@@ -5,7 +5,6 @@ import structs.GameTimer;
 import structs.Player;
 
 import java.nio.*;
-import java.util.Timer;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -53,6 +52,7 @@ public class Main {
 
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
+        timer = new GameTimer();
 
         if ( !glfwInit() )
             throw new IllegalStateException("Unable to initialize GLFW");

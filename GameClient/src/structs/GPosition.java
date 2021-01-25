@@ -1,28 +1,28 @@
 package structs;
 
 public class GPosition {
-    private double posX;
-    private double posY;
+    private float posX;
+    private float posY;
 
-    public GPosition(double posX, double posY) { //is actually a Vector2f custom made
+    public GPosition(float posX, float posY) { //is actually a Vector2f custom made
 
         this.setPosX(posX);
         this.setPosY(posY);
     }
 
-    public double getPosX() {
+    public float getPosX() {
         return posX;
     }
 
-    public void setPosX(double posX) {
+    public void setPosX(float posX) {
         this.posX = posX;
     }
 
-    public double getPosY() {
+    public float getPosY() {
         return posY;
     }
 
-    public void setPosY(double posY) {
+    public void setPosY(float posY) {
         this.posY = posY;
     }
 
