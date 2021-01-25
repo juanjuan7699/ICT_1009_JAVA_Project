@@ -9,7 +9,15 @@ public class Main {
 
 
     public static void main(String[] args) {
-        Player p = new Player();
-        p.tryTeleportToLocation(new GPosition(0,0));
+        for (int i = 0; i < 5; i++) { //check if all uids are unique
+            Player p = new Player(); //player will auto generate a UUID
+            p.tryTeleportToLocation(new GPosition(0,0));
+            System.out.println(p.getUID());
+        }
+
+        Player p = new Player(); //player will auto generate a UUID
+        p.setCurrentLocation(new GPosition(100, 200));
+        System.out.println(p.getCurrentLocation().getRangeTo(new GPosition(200, 250)));
+
     }
 }

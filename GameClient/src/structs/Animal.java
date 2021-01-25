@@ -15,7 +15,7 @@ enum NextIntent {
     SEARCH_HEALING //when health is low try to search for health packs
 }
 
-public class Animal extends Entity {
+public class Animal extends Entity { //create random animal types
 
     private float score;
     Timer AILoop;

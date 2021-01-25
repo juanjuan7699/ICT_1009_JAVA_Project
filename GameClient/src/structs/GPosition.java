@@ -1,33 +1,47 @@
 package structs;
 
 public class GPosition {
-    private float posX;
-    private float posY;
+    private double posX;
+    private double posY;
 
-    public GPosition(float posX, float posY) {
+    public GPosition(double posX, double posY) {
 
         this.setPosX(posX);
         this.setPosY(posY);
     }
 
-    public float getPosX() {
+    public double getPosX() {
         return posX;
     }
 
-    public void setPosX(float posX) {
+    public void setPosX(double posX) {
         this.posX = posX;
     }
 
-    public float getPosY() {
+    public double getPosY() {
         return posY;
     }
 
-    public void setPosY(float posY) {
+    public void setPosY(double posY) {
         this.posY = posY;
     }
 
     public void drawDebug() {
         //do draw here posX posY
+    }
+
+    public double getRangeTo(GPosition target) { //pythagoras theorem, slight rounding
+        //if x:100 y:200 and target x:200 y: 250
+        //return range of hypotenuse
+        int xDiff = (int)Math.abs(getPosX() - target.getPosX());
+        int yDiff = (int)Math.abs(getPosY() - target.getPosY());
+        return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+    }
+
+    public GPosition getExactRangeTo(GPosition target) { //absolute vals
+        //if x:100 y:200 and target x:200 y: 250
+        //return {x:100 y:50}
+        return new GPosition(Math.abs(getPosX() - target.getPosX()), Math.abs(getPosY() - target.getPosY()));
     }
 }
 
