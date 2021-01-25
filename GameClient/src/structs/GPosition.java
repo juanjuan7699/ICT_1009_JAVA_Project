@@ -4,7 +4,7 @@ public class GPosition {
     private double posX;
     private double posY;
 
-    public GPosition(double posX, double posY) {
+    public GPosition(double posX, double posY) { //is actually a Vector2f custom made
 
         this.setPosX(posX);
         this.setPosY(posY);

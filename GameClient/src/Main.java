@@ -1,9 +1,11 @@
 
 import states.GameState;
 import structs.GPosition;
+import structs.GameTimer;
 import structs.Player;
 
 import java.nio.*;
+import java.util.Timer;
 
 import org.lwjgl.*;
 import org.lwjgl.glfw.*;
@@ -18,11 +20,19 @@ import static org.lwjgl.system.MemoryUtil.*;
 
 
 public class Main {
-    //the lower the delay, the more accurate the game is but the higher cpu usage it takes.
-    public static int tickDelay = 50; //1000 is 1 tick, 100 is 10 ticks, 10 is 100 ticks
+    //the lower the delay, the more accurate the game is but the higher cpu usage it takes.!!do not set to 0 or 100% cpu usage
+    public static long tickDelay = 50; //1000 is 1 tick per second
     public GameState gameStateInstance; //change to array for multiple matches, but probably not
 
     private long window; //its a long, i dk
+
+    //LWJGL things
+    public static final int TARGET_FPS = 61;
+    public static final int TARGET_UPS = 30;
+    private GLFWErrorCallback errorCallback;
+    private boolean running;
+    public GameTimer timer; //our main calculator
+
 
     public static void main(String[] args) {
         for (int i = 0; i < 5; i++) { //check if all uids are unique
@@ -64,7 +74,7 @@ public class Main {
         });
 
         // Get the thread stack and push a new frame
-        try ( MemoryStack stack = stackPush() ) {
+        try ( MemoryStack stack = stackPush() ) { //unfortunately java does not usually do manual mem alloc but LWJGL has some helpers
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -82,6 +92,9 @@ public class Main {
             );
         } // the stack frame is popped automatically
 
+        //init game stuff
+        timer.init();
+
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
         // Enable v-sync
@@ -91,22 +104,45 @@ public class Main {
         glfwShowWindow(window);
     }
 
-    private void loop() {
+    private void loop() { //game loop will be FIXED instead of based on FPS
+        float delta; //the delta time for ticking
+        float accumulator = 0f;
+        float interval = 1f / TARGET_UPS;
+        float alpha;
+
+
         GL.createCapabilities(); //create  openGL
+        glClearColor(1.0f, 1.0f, 0.5f, 0.0f); //when you gl clear window it turns back to this color
 
-        // Set the clear color
-        glClearColor(1.0f, 1.0f, 0.5f, 0.0f);
 
-        // Run the rendering loop until the user has attempted to close
-        // the window or has pressed the ESCAPE key.
-        while ( !glfwWindowShouldClose(window) ) {
+        while ( !glfwWindowShouldClose(window) ) { //the game loop here TODO
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
-
             glfwSwapBuffers(window); // swap the color buffers
-
-            // Poll for window events. The key callback above will only be
-            // invoked during this call.
             glfwPollEvents();
+
+
+            delta = timer.getDelta();
+            accumulator += delta;
+
+            //handle input here
+
+            //update the stuff here
+            while (accumulator >= interval) {
+                //here
+                timer.updateUPS();
+                accumulator -= interval;
+            }
+
+            alpha = accumulator / interval; //interpolation value
+            //do a render with the alpha value as interpolation
+
+            timer.updateFPS();
+            timer.update();
+
+            //TODO: render everything here
+            //TODO: update to show next frame
+
+
         }
     }
 
