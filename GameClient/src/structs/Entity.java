@@ -145,8 +145,16 @@ public class Entity {
         return currentHealth;
     }
 
-    public void setCurrentHealth(float currentHealth) {
-        this.currentHealth = currentHealth;
+    public void updateHealth(float incHealth) { //with clamp
+        if (this.currentHealth + incHealth <= 0) {
+            this.currentHealth = 0;
+            return;
+        }
+        if (this.currentHealth + incHealth >= this.maxHealth) {
+            this.currentHealth = this.maxHealth;
+            return;
+        }
+        this.currentHealth += incHealth;
     }
 
     public float getMaxHealth() {
