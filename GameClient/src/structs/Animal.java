@@ -101,7 +101,7 @@ public class Animal extends Entity { //create random animal types
                 }
 
                 //generate rng data every run //TODO: change to + or - if not the wandering will only go positive X and Y
-                setTargetLocation(new GPosition(getTargetLocation().getPosX() + rng.nextInt(wanderDistance), getTargetLocation().getPosY() + rng.nextInt(wanderDistance)));
+                setTargetLocation(new GPosition(getTargetLocation().getX() + rng.nextInt(wanderDistance), getTargetLocation().getY() + rng.nextInt(wanderDistance)));
 
                 if (instantKill) { //should kill somewhere earlier
                     return;

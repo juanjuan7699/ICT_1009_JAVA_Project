@@ -44,8 +44,8 @@ public class Matrix4f { //this weird sht allows u to rotate and transform the gr
     public static Matrix4f translate(GPosition pos) {
         Matrix4f res = identity();
 
-        res.matrix[12] = pos.getPosX();
-        res.matrix[13] = pos.getPosY();
+        res.matrix[12] = pos.getX();
+        res.matrix[13] = pos.getY();
         res.matrix[14] = 0f; //(float)pos.getPosZ(); we dont have a Z pos right now
 
         return res;

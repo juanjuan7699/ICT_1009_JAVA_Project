@@ -1,29 +1,38 @@
 package structs;
 
 public class GPosition {
-    private float posX;
-    private float posY;
 
-    public GPosition(float posX, float posY) { //is actually a Vector2f custom made
+    //now also acts as a vector3f for colors and others
+    private float x;
+    private float y;
+    private float z;
 
-        this.setPosX(posX);
-        this.setPosY(posY);
+    public GPosition(float x, float y) { //is actually a Vector2f custom made
+
+        this(x, y, 0f);
+
     }
 
-    public float getPosX() {
-        return posX;
+    public GPosition(float x, float y, float z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
-    public void setPosX(float posX) {
-        this.posX = posX;
+    public float getX() {
+        return x;
     }
 
-    public float getPosY() {
-        return posY;
+    public void setX(float x) {
+        this.x = x;
     }
 
-    public void setPosY(float posY) {
-        this.posY = posY;
+    public float getY() {
+        return y;
+    }
+
+    public void setY(float y) {
+        this.y = y;
     }
 
     public void drawDebug() {
@@ -33,15 +42,23 @@ public class GPosition {
     public double getRangeTo(GPosition target) { //pythagoras theorem, slight rounding
         //if x:100 y:200 and target x:200 y: 250
         //return range of hypotenuse
-        int xDiff = (int)Math.abs(getPosX() - target.getPosX());
-        int yDiff = (int)Math.abs(getPosY() - target.getPosY());
+        int xDiff = (int)Math.abs(getX() - target.getX());
+        int yDiff = (int)Math.abs(getY() - target.getY());
         return Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
     }
 
     public GPosition getExactRangeTo(GPosition target) { //absolute vals
         //if x:100 y:200 and target x:200 y: 250
         //return {x:100 y:50}
-        return new GPosition(Math.abs(getPosX() - target.getPosX()), Math.abs(getPosY() - target.getPosY()));
+        return new GPosition(Math.abs(getX() - target.getX()), Math.abs(getY() - target.getY()));
+    }
+
+    public float getZ() {
+        return z;
+    }
+
+    public void setZ(float z) {
+        this.z = z;
     }
 }
 

@@ -3,7 +3,6 @@ package structs;
 
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
-import sun.font.TrueTypeFont;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -140,7 +139,7 @@ public class Renderer {
     }
 
     public void renderText(CharSequence text, GPosition pos, int size) { //simple text rendering, Graphics2D
-        font.drawText(this, text, pos.getPosX(), pos.getPosY());
+        font.drawText(this, text, pos.getX(), pos.getY());
     }
 
     private void createFontTexture() { //generate the font texture to display on screen
