@@ -8,9 +8,7 @@ public class GPosition {
     private float z;
 
     public GPosition(float x, float y) { //is actually a Vector2f custom made
-
         this(x, y, 0f);
-
     }
 
     public GPosition(float x, float y, float z) {

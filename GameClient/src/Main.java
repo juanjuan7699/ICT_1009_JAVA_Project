@@ -1,5 +1,7 @@
 
+import rendering.Renderer;
 import states.GameState;
+import structs.Color;
 import structs.GPosition;
 import structs.GameTimer;
 import structs.Player;
@@ -30,7 +32,9 @@ public class Main {
     public static final int TARGET_UPS = 30;
     private GLFWErrorCallback errorCallback;
     private boolean running;
+
     public GameTimer timer; //our main calculator
+    public Renderer renderer;
 
 
     public static void main(String[] args) {
@@ -53,14 +57,19 @@ public class Main {
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
         timer = new GameTimer();
+        renderer = new Renderer();
 
         if ( !glfwInit() )
             throw new IllegalStateException("Unable to initialize GLFW");
 
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
         glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+        glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+        glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+        glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GLFW_TRUE);
 
         // Create the window
         window = glfwCreateWindow(300, 300, "Hello World!", NULL, NULL);
@@ -74,7 +83,7 @@ public class Main {
         });
 
         // Get the thread stack and push a new frame
-        try ( MemoryStack stack = stackPush() ) { //unfortunately java does not usually do manual mem alloc but LWJGL has some helpers
+        try ( MemoryStack stack = stackPush() ) {
             IntBuffer pWidth = stack.mallocInt(1); // int*
             IntBuffer pHeight = stack.mallocInt(1); // int*
 
@@ -90,10 +99,9 @@ public class Main {
                     (vidmode.width() - pWidth.get(0)) / 2,
                     (vidmode.height() - pHeight.get(0)) / 2
             );
-        } // the stack frame is popped automatically
+        }
 
-        //init game stuff
-        timer.init();
+
 
         // Make the OpenGL context current
         glfwMakeContextCurrent(window);
@@ -102,6 +110,12 @@ public class Main {
 
         // Make the window visible
         glfwShowWindow(window);
+
+        GL.createCapabilities(); //create  openGL
+
+        //init game stuff
+        timer.init();
+        renderer.init();
     }
 
     private void loop() { //game loop will be FIXED instead of based on FPS
@@ -110,8 +124,8 @@ public class Main {
         float interval = 1f / TARGET_UPS;
         float alpha;
 
+        //GL.createCapabilities();
 
-        GL.createCapabilities(); //create  openGL
         glClearColor(1.0f, 1.0f, 0.5f, 0.0f); //when you gl clear window it turns back to this color
 
 
@@ -119,6 +133,7 @@ public class Main {
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
             glfwSwapBuffers(window); // swap the color buffers
             glfwPollEvents();
+
 
 
             delta = timer.getDelta();
@@ -141,8 +156,9 @@ public class Main {
 
             //TODO: render everything here
             //TODO: update to show next frame
-
-
+            renderer.renderText("testxxxxxxxxxxxxxxxxxxxxxxxxx", new GPosition(50,50), 12);
+            renderer.drawTextureRegion(50,50,100,100, 50,50,80,80, Color.RED);
+            renderer.flush();
         }
     }
 
@@ -152,12 +168,17 @@ public class Main {
         init();
         loop();
 
+        //dispose here
+
         // when loop() ends it will free and destroy
         glfwFreeCallbacks(window);
         glfwDestroyWindow(window);
 
         // Terminate GLFW and free the error callback
         glfwTerminate();
+
         glfwSetErrorCallback(null).free();
     }
+
+
 }
