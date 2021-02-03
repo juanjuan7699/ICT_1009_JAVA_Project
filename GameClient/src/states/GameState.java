@@ -86,7 +86,7 @@ public class GameState implements State {
     @Override
     public void enter() {
         texture = Texture.loadTexture("resources/cat.png");
-        glClearColor(0.5f, 0.5f, 0.5f, 1f);
+        glClearColor(0f, 0.73f, 0.83f, 1f);
     }
 
     @Override
