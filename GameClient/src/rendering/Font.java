@@ -7,39 +7,48 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
-import static java.awt.Font.MONOSPACED;
-import static java.awt.Font.PLAIN;
+import static java.awt.Font.*;
 
-public class FontRender {
+public class Font {
 
-    private final Map<Character, Glyph> glyphs; //save the font glyphs
+    private final Map<Character, Glyph> glyphs;
     private final Texture texture;
     private int fontHeight;
 
-    public FontRender(int size, boolean antiAlias) {
-        glyphs = new HashMap<>();
-        texture = createFontTexture(new java.awt.Font(MONOSPACED, PLAIN, size), antiAlias);
+    public Font() {
+        this(new java.awt.Font(MONOSPACED, PLAIN, 16), true);
     }
 
-    private Texture createFontTexture(java.awt.Font font, boolean antiAlias) { //generate the fonts
+    public Font(int size, boolean antiAlias) {
+        this(new java.awt.Font(MONOSPACED, PLAIN, size), antiAlias);
+    }
+
+    public Font(java.awt.Font font, boolean antiAlias) {
+        glyphs = new HashMap<>();
+        texture = createFontTexture(font, antiAlias);
+    }
+
+    private Texture createFontTexture(java.awt.Font font, boolean antiAlias) {
+        /* Loop through the characters to get charWidth and charHeight */
         int imageWidth = 0;
         int imageHeight = 0;
-        int x = 0;
 
-        //generate all fonts after 32 to 256 via ASCII
+        /* Start at char #32, because ASCII 0 to 31 are just control codes */
         for (int i = 32; i < 256; i++) {
             if (i == 127) {
-                //skip control code
+                /* ASCII 127 is the DEL control code, so we can skip it */
                 continue;
             }
             char c = (char) i;
             BufferedImage ch = createCharImage(font, c, antiAlias);
             if (ch == null) {
-                //if the char doesnt exist then it doesnt exist in the font file
+                /* If char image is null that font does not contain the char */
                 continue;
             }
 
@@ -48,23 +57,31 @@ public class FontRender {
         }
 
         fontHeight = imageHeight;
+
+        /* Image for the texture */
         BufferedImage image = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
 
-        //same loop but for glyphs
+        int x = 0;
+
+        /* Create image for the standard chars, again we omit ASCII 0 to 31
+         * because they are just control codes */
         for (int i = 32; i < 256; i++) {
             if (i == 127) {
+                /* ASCII 127 is the DEL control code, so we can skip it */
                 continue;
             }
             char c = (char) i;
             BufferedImage charImage = createCharImage(font, c, antiAlias);
             if (charImage == null) {
+                /* If char image is null that font does not contain the char */
                 continue;
             }
 
             int charWidth = charImage.getWidth();
             int charHeight = charImage.getHeight();
 
+            /* Create glyph and draw char on image */
             Glyph ch = new Glyph(charWidth, charHeight, x, image.getHeight() - charHeight, 0f);
             g.drawImage(charImage, x, 0, null);
             x += ch.width;
@@ -103,13 +120,12 @@ public class FontRender {
             }
         }
         buffer.flip();
-
         Texture fontTexture = Texture.createTexture(width, height, buffer);
         MemoryUtil.memFree(buffer);
         return fontTexture;
     }
 
-    private BufferedImage createCharImage(Font font, char c, boolean antiAlias) {
+    private BufferedImage createCharImage(java.awt.Font font, char c, boolean antiAlias) {
         /* Creating temporary image to extract character size */
         BufferedImage image = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = image.createGraphics();
@@ -148,11 +164,14 @@ public class FontRender {
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
             if (c == '\n') {
+                /* Line end, set width to maximum from line width and stored
+                 * width */
                 width = Math.max(width, lineWidth);
                 lineWidth = 0;
                 continue;
             }
             if (c == '\r') {
+                /* Carriage return, just skip it */
                 continue;
             }
             Glyph g = glyphs.get(c);
@@ -214,7 +233,7 @@ public class FontRender {
         renderer.end();
     }
 
-    public void drawText(Renderer renderer, CharSequence text, float x, float y) { //overload
+    public void drawText(Renderer renderer, CharSequence text, float x, float y) {
         drawText(renderer, text, x, y, Color.WHITE);
     }
 

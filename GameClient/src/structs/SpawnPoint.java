@@ -1,16 +1,18 @@
 package structs;
 
+import maths.GVector;
+
 public class SpawnPoint {
-    private GPosition position;
+    private GVector position;
     private boolean occupied; //if there is an item already on it
 
     private String sprite; //change based on ally / enemy / pickup spawn
 
-    public GPosition getPosition() {
+    public GVector getPosition() {
         return position;
     }
 
-    public void setPosition(GPosition position) {
+    public void setPosition(GVector position) {
         this.position = position;
     }
 

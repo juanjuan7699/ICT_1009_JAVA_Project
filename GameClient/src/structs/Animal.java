@@ -1,19 +1,12 @@
 package structs;
 
+import enums.NextIntent;
+import maths.GVector;
+
 import java.util.Date;
 import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
-
-enum NextIntent {
-    NONE,
-    MOVEMENT_WANDER,
-    MOVEMENT_EVADE,
-    ATTACK_AGGRO,
-    ATTACK_RANDOM,
-    SEARCH_TARGET,
-    SEARCH_HEALING //when health is low try to search for health packs
-}
 
 public class Animal extends Entity { //create random animal types
 
@@ -101,7 +94,7 @@ public class Animal extends Entity { //create random animal types
                 }
 
                 //generate rng data every run //TODO: change to + or - if not the wandering will only go positive X and Y
-                setTargetLocation(new GPosition(getTargetLocation().getX() + rng.nextInt(wanderDistance), getTargetLocation().getY() + rng.nextInt(wanderDistance)));
+                setTargetLocation(new GVector(getTargetLocation().getX() + rng.nextInt(wanderDistance), getTargetLocation().getY() + rng.nextInt(wanderDistance)));
 
                 if (instantKill) { //should kill somewhere earlier
                     return;

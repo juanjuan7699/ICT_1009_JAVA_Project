@@ -7,8 +7,7 @@ import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL13.GL_CLAMP_TO_BORDER;
-import static org.lwjgl.stb.STBImage.stbi_load;
-import static org.lwjgl.stb.STBImage.stbi_set_flip_vertically_on_load;
+import static org.lwjgl.stb.STBImage.*;
 
 public class Texture { //texture object for lwjgl to render in the Renderer
 
@@ -28,7 +27,7 @@ public class Texture { //texture object for lwjgl to render in the Renderer
         glTexParameteri(GL_TEXTURE_2D, name, value);
     }
 
-    public void uploadData(int width, int height, ByteBuffer data) { //overload for upload data
+    public void uploadData(int width, int height, ByteBuffer data) {
         uploadData(GL_RGBA8, width, height, GL_RGBA, data);
     }
 
@@ -77,7 +76,7 @@ public class Texture { //texture object for lwjgl to render in the Renderer
         return texture;
     }
 
-    public static Texture loadTexture(String path) { //to load the texture
+    public static Texture loadTexture(String path) {
         ByteBuffer image;
         int width, height;
         try (MemoryStack stack = MemoryStack.stackPush()) {
@@ -90,7 +89,7 @@ public class Texture { //texture object for lwjgl to render in the Renderer
             stbi_set_flip_vertically_on_load(true);
             image = stbi_load(path, w, h, comp, 4);
             if (image == null) {
-                return null;
+                throw new RuntimeException("Failed to load a texture file!" + System.lineSeparator() + stbi_failure_reason());
             }
 
             /* Get width and height of image */
@@ -100,4 +99,5 @@ public class Texture { //texture object for lwjgl to render in the Renderer
 
         return createTexture(width, height, image);
     }
+
 }

@@ -1,5 +1,8 @@
 package structs;
 
+import enums.BulletType;
+import enums.TraceType;
+
 public class Player extends Entity {
 
     private boolean canAttack;

@@ -1,13 +1,12 @@
 package rendering;
 
 
+import maths.Matrix4f;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL;
 import org.lwjgl.system.MemoryStack;
 import org.lwjgl.system.MemoryUtil;
+import structs.AnimalGame;
 import structs.Color;
-import structs.GPosition;
-import structs.Matrix4f;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
@@ -19,7 +18,6 @@ import static org.lwjgl.opengl.GL20.GL_VERTEX_SHADER;
 import static org.lwjgl.opengl.GL30.GL_ARRAY_BUFFER;
 
 public class Renderer {
-    //do rendering stuff here
     private VertexArrayObject vao;
     private VertexBufferObject vbo;
     private ShaderProgram program;
@@ -28,12 +26,9 @@ public class Renderer {
     private int numVertices;
     private boolean drawing;
 
-    private FontRender font;
+    private Font font;
 
-    public void clear() {
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
-
+    /** Initializes the renderer. */
     public void init() {
         /* Setup shader programs */
         setupShaderProgram();
@@ -43,10 +38,15 @@ public class Renderer {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         /* Create fonts */
-        font = new FontRender(12, false);
-
+        font = new Font();
     }
 
+    /**
+     * Clears the drawing area.
+     */
+    public void clear() {
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    }
 
     /**
      * Begin rendering.
@@ -98,26 +98,121 @@ public class Renderer {
         }
     }
 
-    private void specifyVertexAttributes() {
-        /* Specify Vertex Pointer */
-        int posAttrib = program.getAttributeLocation("position");
-        program.enableVertexAttribute(posAttrib);
-        program.pointVertexAttribute(posAttrib, 2, 8 * Float.BYTES, 0);
-
-        /* Specify Color Pointer */
-        int colAttrib = program.getAttributeLocation("color");
-        program.enableVertexAttribute(colAttrib);
-        program.pointVertexAttribute(colAttrib, 4, 8 * Float.BYTES, 2 * Float.BYTES);
-
-        /* Specify Texture Pointer */
-        int texAttrib = program.getAttributeLocation("texcoord");
-        program.enableVertexAttribute(texAttrib);
-        program.pointVertexAttribute(texAttrib, 2, 8 * Float.BYTES, 6 * Float.BYTES);
+    /**
+     * Calculates total width of a text.
+     *
+     * @param text The text
+     *
+     * @return Total width of the text
+     */
+    public int getTextWidth(CharSequence text) {
+        return font.getWidth(text);
     }
 
-    //TODO: Color must be in range of 0f to 1f, make a custom object
+    /**
+     * Calculates total height of a text.
+     *
+     * @param text The text
+     *
+     * @return Total width of the text
+     */
+    public int getTextHeight(CharSequence text) {
+        return font.getHeight(text);
+    }
+
+    /**
+     * Draw text at the specified position.
+     *
+     * @param text Text to draw
+     * @param x    X coordinate of the text position
+     * @param y    Y coordinate of the text position
+     */
+    public void drawText(CharSequence text, float x, float y) {
+        font.drawText(this, text, x, y);
+    }
+
+    /**
+     * Draw text at the specified position and color.
+     *
+     * @param text Text to draw
+     * @param x    X coordinate of the text position
+     * @param y    Y coordinate of the text position
+     * @param c    Color to use
+     */
+    public void drawText(CharSequence text, float x, float y, Color c) {
+        font.drawText(this, text, x, y, c);
+    }
+
+
+    /**
+     * Draws the currently bound texture on specified coordinates.
+     *
+     * @param texture Used for getting width and height of the texture
+     * @param x       X position of the texture
+     * @param y       Y position of the texture
+     */
+    public void drawTexture(Texture texture, float x, float y) {
+        drawTexture(texture, x, y, Color.WHITE);
+    }
+
+    /**
+     * Draws the currently bound texture on specified coordinates and with
+     * specified color.
+     *
+     * @param texture Used for getting width and height of the texture
+     * @param x       X position of the texture
+     * @param y       Y position of the texture
+     * @param c       The color to use
+     */
+    public void drawTexture(Texture texture, float x, float y, Color c) {
+        /* Vertex positions */
+        float x1 = x;
+        float y1 = y;
+        float x2 = x1 + texture.getWidth();
+        float y2 = y1 + texture.getHeight();
+
+        /* Texture coordinates */
+        float s1 = 0f;
+        float t1 = 0f;
+        float s2 = 1f;
+        float t2 = 1f;
+
+        drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, c);
+    }
+
+    /**
+     * Draws a texture region with the currently bound texture on specified
+     * coordinates.
+     *
+     * @param texture   Used for getting width and height of the texture
+     * @param x         X position of the texture
+     * @param y         Y position of the texture
+     * @param regX      X position of the texture region
+     * @param regY      Y position of the texture region
+     * @param regWidth  Width of the texture region
+     * @param regHeight Height of the texture region
+     */
+    public void drawTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight) {
+        drawTextureRegion(texture, x, y, regX, regY, regWidth, regHeight, Color.WHITE);
+    }
+
+    /**
+     * Draws a texture region with the currently bound texture on specified
+     * coordinates.
+     *
+     * @param texture   Used for getting width and height of the texture
+     * @param x         X position of the texture
+     * @param y         Y position of the texture
+     * @param regX      X position of the texture region
+     * @param regY      Y position of the texture region
+     * @param regWidth  Width of the texture region
+     * @param regHeight Height of the texture region
+     * @param c         The color to use
+     */
     public void drawTextureRegion(Texture texture, float x, float y, float regX, float regY, float regWidth, float regHeight, Color c) {
         /* Vertex positions */
+        float x1 = x;
+        float y1 = y;
         float x2 = x + regWidth;
         float y2 = y + regHeight;
 
@@ -127,18 +222,49 @@ public class Renderer {
         float s2 = (regX + regWidth) / texture.getWidth();
         float t2 = (regY + regHeight) / texture.getHeight();
 
-        drawTextureRegion(x, y, x2, y2, s1, t1, s2, t2, c);
+        drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, c);
     }
 
+    /**
+     * Draws a texture region with the currently bound texture on specified
+     * coordinates.
+     *
+     * @param x1 Bottom left x position
+     * @param y1 Bottom left y position
+     * @param x2 Top right x position
+     * @param y2 Top right y position
+     * @param s1 Bottom left s coordinate
+     * @param t1 Bottom left t coordinate
+     * @param s2 Top right s coordinate
+     * @param t2 Top right t coordinate
+     */
+    public void drawTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2) {
+        drawTextureRegion(x1, y1, x2, y2, s1, t1, s2, t2, Color.WHITE);
+    }
+
+    /**
+     * Draws a texture region with the currently bound texture on specified
+     * coordinates.
+     *
+     * @param x1 Bottom left x position
+     * @param y1 Bottom left y position
+     * @param x2 Top right x position
+     * @param y2 Top right y position
+     * @param s1 Bottom left s coordinate
+     * @param t1 Bottom left t coordinate
+     * @param s2 Top right s coordinate
+     * @param t2 Top right t coordinate
+     * @param c  The color to use
+     */
     public void drawTextureRegion(float x1, float y1, float x2, float y2, float s1, float t1, float s2, float t2, Color c) {
         if (vertices.remaining() < 8 * 6) {
             /* We need more space in the buffer, so flush it */
             flush();
         }
 
-        float r = c.getX();
-        float g = c.getY();
-        float b = c.getZ();
+        float r = c.getRed();
+        float g = c.getGreen();
+        float b = c.getBlue();
         float a = c.getAlpha();
 
         vertices.put(x1).put(y1).put(r).put(g).put(b).put(a).put(s1).put(t1);
@@ -152,9 +278,23 @@ public class Renderer {
         numVertices += 6;
     }
 
+    /**
+     * Dispose renderer and clean up its used data.
+     */
+    public void dispose() {
+        MemoryUtil.memFree(vertices);
+
+        if (vao != null) {
+            vao.delete();
+        }
+        vbo.delete();
+        program.delete();
+        font.dispose();
+    }
+
     /** Setups the default shader program. */
     private void setupShaderProgram() {
-        if (isDefaultContext()) {
+        if (AnimalGame.isDefaultContext()) {
             /* Generate Vertex Array Object */
             vao = new VertexArrayObject();
             vao.bind();
@@ -179,7 +319,7 @@ public class Renderer {
 
         /* Load shaders */
         Shader vertexShader, fragmentShader;
-        if (isDefaultContext()) {
+        if (AnimalGame.isDefaultContext()) {
             vertexShader = Shader.loadShader(GL_VERTEX_SHADER, "resources/default.vert");
             fragmentShader = Shader.loadShader(GL_FRAGMENT_SHADER, "resources/default.frag");
         } else {
@@ -191,7 +331,7 @@ public class Renderer {
         program = new ShaderProgram();
         program.attachShader(vertexShader);
         program.attachShader(fragmentShader);
-        if (isDefaultContext()) {
+        if (AnimalGame.isDefaultContext()) {
             program.bindFragmentDataLocation(0, "fragColor");
         }
         program.link();
@@ -233,22 +373,26 @@ public class Renderer {
         Matrix4f projection = Matrix4f.orthographic(0f, width, 0f, height, -1f, 1f);
         int uniProjection = program.getUniformLocation("projection");
         program.setUniform(uniProjection, projection);
-
     }
 
+    /**
+     * Specifies the vertex pointers.
+     */
+    private void specifyVertexAttributes() {
+        /* Specify Vertex Pointer */
+        int posAttrib = program.getAttributeLocation("position");
+        program.enableVertexAttribute(posAttrib);
+        program.pointVertexAttribute(posAttrib, 2, 8 * Float.BYTES, 0);
 
-    public void renderText(CharSequence text, GPosition pos, int size) { //simple text rendering, Graphics2D
-        font.drawText(this, text, pos.getX(), pos.getY());
+        /* Specify Color Pointer */
+        int colAttrib = program.getAttributeLocation("color");
+        program.enableVertexAttribute(colAttrib);
+        program.pointVertexAttribute(colAttrib, 4, 8 * Float.BYTES, 2 * Float.BYTES);
+
+        /* Specify Texture Pointer */
+        int texAttrib = program.getAttributeLocation("texcoord");
+        program.enableVertexAttribute(texAttrib);
+        program.pointVertexAttribute(texAttrib, 2, 8 * Float.BYTES, 6 * Float.BYTES);
     }
-
-    private void createFontTexture() { //generate the font texture to display on screen
-        int imageWidth = 0;
-        int imageHeight = 0;
-    }
-
-    public static boolean isDefaultContext() {
-        return GL.getCapabilities().OpenGL32;
-    }
-
 }
 

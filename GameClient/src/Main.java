@@ -1,10 +1,7 @@
 
 import rendering.Renderer;
 import states.GameState;
-import structs.Color;
-import structs.GPosition;
-import structs.GameTimer;
-import structs.Player;
+import structs.*;
 
 import java.nio.*;
 
@@ -36,24 +33,140 @@ public class Main {
     public GameTimer timer; //our main calculator
     public Renderer renderer;
 
+    /**
+     * This error callback will simply print the error to
+     * <code>System.err</code>.
+     */
+    private static GLFWErrorCallback erroCallback
+            = GLFWErrorCallback.createPrint(System.err);
+
+    /**
+     * This key callback will check if ESC is pressed and will close the window
+     * if it is pressed.
+     */
+    private static GLFWKeyCallback keyCallback = new GLFWKeyCallback() {
+
+        @Override
+        public void invoke(long window, int key, int scancode, int action, int mods) {
+            if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+                glfwSetWindowShouldClose(window, true);
+            }
+        }
+    };
 
     public static void main(String[] args) {
-        for (int i = 0; i < 5; i++) { //check if all uids are unique
-            Player p = new Player(); //player will auto generate a UUID
-            p.tryTeleportToLocation(new GPosition(0,0));
-            System.out.println(p.getUID());
-        }
-
-        Player p = new Player(); //player will auto generate a UUID
-        p.setCurrentLocation(new GPosition(100, 200));
-        System.out.println(p.getCurrentLocation().getRangeTo(new GPosition(200, 250)));
+//        for (int i = 0; i < 5; i++) { //check if all uids are unique
+//            Player p = new Player(); //player will auto generate a UUID
+//            p.tryTeleportToLocation(new GPosition(0,0));
+//            System.out.println(p.getUID());
+//        }
+//
+//        Player p = new Player(); //player will auto generate a UUID
+//        p.setCurrentLocation(new GPosition(100, 200));
+//        System.out.println(p.getCurrentLocation().getRangeTo(new GPosition(200, 250)));
 
         //lwjgl tests
-        new Main().run();
-
-
+        //new Main().run();
+        new AnimalGame(1280,720).start();
     }
 
+    public static void hello() {
+        long window;
+
+        /* Set the error callback */
+        glfwSetErrorCallback(erroCallback);
+
+        /* Initialize GLFW */
+        if (!glfwInit()) {
+            throw new IllegalStateException("Unable to initialize GLFW");
+        }
+
+        /* Create window */
+        window = glfwCreateWindow(640, 480, "Simple example", NULL, NULL);
+        if (window == NULL) {
+            glfwTerminate();
+            throw new RuntimeException("Failed to create the GLFW window");
+        }
+
+        /* Center the window on screen */
+        GLFWVidMode vidMode = glfwGetVideoMode(glfwGetPrimaryMonitor());
+        glfwSetWindowPos(window,
+                (vidMode.width() - 640) / 2,
+                (vidMode.height() - 480) / 2
+        );
+
+        /* Create OpenGL context */
+        glfwMakeContextCurrent(window);
+        GL.createCapabilities();
+
+        /* Enable vertical synchronization */
+        glfwSwapInterval(1);
+
+        /* Set the key callback */
+        glfwSetKeyCallback(window, keyCallback);
+
+        /* Declare buffers for using inside the loop */
+        IntBuffer width = MemoryUtil.memAllocInt(1);
+        IntBuffer height = MemoryUtil.memAllocInt(1);
+
+        /* Loop until window gets closed */
+        while (!glfwWindowShouldClose(window)) {
+            float ratio;
+
+            /* Get width and height to calcualte the ratio */
+            glfwGetFramebufferSize(window, width, height);
+            ratio = width.get() / (float) height.get();
+
+            /* Rewind buffers for next get */
+            width.rewind();
+            height.rewind();
+
+            /* Set viewport and clear screen */
+            glViewport(0, 0, width.get(), height.get());
+            glClear(GL_COLOR_BUFFER_BIT);
+
+            /* Set ortographic projection */
+            glMatrixMode(GL_PROJECTION);
+            glLoadIdentity();
+            glOrtho(-ratio, ratio, -1f, 1f, 1f, -1f);
+            glMatrixMode(GL_MODELVIEW);
+
+            /* Rotate matrix */
+            glLoadIdentity();
+            glRotatef((float) glfwGetTime() * 50f, 0f, 0f, 1f);
+
+            /* Render triangle */
+            glBegin(GL_TRIANGLES);
+            glColor3f(1f, 0f, 0f);
+            glVertex3f(-0.6f, -0.4f, 0f);
+            glColor3f(0f, 1f, 0f);
+            glVertex3f(0.6f, -0.4f, 0f);
+            glColor3f(0f, 0f, 1f);
+            glVertex3f(0f, 0.6f, 0f);
+            glEnd();
+
+            /* Swap buffers and poll Events */
+            glfwSwapBuffers(window);
+            glfwPollEvents();
+
+            /* Flip buffers for next loop */
+            width.flip();
+            height.flip();
+        }
+
+        /* Free buffers */
+        MemoryUtil.memFree(width);
+        MemoryUtil.memFree(height);
+
+        /* Release window and its callbacks */
+        glfwDestroyWindow(window);
+        keyCallback.free();
+
+        /* Terminate GLFW and release the error callback */
+        glfwTerminate();
+        erroCallback.free();
+
+    }
     private void init() {
         GLFWErrorCallback.createPrint(System.err).set();
         timer = new GameTimer();
@@ -156,7 +269,6 @@ public class Main {
 
             //TODO: render everything here
             //TODO: update to show next frame
-            renderer.renderText("testxxxxxxxxxxxxxxxxxxxxxxxxx", new GPosition(50,50), 12);
             renderer.drawTextureRegion(50,50,100,100, 50,50,80,80, Color.RED);
             renderer.flush();
         }

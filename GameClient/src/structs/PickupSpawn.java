@@ -1,5 +1,7 @@
 package structs;
 
+import enums.PickupType;
+
 import java.util.Random;
 
 public class PickupSpawn extends SpawnPoint {

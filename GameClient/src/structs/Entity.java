@@ -1,13 +1,16 @@
 package structs;
 
+import maths.GVector;
+import rendering.Texture;
+
 import java.util.UUID;
 
 public class Entity {
     //parent class for Player and other units like Animals and probably bullets
-    private GPosition currentLocation;
-    private GPosition targetLocation; //you can lerp (linear interpolation) from currentLocation to targetLocation for e.g. homing missiles
-    private GPosition spawnLocation;
-    private HPosition hitBox;
+    private GVector currentLocation; //2f
+    private GVector targetLocation; //2f //you can lerp (linear interpolation) from currentLocation to targetLocation for e.g. homing missiles
+    private GVector spawnLocation; //2f
+    private GVector hitBox; //4f
     private EntityType entityType;
 
     private float currentHealth;
@@ -22,14 +25,15 @@ public class Entity {
 
     private String UID; //for networking
     private String name;
-    private String sprite; //currently string, have to change to canvas or something, draw on LWJGL
+
+    private Texture sprite;
 
     public Entity(EntityType entityType) { //generic
         this.entityType = entityType;
-        this.spawnLocation = new GPosition(0,0);
-        this.currentLocation = new GPosition(0,0);
-        this.targetLocation = new GPosition(0,0);
-        this.hitBox = new HPosition(0,0,0,0);
+        this.spawnLocation = new GVector(0,0);
+        this.currentLocation = new GVector(0,0);
+        this.targetLocation = new GVector(0,0);
+        this.hitBox = new GVector(0,0,0,0);
 
         this.currentHealth = 1;
         this.maxHealth = 1;
@@ -43,7 +47,7 @@ public class Entity {
 
         this.UID = UUID.randomUUID().toString();
         this.name = UID;
-        this.sprite = "not red ball";
+        this.sprite = Texture.loadTexture("resources/cat.png");
     }
 
     public boolean hitTest(Entity target) { //check hitbox and the other object to see if it collides
@@ -54,7 +58,7 @@ public class Entity {
         return false;
     }
 
-    public boolean tryTeleportToLocation(GPosition targetLocation) { //initial spawning or stuff
+    public boolean tryTeleportToLocation(GVector targetLocation) { //initial spawning or stuff
         //draw at target location
         //if teleport failed find suitable location etc
         return true;
@@ -85,35 +89,35 @@ public class Entity {
         return getCurrentHealth() > 0;
     }
 
-    public GPosition getCurrentLocation() {
+    public GVector getCurrentLocation() {
         return currentLocation;
     }
 
-    public void setCurrentLocation(GPosition currentLocation) {
+    public void setCurrentLocation(GVector currentLocation) {
         this.currentLocation = currentLocation;
     }
 
-    public GPosition getTargetLocation() {
+    public GVector getTargetLocation() {
         return targetLocation;
     }
 
-    public void setTargetLocation(GPosition targetLocation) {
+    public void setTargetLocation(GVector targetLocation) {
         this.targetLocation = targetLocation;
     }
 
-    public GPosition getSpawnLocation() {
+    public GVector getSpawnLocation() {
         return spawnLocation;
     }
 
-    public void setSpawnLocation(GPosition spawnLocation) {
+    public void setSpawnLocation(GVector spawnLocation) {
         this.spawnLocation = spawnLocation;
     }
 
-    public HPosition getHitBox() {
+    public GVector getHitBox() {
         return hitBox;
     }
 
-    public void setHitBox(HPosition hitBox) {
+    public void setHitBox(GVector hitBox) {
         this.hitBox = hitBox;
     }
 
@@ -209,11 +213,11 @@ public class Entity {
         this.name = name;
     }
 
-    public String getSprite() {
+    public Texture getSprite() {
         return sprite;
     }
 
-    public void setSprite(String sprite) {
+    public void setSprite(Texture sprite) {
         this.sprite = sprite;
     }
 

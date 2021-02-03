@@ -1,7 +1,7 @@
 package rendering;
 
+import maths.Matrix4f;
 import org.lwjgl.system.MemoryStack;
-import structs.Matrix4f;
 
 import java.nio.FloatBuffer;
 
@@ -10,14 +10,8 @@ import static org.lwjgl.opengl.GL30.glBindFragDataLocation;
 
 public class ShaderProgram {
 
-    /**
-     * Stores the handle of the program.
-     */
     private final int id;
 
-    /**
-     * Creates a shader program.
-     */
     public ShaderProgram() {
         id = glCreateProgram();
     }
@@ -62,7 +56,7 @@ public class ShaderProgram {
     public void setUniform(int location, Matrix4f value) {
         try (MemoryStack stack = MemoryStack.stackPush()) {
             FloatBuffer buffer = stack.mallocFloat(4 * 4);
-            //value.toBuffer(buffer);
+            value.toBuffer(buffer);
             glUniformMatrix4fv(location, false, buffer);
         }
     }
