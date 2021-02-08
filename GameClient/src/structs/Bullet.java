@@ -2,6 +2,9 @@ package structs;
 
 import enums.BulletType;
 import enums.TraceType;
+import maths.GVector;
+import rendering.Renderer;
+import rendering.Texture;
 
 public class Bullet extends Entity {
     private BulletType bulletType;
@@ -9,7 +12,7 @@ public class Bullet extends Entity {
 
     private float finalDamage; //this.damage from Entity + (instigator)player.damage only when shooting
     private float radius; //only for non TraceType.SINGLE traces
-    private float velocity; //speed of non hitscan/laser bullets
+    private GVector velocity; //speed of non hitscan/laser bullets
     private float damageOverTime; // >1 if you want to deal baseDamage/damageOverTime damage every second instead of instant
 
     private boolean activateOnCollision; //activates on collision with another object
@@ -18,6 +21,8 @@ public class Bullet extends Entity {
 
     public Bullet() {
         super(EntityType.BULLET_ENTITY);
+        this.setSprite(Texture.loadTexture("resources/bulletTest.png"));
+        System.out.println("bullet created");
     } //base bullet, can extend to be maybe missles, grenades, etc
 
     public void tryHit(Entity instigator, Entity target) { //on collision do this
@@ -28,6 +33,14 @@ public class Bullet extends Entity {
             //also check if its damageovertime etc
             //check if its an ally, etc
         }
+    }
+
+    @Override
+    public void render(Renderer renderer) {
+        //update the vector of the
+        this.setCurrentLocation(this.getCurrentLocation().add(this.getVelocity()));
+        super.render(renderer);
+
     }
 
     //TODO: for cloning the same bullet everytime the player shoots
@@ -67,11 +80,11 @@ public class Bullet extends Entity {
         this.radius = radius;
     }
 
-    public float getVelocity() {
+    public GVector getVelocity() {
         return velocity;
     }
 
-    public void setVelocity(float velocity) {
+    public void setVelocity(GVector velocity) {
         this.velocity = velocity;
     }
 

@@ -2,6 +2,7 @@ package structs;
 
 import enums.BulletType;
 import enums.TraceType;
+import maths.GVector;
 
 public class Player extends Entity {
 
@@ -22,7 +23,7 @@ public class Player extends Entity {
         currentWeapon.setBulletType(BulletType.PROJECTILE_BULLET);
         currentWeapon.setTraceType(TraceType.SINGLE);
         currentWeapon.setDamage(100);
-        currentWeapon.setVelocity(10);
+        currentWeapon.setVelocity(new GVector(10, 0)); //generic
     }
 
     public void tryAttack() { //attack stuff here ettc etc
@@ -32,5 +33,13 @@ public class Player extends Entity {
         else {
             System.out.println("cannot attack");
         }
+    }
+
+    public void setCanAttack(boolean canAttack) {
+        this.canAttack = canAttack;
+    }
+
+    public boolean isCanAttack() {
+        return this.canAttack;
     }
 }

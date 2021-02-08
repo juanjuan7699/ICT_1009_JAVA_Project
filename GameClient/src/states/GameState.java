@@ -7,7 +7,9 @@ import rendering.Renderer;
 import rendering.Texture;
 import structs.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static org.lwjgl.glfw.GLFW.*;
@@ -15,7 +17,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 
 public class GameState implements State {
     private HashMap<String, Entity> players; //place all players in this area, can also include max players per session
-    private Entity[] enemies;
+    private List<Entity> renderQueue; //the rest of the stuff that are not players here
 
     private float gameTime; //timer
     private int totalScore;
@@ -31,6 +33,7 @@ public class GameState implements State {
         currentState = GState.STARTUP;
 
         players = new HashMap<>();
+        renderQueue = new ArrayList<>();
     }
 
     public void testAddPlayer() {
@@ -52,6 +55,10 @@ public class GameState implements State {
 
     public void addPlayerToRenderQueue(Player player) {
         players.put(player.getUID(), player);
+    }
+
+    public void addToRenderQueue(Entity any) {
+        renderQueue.add(any);
     }
 
     public Player getPlayerByID(String UID) {
@@ -92,6 +99,18 @@ public class GameState implements State {
         if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
             players.get("1").tryMoveInput(4);
         }
+
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS && ((Player)players.get("1")).isCanAttack()) {
+            Bullet bullet = new Bullet();
+            bullet.setCurrentLocation(players.get("1").getCurrentLocation());
+            bullet.setVelocity(new GVector(8, 0));
+            addToRenderQueue(bullet); // must remove later on, it will cause mem leaks if not
+            ((Player)players.get("1")).setCanAttack(false);
+        }
+
+        if (glfwGetKey(window, GLFW_KEY_R) == GLFW_RELEASE) {
+            ((Player)players.get("1")).setCanAttack(true);
+        }
     }
 
     @Override
@@ -105,7 +124,7 @@ public class GameState implements State {
 
 
         //render here TODO: add all the animations here
-        for (Map.Entry<String, Entity> entities : players.entrySet()) {
+        for (Map.Entry<String, Entity> entities : players.entrySet()) { //RENDERING PLAYERS ONLY
             renderer.begin();
 
             Entity entity = entities.getValue();
@@ -116,6 +135,18 @@ public class GameState implements State {
             renderer.end();
 
             entity.renderTextData(renderer); //always render text after ending previous renderer
+        }
+
+        for (Entity entity : renderQueue) { //RENDERING EVERYTHING ELSE : yes they look the same but they are separate for gamestate purposes
+            renderer.begin();
+
+            texture = entity.getSprite();
+            texture.bind();
+            entity.render(renderer);
+
+            renderer.end();
+
+            entity.renderTextData(renderer);
         }
         //end render here
 
