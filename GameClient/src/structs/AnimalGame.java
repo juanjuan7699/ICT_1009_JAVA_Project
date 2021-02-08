@@ -80,6 +80,9 @@ public class AnimalGame {
     public void initStates() {
         state.exit();
         state.enter(); //re init
+
+        //debug
+        state.testAddPlayer();
     }
 
     public void gameLoop() {
@@ -117,7 +120,7 @@ public class AnimalGame {
             timer.update();
 
             //TODO debug stuff
-            renderer.drawText("FPS: " + timer.getFPS() + " | UPS: " + timer.getUPS(), 5, 25);
+            renderer.drawText("FPS: " + timer.getFPS() + " | Tickrate: " + timer.getUPS(), 5, 25);
             renderer.drawText("Context: " + (AnimalGame.isDefaultContext() ? "3.2 core" : "2.1"), 5, 5);
 
             /* Update window to show the new screen */

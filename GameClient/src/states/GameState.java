@@ -2,6 +2,7 @@ package states;
 
 import enums.GState;
 import maths.GVector;
+import org.lwjgl.glfw.GLFW;
 import rendering.Renderer;
 import rendering.Texture;
 import structs.*;
@@ -9,6 +10,7 @@ import structs.*;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.glClearColor;
 
 public class GameState implements State {
@@ -27,9 +29,28 @@ public class GameState implements State {
     public GameState(Renderer renderer) {
         this.renderer = renderer;
         currentState = GState.STARTUP;
+
+        players = new HashMap<>();
     }
 
-    public void addPlayer(Player player) {
+    public void testAddPlayer() {
+        //TODO make not debug
+        Player player = new Player();
+        player.setUID("1");
+        player.setSprite(Texture.loadTexture("resources/color2.png"));
+        player.setColor(Color.WHITE);
+        player.setCurrentLocation(new GVector(50,80));
+        player.setName("My aasdasd name");
+        addPlayerToRenderQueue(player);
+
+        Player player2 = new Player();
+        player2.setSprite(Texture.loadTexture("resources/color3.png"));
+        player2.setColor(Color.WHITE);
+        player2.setCurrentLocation(new GVector(300,200));
+        addPlayerToRenderQueue(player2);
+    }
+
+    public void addPlayerToRenderQueue(Player player) {
         players.put(player.getUID(), player);
     }
 
@@ -57,35 +78,54 @@ public class GameState implements State {
 
     @Override
     public void input() {
-        //inout here
+        //TODO debug testing only
+        long window = GLFW.glfwGetCurrentContext();
+        if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
+            players.get("1").tryMoveInput(1);
+        }
+        if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
+            players.get("1").tryMoveInput(2);
+        }
+        if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
+            players.get("1").tryMoveInput(3);
+        }
+        if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
+            players.get("1").tryMoveInput(4);
+        }
     }
 
     @Override
     public void update(float delta) {
-
+        //update scores here
     }
 
     @Override
     public void render(float alpha) {
         renderer.clear(); //clear before render loop
 
-        texture.bind();
-        renderer.begin();
 
         //render here TODO: add all the animations here
-        renderer.drawTextureRegion(texture, 50, 50, 0, 0, 512, 512, Color.GREEN);
-        //end render here TODO
+        for (Map.Entry<String, Entity> entities : players.entrySet()) {
+            renderer.begin();
 
-        renderer.end();
+            Entity entity = entities.getValue();
+            texture = entity.getSprite();
+            texture.bind();
+            entity.render(renderer);
+
+            renderer.end();
+
+            entity.renderTextData(renderer); //always render text after ending previous renderer
+        }
+        //end render here
 
         //render text here !!must render after renderer.end() because it starts its own render loop
-        renderer.drawText("things are rendering", 5, 500);
         renderer.drawText("total score: " + totalScore, 5, 520);
     }
 
     @Override
     public void enter() {
-        texture = Texture.loadTexture("resources/cat.png");
+        //texture = Texture.loadTexture("resources/cat.png");
         glClearColor(0f, 0.73f, 0.83f, 1f);
     }
 

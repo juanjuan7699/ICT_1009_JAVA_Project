@@ -1,6 +1,7 @@
 package structs;
 
 import maths.GVector;
+import rendering.Renderer;
 import rendering.Texture;
 
 import java.util.UUID;
@@ -10,7 +11,7 @@ public class Entity {
     private GVector currentLocation; //2f
     private GVector targetLocation; //2f //you can lerp (linear interpolation) from currentLocation to targetLocation for e.g. homing missiles
     private GVector spawnLocation; //2f
-    private GVector hitBox; //4f
+    private GVector hitBox; //2f-4f
     private EntityType entityType;
 
     private float currentHealth;
@@ -27,6 +28,7 @@ public class Entity {
     private String name;
 
     private Texture sprite;
+    private Color color;
 
     public Entity(EntityType entityType) { //generic
         this.entityType = entityType;
@@ -48,6 +50,8 @@ public class Entity {
         this.UID = UUID.randomUUID().toString();
         this.name = UID;
         this.sprite = Texture.loadTexture("resources/cat.png");
+        this.color = Color.BLACK;
+        this.name = "GENERIC_ENTITY";
     }
 
     public boolean hitTest(Entity target) { //check hitbox and the other object to see if it collides
@@ -83,6 +87,40 @@ public class Entity {
         //undraw only, java will auto garbage collect
         this.visible = false; //instant vanish
 
+    }
+
+    public void render(Renderer renderer) {
+
+        //render the player image
+        //regX and regY is the starting position of the PNG image to render
+        renderer.drawTextureRegion(sprite, this.currentLocation.getX(), this.currentLocation.getY(), 0, 0, sprite.getWidth(), sprite.getHeight(), this.getColor());
+
+        //render health above image
+        //should be a custom made image
+
+    }
+
+    public void renderTextData(Renderer renderer) {
+        //render name below image
+        int mid = renderer.getTextWidth(this.name)/4;
+        renderer.drawText(this.name, this.currentLocation.getX()-mid, this.currentLocation.getY()-20);
+    }
+
+    public void tryMoveInput(int direction) { //add more later
+        switch(direction) {
+            case 1:
+                this.setCurrentLocation(this.getCurrentLocation().add(new GVector(0, 5)));
+                break;
+            case 2:
+                this.setCurrentLocation(this.getCurrentLocation().add(new GVector(0, -5)));
+                break;
+            case 3:
+                this.setCurrentLocation(this.getCurrentLocation().add(new GVector(-5, 0)));
+                break;
+            case 4:
+                this.setCurrentLocation(this.getCurrentLocation().add(new GVector(5, 0)));
+                break;
+        }
     }
 
     public boolean isAlive() {
@@ -227,5 +265,13 @@ public class Entity {
 
     public void setCombat(boolean combat) {
         this.combat = combat;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 }
