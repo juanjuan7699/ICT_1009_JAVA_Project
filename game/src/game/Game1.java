@@ -73,10 +73,10 @@ public class Game1 {
 			
 			titleNamePanel = new JPanel();
 			titleNamePanel.setBounds(450, 100, 600, 100); //startpoint(x, y), x-width, height
-			titleNamePanel.setBackground(Color.black);
+			titleNamePanel.setBackground(Color.cyan);
 			
 			titleNameLabel = new JLabel("Animal Hunter 2k21");
-			titleNameLabel.setForeground(Color.yellow);
+			titleNameLabel.setForeground(Color.black);
 			titleNameLabel.setVisible(true);
 			
 //			startButtonPanel = new JPanel();
@@ -92,7 +92,7 @@ public class Game1 {
 			
 			p1ButtonPanel = new JPanel();
 			p1ButtonPanel.setBounds(500, 300, 200, 50); //startpoint(x, y), x-width, height
-			p1ButtonPanel.setBackground(Color.black);
+			p1ButtonPanel.setBackground(Color.cyan);
 			
 			p1Button = new JButton("Single Player");
 			p1Button.setBackground(Color.pink);
@@ -101,7 +101,7 @@ public class Game1 {
 			
 			p1p2ButtonPanel = new JPanel();
 			p1p2ButtonPanel.setBounds(790, 300, 200, 50); //startpoint(x, y), x-width, height
-			p1p2ButtonPanel.setBackground(Color.black);
+			p1p2ButtonPanel.setBackground(Color.cyan);
 			
 			p1p2Button = new JButton("Multi-Player");
 			p1p2Button.setBackground(Color.magenta);
@@ -110,7 +110,7 @@ public class Game1 {
 			
 			instructionButtonPanel = new JPanel();
 			instructionButtonPanel.setBounds(650, 400, 200, 50); //startpoint(x, y), x-width, height
-			instructionButtonPanel.setBackground(Color.black);
+			instructionButtonPanel.setBackground(Color.cyan);
 			
 			instructionButton = new JButton("How To Play");
 			instructionButton.setBackground(Color.orange);
@@ -123,10 +123,10 @@ public class Game1 {
 			
 			leaderboardButtonPanel = new JPanel();
 			leaderboardButtonPanel.setBounds(650, 500, 200, 50); //startpoint(x, y), x-width, height
-			leaderboardButtonPanel.setBackground(Color.black);
+			leaderboardButtonPanel.setBackground(Color.cyan);
 			
 			leaderboardButton = new JButton("LeaderBoard");
-			leaderboardButton.setBackground(Color.cyan);
+			leaderboardButton.setBackground(Color.blue);
 			leaderboardButton.setForeground(Color.black);
 			leaderboardButton.setFont(buttonFont); //add font to button
 //			leaderboardButtonPanel.setBounds(650, 600, 200, 50); //startpoint(x, y), x-width, height
@@ -134,7 +134,7 @@ public class Game1 {
 			
 			quitButtonPanel = new JPanel();
 			quitButtonPanel.setBounds(650, 600, 200, 50); //startpoint(x, y), x-width, height
-			quitButtonPanel.setBackground(Color.black);
+			quitButtonPanel.setBackground(Color.cyan);
 			
 			quitButton = new JButton("Quit");
 			quitButton.setBackground(Color.red);
@@ -184,7 +184,7 @@ public class Game1 {
 			//instructionScreenFrame.setExtendedState(JFrame.MAXIMIZED_BOTH); 
 			//instructionScreenFrame.setUndecorated(true);
 			instructionScreenFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			instructionScreenFrame.getContentPane().setBackground(Color.black);
+			instructionScreenFrame.getContentPane().setBackground(Color.cyan);
 			instructionScreenFrame.setLayout(null);
 			instructionScreenFrame.setVisible(true);
 			con = instructionScreenFrame.getContentPane();
@@ -192,24 +192,25 @@ public class Game1 {
 			
 			isp = new JPanel();
 			isp.setBounds(100, 50, 600, 100);
-			isp.setBackground(Color.black);
+			isp.setBackground(Color.cyan);
 			con.add(isp); // add panel to frame
 			
 			isl = new JLabel("How To Play");
-			isl.setForeground(Color.yellow);
+			isl.setForeground(Color.black);
 			isl.setVisible(true);
 			isl.setFont(titleFont); // add font to label
 			isp.add(isl); // add label to panel
 			
 			isp2 = new JPanel();
-			isp2.setBounds(100, 200, 300, 200);
-			isp2.setBackground(Color.black);
+			isp2.setBounds(100, 200, 320, 400);
+			isp2.setBackground(Color.cyan);
 			con.add(isp2); // add panel to frame
 			
-			instructionTextArea = new JTextArea("Single Player\n" + "\nMove Left: Left Arrow\n" + "Move Right: Right Arrow\n" + "Shoot: Spacebar");
-			instructionTextArea.setBounds(100, 200, 300, 200);
-			instructionTextArea.setBackground(Color.black);
-			instructionTextArea.setForeground(Color.yellow);
+			instructionTextArea = new JTextArea("Single Player\n" + "\nMove Up: UP Arrow\n" + "Move Down: Down Arrow\n" + "Move Left: Left Arrow\n" 
+			+ "Move Right: Right Arrow\n" + "Shoot: Spacebar");
+			instructionTextArea.setBounds(100, 200, 320, 400);
+			instructionTextArea.setBackground(Color.cyan);
+			instructionTextArea.setForeground(Color.black);
 			instructionTextArea.setFont(buttonFont);
 			instructionTextArea.setLineWrap(true);
 			instructionTextArea.setEditable(false);
@@ -217,14 +218,15 @@ public class Game1 {
 			isp2.add(instructionTextArea); // add textarea to panel
 			
 			isp3 = new JPanel();
-			isp3.setBounds(500, 200, 250, 200);
-			isp3.setBackground(Color.black);
+			isp3.setBounds(500, 200, 350, 400);
+			isp3.setBackground(Color.cyan);
 			con.add(isp3); // add panel to frame
 			
-			instructionTextArea2 = new JTextArea("Multiplayer\n" + "\nPlayer 1\n" + "Move Left: 'A'\n" + "Move Right: 'D'\n" + "Shoot: Spacebar");
-			instructionTextArea2.setBounds(500, 200, 250, 200);
-			instructionTextArea2.setBackground(Color.black);
-			instructionTextArea2.setForeground(Color.yellow);
+			instructionTextArea2 = new JTextArea("Multiplayer\n" + "\nPlayer 1\n" + "Move Up: 'Q' Arrow\n" + "Move Down: 'S' Arrow\n" + 
+			"Move Left: 'A'\n" + "Move Right: 'D'\n" + "Shoot: Spacebar");
+			instructionTextArea2.setBounds(500, 200, 350, 400);
+			instructionTextArea2.setBackground(Color.cyan);
+			instructionTextArea2.setForeground(Color.black);
 			instructionTextArea2.setFont(buttonFont);
 			instructionTextArea2.setLineWrap(true);
 			instructionTextArea2.setEditable(false);
@@ -232,14 +234,15 @@ public class Game1 {
 			isp3.add(instructionTextArea2); // add textarea to panel
 			
 			isp4 = new JPanel();
-			isp4.setBounds(750, 200, 300, 200);
-			isp4.setBackground(Color.black);
+			isp4.setBounds(850, 200, 350, 400);
+			isp4.setBackground(Color.cyan);
 			con.add(isp4); // add panel to frame
 			
-			instructionTextArea3 = new JTextArea("\n\nPlayer 2\n" + "Move Left: Left Arrow\n" + "Move Right: Right Arrow\n" + "Shoot: Enter key");
-			instructionTextArea3.setBounds(750, 200, 300, 200);
-			instructionTextArea3.setBackground(Color.black);
-			instructionTextArea3.setForeground(Color.yellow);
+			instructionTextArea3 = new JTextArea("\n\nPlayer 2\n" + "Move Up: UP Arrow\n" + "Move Down: Down Arrow\n" + "Move Left: Left Arrow\n" 
+			+ "Move Right: Right Arrow\n" + "Shoot: Enter key");
+			instructionTextArea3.setBounds(850, 200, 350, 400);
+			instructionTextArea3.setBackground(Color.cyan);
+			instructionTextArea3.setForeground(Color.black);
 			instructionTextArea3.setFont(buttonFont);
 			instructionTextArea3.setLineWrap(true);
 			instructionTextArea3.setEditable(false);
