@@ -1,0 +1,111 @@
+
+images.png
+size: 8192, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Starscape00
+  rotate: false
+  xy: 2160, 128
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+Starscape01
+  rotate: false
+  xy: 0, 128
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+Starscape02
+  rotate: false
+  xy: 3240, 128
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+Starscape03
+  rotate: false
+  xy: 1080, 128
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+bear
+  rotate: false
+  xy: 0, 0
+  size: 162, 128
+  orig: 162, 128
+  offset: 0, 0
+  index: -1
+crocodile
+  rotate: false
+  xy: 306, 0
+  size: 129, 128
+  orig: 129, 128
+  offset: 0, 0
+  index: -1
+darkPurpleStarscape
+  rotate: false
+  xy: 4320, 1792
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+duck
+  rotate: false
+  xy: 435, 0
+  size: 129, 128
+  orig: 129, 128
+  offset: 0, 0
+  index: -1
+goat
+  rotate: false
+  xy: 4320, 1621
+  size: 184, 171
+  orig: 184, 171
+  offset: 0, 0
+  index: -1
+laserOrange02
+  rotate: false
+  xy: 4576, 1835
+  size: 13, 37
+  orig: 13, 37
+  offset: 0, 0
+  index: -1
+laserOrange11
+  rotate: false
+  xy: 4504, 1755
+  size: 37, 37
+  orig: 37, 37
+  offset: 0, 0
+  index: -1
+pig
+  rotate: false
+  xy: 162, 0
+  size: 144, 128
+  orig: 144, 128
+  offset: 0, 0
+  index: -1
+rabbit
+  rotate: false
+  xy: 4576, 1872
+  size: 129, 176
+  orig: 129, 176
+  offset: 0, 0
+  index: -1
+snake
+  rotate: false
+  xy: 4320, 1479
+  size: 128, 142
+  orig: 128, 142
+  offset: 0, 0
+  index: -1
+soldier1_gun
+  rotate: false
+  xy: 564, 76
+  size: 43, 52
+  orig: 43, 52
+  offset: 0, 0
+  index: -1
