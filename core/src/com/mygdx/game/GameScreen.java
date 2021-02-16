@@ -35,13 +35,15 @@ class GameScreen implements Screen {
 //	private int backgroundOffset;
     private float[] backgroundOffsets = {0, 0, 0, 0};
     private float backgroundMaxScrollingSpeed;
+    private float timeBetweenEnemySpawns = 3f;
+    private float enemySpawnTimer = 0;
 
     //World parameters
     private final int WORLD_WIDTH = 72;
     private final int WORLD_HEIGHT = 128;
 
     // Game Objects
-    private Animals enemyAnimal;
+    private LinkedList<Animals> enemyAnimalList;
     private Player player;
     private LinkedList<Laser> laserLinkedList;
 
@@ -80,7 +82,7 @@ class GameScreen implements Screen {
                 0.4f, 4, 90, .5f,
                 playerTextureRegion, laserTextureRegion);
 
-        enemyAnimal = new Animals(48, 10, 10, MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT - 5, bearTextureRegion);
+        enemyAnimalList = new LinkedList<>();
 
         laserLinkedList = new LinkedList<>();
 
@@ -91,17 +93,22 @@ class GameScreen implements Screen {
     public void render(float deltaTime) {
         batch.begin();
 
-        detectInput(deltaTime);
-        moveEnemies(deltaTime);
-
-        player.update(deltaTime);
-        enemyAnimal.update(deltaTime);
-
         //Scrolling background
-		renderBackground(deltaTime);
+        renderBackground(deltaTime);
 
-        // Animals
-        enemyAnimal.draw(batch);
+        detectInput(deltaTime);
+        player.update(deltaTime);
+
+        spawnEnemyAnimals(deltaTime);
+
+        ListIterator<Animals> enemyAnimalListIterator = enemyAnimalList.listIterator();
+        while (enemyAnimalListIterator.hasNext()) {
+            Animals enemyAnimal = enemyAnimalListIterator.next();
+            moveEnemy(enemyAnimal, deltaTime);
+            enemyAnimal.update(deltaTime);
+            // Animals
+            enemyAnimal.draw(batch);
+        }
 
         // Player
         player.draw(batch);
@@ -117,6 +124,17 @@ class GameScreen implements Screen {
 //        renderExplosions(deltaTime);
 
         batch.end();
+    }
+
+    private void spawnEnemyAnimals(float deltaTime) {
+        enemySpawnTimer += deltaTime;
+
+        if (enemySpawnTimer > timeBetweenEnemySpawns) {
+            enemyAnimalList.add(new Animals(48, 10,
+                    10, MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5,
+                    WORLD_HEIGHT - 5, bearTextureRegion));
+            enemySpawnTimer -= timeBetweenEnemySpawns;
+        }
     }
 
     private void detectInput(float deltaTime) {
@@ -153,7 +171,7 @@ class GameScreen implements Screen {
         // Touch Input (Mouse)
     }
 
-    private void moveEnemies(float deltaTime) {
+    private void moveEnemy(Animals enemyAnimal, float deltaTime) {
         // Strategy: determine the max distance the ship can move
 
         float leftLimit, rightLimit, upLimit, downLimit;
@@ -176,13 +194,19 @@ class GameScreen implements Screen {
 
     private void detectCollisions(){
         //Check if laser intersects animal
-        ListIterator<Laser> iterator = laserLinkedList.listIterator();
-        while(iterator.hasNext()) {
-            Laser laser = iterator.next();
-            if(enemyAnimal.intersects(laser.boundingBox)){
-                // Touches animal
-                enemyAnimal.hit(laser);
-                iterator.remove();
+        ListIterator<Laser> laserListIterator = laserLinkedList.listIterator();
+        while(laserListIterator.hasNext()) {
+            Laser laser = laserListIterator.next();
+            ListIterator<Animals> enemyAnimalListIterator = enemyAnimalList.listIterator();
+            while (enemyAnimalListIterator.hasNext()) {
+                Animals enemyAnimal = enemyAnimalListIterator.next();
+
+                if (enemyAnimal.intersects(laser.boundingBox)){
+                    // Touches animal
+                    enemyAnimal.hit(laser);
+                    laserListIterator.remove();
+                    break;
+                }
             }
         }
     }
@@ -198,7 +222,6 @@ class GameScreen implements Screen {
             for (Laser laser : lasers) {
                 laserLinkedList.add(laser);
             }
-
         }
         // Draw lasers
         // Remove old lasers
