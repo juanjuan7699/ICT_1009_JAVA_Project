@@ -1,5 +1,7 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -74,7 +76,7 @@ class GameScreen implements Screen {
 
         // Setup game objects
         player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
-                10, 2,
+                10, 48,
                 0.4f, 4, 90, .5f,
                 playerTextureRegion, laserTextureRegion);
 
@@ -88,6 +90,8 @@ class GameScreen implements Screen {
     @Override
     public void render(float deltaTime) {
         batch.begin();
+
+        detectInput(deltaTime);
 
         player.update(deltaTime);
         enemyAnimal.update(deltaTime);
@@ -112,6 +116,40 @@ class GameScreen implements Screen {
 //        renderExplosions(deltaTime);
 
         batch.end();
+    }
+
+    private void detectInput(float deltaTime) {
+        // Keyboard Input
+
+        // Strategy: determine the max distance the ship can move
+        // Check each key that matters and move accordingly
+
+        float leftLimit, rightLimit, upLimit, downLimit;
+        leftLimit = -player.boundingBox.x;
+        downLimit = -player.boundingBox.y;
+        rightLimit = WORLD_WIDTH - player.boundingBox.x - player.boundingBox.width;
+        upLimit = WORLD_HEIGHT/2 - player.boundingBox.y - player.boundingBox.height;
+
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rightLimit > 0) {
+//            float xChange = player.movementSpeed * deltaTime;
+//            xChange = Math.min(xChange, rightLimit);
+//            player.translate(xChange, 0f);
+
+            player.translate(Math.min(player.movementSpeed * deltaTime, rightLimit), 0f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP) && upLimit > 0) {
+            player.translate(0f, Math.min(player.movementSpeed * deltaTime, upLimit));
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT) && leftLimit < 0) {
+            player.translate(Math.max(-player.movementSpeed * deltaTime, leftLimit), 0f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && downLimit < 0) {
+            player.translate(0f, Math.max(-player.movementSpeed * deltaTime, downLimit));
+        }
+        // Touch Input (Mouse)
     }
 
     private void detectCollisions(){
