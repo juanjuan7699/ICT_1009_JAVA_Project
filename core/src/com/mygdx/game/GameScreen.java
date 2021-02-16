@@ -3,13 +3,11 @@ package com.mygdx.game;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
-import com.sun.jdi.connect.spi.TransportService;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
@@ -41,8 +39,8 @@ class GameScreen implements Screen {
     private final int WORLD_HEIGHT = 128;
 
     // Game Objects
-    private animals enemyAnimal;
-    private player player;
+    private Animals enemyAnimal;
+    private Player player;
     private LinkedList<Laser> laserLinkedList;
 
     GameScreen() {
@@ -75,12 +73,12 @@ class GameScreen implements Screen {
         laserTextureRegion = textureAtlas.findRegion("laserOrange02");
 
         // Setup game objects
-        player = new player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
+        player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
                 10, 2,
                 0.4f, 4, 90, .5f,
                 playerTextureRegion, laserTextureRegion);
 
-        enemyAnimal = new animals(2, 10, 10, WORLD_WIDTH / 2, WORLD_HEIGHT * 3 / 4, bearTextureRegion);
+        enemyAnimal = new Animals(2, 10, 10, WORLD_WIDTH / 2, WORLD_HEIGHT * 3 / 4, bearTextureRegion);
 
         laserLinkedList = new LinkedList<>();
 
@@ -92,26 +90,49 @@ class GameScreen implements Screen {
         batch.begin();
 
         player.update(deltaTime);
-
+        enemyAnimal.update(deltaTime);
 
         //Scrolling background
-//		backgroundOffset ++;
-//		if(backgroundOffset % WORLD_HEIGHT == 0) {
-//			backgroundOffset = 0;
-//		}
-//
-//		batch.draw(background, 0, -backgroundOffset, WORLD_WIDTH, WORLD_HEIGHT);
-//		batch.draw(background, 0, -backgroundOffset + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
-
-        renderBackground(deltaTime);
+		renderBackground(deltaTime);
 
         // Animals
         enemyAnimal.draw(batch);
 
         // Player
         player.draw(batch);
+        player.draw(batch);
 
         // Lasers
+        renderLasers(deltaTime);
+
+        //Detect collisions
+        detectCollisions();
+
+        // Explosions
+//        renderExplosions(deltaTime);
+
+        batch.end();
+    }
+
+    private void detectCollisions(){
+        //Check if laser intersects animal
+        ListIterator<Laser> iterator = laserLinkedList.listIterator();
+        while(iterator.hasNext()) {
+            Laser laser = iterator.next();
+            if(enemyAnimal.intersects(laser.boundingBox)){
+                // Touches animal
+                enemyAnimal.hit(laser);
+                iterator.remove();
+            }
+        }
+    }
+
+//    private void renderExplosions(float deltaTime){
+//
+//    }
+
+
+    private void renderLasers(float deltaTime){
         // Create new lasers
         if (player.canFireLaser()) {
             Laser[] lasers = player.fireLasers();
@@ -126,15 +147,11 @@ class GameScreen implements Screen {
         while(iterator.hasNext()) {
             Laser laser = iterator.next();
             laser.draw(batch);
-            laser.yPosition += laser.movementSpeed*deltaTime;
-            if (laser.yPosition > WORLD_HEIGHT) {
+            laser.boundingBox.y += laser.movementSpeed*deltaTime;
+            if (laser.boundingBox.y + laser.boundingBox.height < 0) {
                 iterator.remove();
             }
         }
-
-        // Explosions
-
-        batch.end();
     }
 
     private void renderBackground(float deltaTime) {

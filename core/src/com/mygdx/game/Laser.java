@@ -2,14 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 public class Laser {
 
-
-
     // Positions and dimensions
-    float xPosition, yPosition; // Bottom centre of the laser
-    float width, height;
+    Rectangle boundingBox;
 
     // Laser characteristics
     float movementSpeed; // worldunits/second
@@ -17,18 +15,15 @@ public class Laser {
     // Graphics
     TextureRegion textureRegion;
 
-    public Laser(float xPosition, float yPosition,
+    public Laser(float xCentre, float yBottom,
                  float width, float height, float movementSpeed,
                  TextureRegion textureRegion) {
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
-        this.width = width;
-        this.height = height;
+        this.boundingBox = new Rectangle(xCentre - width / 2, yBottom, width, height);
         this.movementSpeed = movementSpeed;
         this.textureRegion = textureRegion;
     }
 
     public void draw(Batch batch) {
-        batch.draw(textureRegion, xPosition - width/2, yPosition, width, height);
+        batch.draw(textureRegion, boundingBox.x, boundingBox.y, boundingBox.width, boundingBox.height);
     }
 }
