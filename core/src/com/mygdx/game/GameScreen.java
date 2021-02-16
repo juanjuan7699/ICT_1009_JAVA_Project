@@ -58,10 +58,14 @@ class GameScreen implements Screen {
         textureAtlas = new TextureAtlas("images.atlas");
 
         backgrounds = new TextureRegion[4];
-        backgrounds[0] = textureAtlas.findRegion("Starscape00");
-        backgrounds[1] = textureAtlas.findRegion("Starscape01");
-        backgrounds[2] = textureAtlas.findRegion("Starscape02");
-        backgrounds[3] = textureAtlas.findRegion("Starscape03");
+        backgrounds[0] = textureAtlas.findRegion("grassBackground");
+        backgrounds[1] = textureAtlas.findRegion("grassBackground");
+        backgrounds[2] = textureAtlas.findRegion("grassBackground");
+        backgrounds[3] = textureAtlas.findRegion("grassBackground");
+//        backgrounds[0] = textureAtlas.findRegion("Starscape00");
+//        backgrounds[1] = textureAtlas.findRegion("Starscape01");
+//        backgrounds[2] = textureAtlas.findRegion("Starscape02");
+//        backgrounds[3] = textureAtlas.findRegion("Starscape03");
 
         backgroundMaxScrollingSpeed = (float) (WORLD_HEIGHT) / 4;
 
