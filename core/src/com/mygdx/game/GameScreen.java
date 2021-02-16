@@ -80,7 +80,7 @@ class GameScreen implements Screen {
                 0.4f, 4, 90, .5f,
                 playerTextureRegion, laserTextureRegion);
 
-        enemyAnimal = new Animals(2, 10, 10, WORLD_WIDTH / 2, WORLD_HEIGHT * 3 / 4, bearTextureRegion);
+        enemyAnimal = new Animals(48, 10, 10, MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT - 5, bearTextureRegion);
 
         laserLinkedList = new LinkedList<>();
 
@@ -92,6 +92,7 @@ class GameScreen implements Screen {
         batch.begin();
 
         detectInput(deltaTime);
+        moveEnemies(deltaTime);
 
         player.update(deltaTime);
         enemyAnimal.update(deltaTime);
@@ -128,7 +129,7 @@ class GameScreen implements Screen {
         leftLimit = -player.boundingBox.x;
         downLimit = -player.boundingBox.y;
         rightLimit = WORLD_WIDTH - player.boundingBox.x - player.boundingBox.width;
-        upLimit = WORLD_HEIGHT/2 - player.boundingBox.y - player.boundingBox.height;
+        upLimit = (float)WORLD_HEIGHT/2 - player.boundingBox.y - player.boundingBox.height;
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rightLimit > 0) {
 //            float xChange = player.movementSpeed * deltaTime;
@@ -152,6 +153,27 @@ class GameScreen implements Screen {
         // Touch Input (Mouse)
     }
 
+    private void moveEnemies(float deltaTime) {
+        // Strategy: determine the max distance the ship can move
+
+        float leftLimit, rightLimit, upLimit, downLimit;
+        leftLimit = -enemyAnimal.boundingBox.x;
+        downLimit = (float)WORLD_HEIGHT/2 - enemyAnimal.boundingBox.y;
+        rightLimit = WORLD_WIDTH - enemyAnimal.boundingBox.x - enemyAnimal.boundingBox.width;
+        upLimit = WORLD_HEIGHT - enemyAnimal.boundingBox.y - enemyAnimal.boundingBox.height;
+
+        float xMove = enemyAnimal.getDirectionVector().x * enemyAnimal.movementSpeed * deltaTime;
+        float yMove = enemyAnimal.getDirectionVector().y * enemyAnimal.movementSpeed * deltaTime;
+
+        if (xMove > 0) xMove = Math.min(xMove, rightLimit);
+        else xMove = Math.max(xMove,leftLimit);
+
+        if (yMove > 0) yMove = Math.min(yMove, upLimit);
+        else yMove = Math.max(yMove,downLimit);
+
+        enemyAnimal.translate(xMove,yMove);
+    }
+
     private void detectCollisions(){
         //Check if laser intersects animal
         ListIterator<Laser> iterator = laserLinkedList.listIterator();
@@ -168,7 +190,6 @@ class GameScreen implements Screen {
 //    private void renderExplosions(float deltaTime){
 //
 //    }
-
 
     private void renderLasers(float deltaTime){
         // Create new lasers

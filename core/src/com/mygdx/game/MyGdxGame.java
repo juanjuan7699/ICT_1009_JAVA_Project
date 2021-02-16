@@ -2,9 +2,13 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 
+import java.util.Random;
+
 public class MyGdxGame extends Game {
 
 	GameScreen gameScreen;
+
+	public static Random random = new Random();
 
 	@Override
 	public void create() {
