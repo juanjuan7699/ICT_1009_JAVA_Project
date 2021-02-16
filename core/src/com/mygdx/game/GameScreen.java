@@ -9,81 +9,92 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.sun.jdi.connect.spi.TransportService;
+
+import java.util.LinkedList;
+import java.util.ListIterator;
 
 class GameScreen implements Screen {
 
-	//Screen
-	private Camera camera;
-	private Viewport viewport;
-	
-	//Graphics
-	private SpriteBatch batch;
-//	private TextureAtlas textureAtlas;
+    //Screen
+    private Camera camera;
+    private Viewport viewport;
+
+    //Graphics
+    private SpriteBatch batch;
+    //	private TextureAtlas textureAtlas;
 //	private Texture background;
-	private TextureAtlas textureAtlas;
-	private float backgroundHeight; //  of background in world units
-	private TextureRegion[] backgrounds;
-	private TextureRegion playerTextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
-	laserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion;
+    private TextureAtlas textureAtlas;
+    private float backgroundHeight; //  of background in world units
+    private TextureRegion[] backgrounds;
+    private TextureRegion playerTextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
+            laserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion;
 
 
-
-	//Timing
+    //Timing
 //	private int backgroundOffset;
-	private float[] backgroundOffsets = {0,0,0,0};
-	private float backgroundMaxScrollingSpeed;
+    private float[] backgroundOffsets = {0, 0, 0, 0};
+    private float backgroundMaxScrollingSpeed;
 
-	//World parameters
-	private final int WORLD_WIDTH = 72;
-	private final int WORLD_HEIGHT = 128;
+    //World parameters
+    private final int WORLD_WIDTH = 72;
+    private final int WORLD_HEIGHT = 128;
 
-	// Game Objects
-	private animals enemyAnimal;
-	private player player;
-	
-	GameScreen(){
-		camera = new OrthographicCamera();
-		viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
-		
+    // Game Objects
+    private animals enemyAnimal;
+    private player player;
+    private LinkedList<Laser> laserLinkedList;
+
+    GameScreen() {
+        camera = new OrthographicCamera();
+        viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
+
 //		background = new Texture("darkPurpleStarscape.png");
 //		backgroundOffset = 0;
 
-		// Setup texture atlas
-		textureAtlas = new TextureAtlas("images.atlas");
+        // Setup texture atlas
+        textureAtlas = new TextureAtlas("images.atlas");
 
-		backgrounds = new TextureRegion[4];
-		backgrounds[0] = textureAtlas.findRegion("Starscape00");
-		backgrounds[1] = textureAtlas.findRegion("Starscape01");
-		backgrounds[2] = textureAtlas.findRegion("Starscape02");
-		backgrounds[3] = textureAtlas.findRegion("Starscape03");
+        backgrounds = new TextureRegion[4];
+        backgrounds[0] = textureAtlas.findRegion("Starscape00");
+        backgrounds[1] = textureAtlas.findRegion("Starscape01");
+        backgrounds[2] = textureAtlas.findRegion("Starscape02");
+        backgrounds[3] = textureAtlas.findRegion("Starscape03");
 
-		backgroundMaxScrollingSpeed = (float)(WORLD_HEIGHT) / 4;
+        backgroundMaxScrollingSpeed = (float) (WORLD_HEIGHT) / 4;
 
-		// init texture regions
-		playerTextureRegion = textureAtlas.findRegion("soldier1_gun");
-		//playerTextureRegion.;
-		bearTextureRegion = textureAtlas.findRegion("bear");
+        // init texture regions
+        playerTextureRegion = textureAtlas.findRegion("soldier1_gun");
+        bearTextureRegion = textureAtlas.findRegion("bear");
 //		crocTextureRegion = textureAtlas.findRegion("crocodile");
 //		duckTextureRegion = textureAtlas.findRegion("duck");
 //		goatTextureRegion = textureAtlas.findRegion("goat");
 //		pigTextureRegion = textureAtlas.findRegion("pig");
 //		rabbitTextureRegion = textureAtlas.findRegion("rabbit");
 //		snakeTextureRegion = textureAtlas.findRegion("snake");
-		laserTextureRegion = textureAtlas.findRegion("laserOrange02");
+        laserTextureRegion = textureAtlas.findRegion("laserOrange02");
 
-		// Setup game objects
-		player = new player(2, 10, 10,
-				WORLD_WIDTH/2, WORLD_HEIGHT/4, playerTextureRegion);
+        // Setup game objects
+        player = new player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
+                10, 2,
+                0.4f, 4, 90, .5f,
+                playerTextureRegion, laserTextureRegion);
 
-		enemyAnimal = new animals(2, 10, 10, WORLD_WIDTH/2, WORLD_HEIGHT*3/4, bearTextureRegion);
-		batch = new SpriteBatch();
-	}
-	
-	@Override
-	public void render(float deltaTime) {
-		batch.begin();
-		
-		//Scrolling background
+        enemyAnimal = new animals(2, 10, 10, WORLD_WIDTH / 2, WORLD_HEIGHT * 3 / 4, bearTextureRegion);
+
+        laserLinkedList = new LinkedList<>();
+
+        batch = new SpriteBatch();
+    }
+
+    @Override
+    public void render(float deltaTime) {
+        batch.begin();
+
+        player.update(deltaTime);
+
+
+        //Scrolling background
 //		backgroundOffset ++;
 //		if(backgroundOffset % WORLD_HEIGHT == 0) {
 //			backgroundOffset = 0;
@@ -92,63 +103,86 @@ class GameScreen implements Screen {
 //		batch.draw(background, 0, -backgroundOffset, WORLD_WIDTH, WORLD_HEIGHT);
 //		batch.draw(background, 0, -backgroundOffset + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
 
-		renderBackground(deltaTime);
+        renderBackground(deltaTime);
 
-		// Animals
-		enemyAnimal.draw(batch);
+        // Animals
+        enemyAnimal.draw(batch);
 
-		// Player
-		player.draw(batch);
+        // Player
+        player.draw(batch);
 
-		batch.end();
-	}
+        // Lasers
+        // Create new lasers
+        if (player.canFireLaser()) {
+            Laser[] lasers = player.fireLasers();
+            for (Laser laser : lasers) {
+                laserLinkedList.add(laser);
+            }
 
-	private void renderBackground(float deltaTime){
+        }
+        // Draw lasers
+        // Remove old lasers
+        ListIterator<Laser> iterator = laserLinkedList.listIterator();
+        while(iterator.hasNext()) {
+            Laser laser = iterator.next();
+            laser.draw(batch);
+            laser.yPosition += laser.movementSpeed*deltaTime;
+            if (laser.yPosition > WORLD_HEIGHT) {
+                iterator.remove();
+            }
+        }
 
-		backgroundOffsets[0] += deltaTime * backgroundMaxScrollingSpeed / 8;
-		backgroundOffsets[1] += deltaTime * backgroundMaxScrollingSpeed / 4;
-		backgroundOffsets[2] += deltaTime * backgroundMaxScrollingSpeed / 2;
-		backgroundOffsets[3] += deltaTime * backgroundMaxScrollingSpeed;
+        // Explosions
 
-		for(int layer = 0; layer < backgroundOffsets.length; layer++){
-			if(backgroundOffsets[layer] > WORLD_HEIGHT){
-				backgroundOffsets[layer] = 0;
-			}
+        batch.end();
+    }
 
-			batch.draw(backgrounds[layer], 0, -backgroundOffsets[layer], WORLD_WIDTH, WORLD_HEIGHT);
-			batch.draw(backgrounds[layer], 0, -backgroundOffsets[layer] + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
-		}
-	}
+    private void renderBackground(float deltaTime) {
 
-	@Override
-	public void resize(int width, int height) {
-		viewport.update(width, height, true);
-		batch.setProjectionMatrix(camera.combined);
-	}
+        backgroundOffsets[0] += deltaTime * backgroundMaxScrollingSpeed / 8;
+        backgroundOffsets[1] += deltaTime * backgroundMaxScrollingSpeed / 4;
+        backgroundOffsets[2] += deltaTime * backgroundMaxScrollingSpeed / 2;
+        backgroundOffsets[3] += deltaTime * backgroundMaxScrollingSpeed;
 
-	@Override
-	public void pause() {
+        for (int layer = 0; layer < backgroundOffsets.length; layer++) {
+            if (backgroundOffsets[layer] > WORLD_HEIGHT) {
+                backgroundOffsets[layer] = 0;
+            }
 
-	}
+            batch.draw(backgrounds[layer], 0, -backgroundOffsets[layer], WORLD_WIDTH, WORLD_HEIGHT);
+            batch.draw(backgrounds[layer], 0, -backgroundOffsets[layer] + WORLD_HEIGHT, WORLD_WIDTH, WORLD_HEIGHT);
+        }
+    }
 
-	@Override
-	public void resume() {
+    @Override
+    public void resize(int width, int height) {
+        viewport.update(width, height, true);
+        batch.setProjectionMatrix(camera.combined);
+    }
 
-	}
+    @Override
+    public void pause() {
 
-	@Override
-	public void hide() {
+    }
 
-	}
-	
-	@Override
-	public void show() {
+    @Override
+    public void resume() {
 
-	}
+    }
 
-	@Override
-	public void dispose() {
+    @Override
+    public void hide() {
 
-	}
+    }
+
+    @Override
+    public void show() {
+
+    }
+
+    @Override
+    public void dispose() {
+
+    }
 
 }
