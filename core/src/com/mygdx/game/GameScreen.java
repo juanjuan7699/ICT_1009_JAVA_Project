@@ -109,8 +109,7 @@ class GameScreen implements Screen {
 
         batch = new SpriteBatch();
 
-//        Sound sound = Gdx.audio.newSound(Gdx.files.internal(""));
-        Music music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
+        music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
 
         music.setVolume(0.2f);
         music.setLooping(true);
