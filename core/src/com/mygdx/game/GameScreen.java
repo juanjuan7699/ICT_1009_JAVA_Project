@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.audio.Music;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -48,6 +50,10 @@ class GameScreen implements Screen {
     private Player player2;
     private LinkedList<Laser> laserLinkedList;
     private LinkedList<Laser> laser2LinkedList;
+
+    // Sound Effects
+    private Sound sound;
+    private Music music;
 
     GameScreen() {
         camera = new OrthographicCamera();
@@ -102,6 +108,13 @@ class GameScreen implements Screen {
         laser2LinkedList = new LinkedList<>();
 
         batch = new SpriteBatch();
+
+//        Sound sound = Gdx.audio.newSound(Gdx.files.internal(""));
+        Music music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
+
+        music.setVolume(0.2f);
+        music.setLooping(true);
+        music.play();
     }
 
     @Override
