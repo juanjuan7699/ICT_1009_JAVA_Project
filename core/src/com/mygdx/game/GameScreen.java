@@ -27,8 +27,8 @@ class GameScreen implements Screen {
     private TextureAtlas textureAtlas;
     private float backgroundHeight; //  of background in world units
     private TextureRegion[] backgrounds;
-    private TextureRegion playerTextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
-            laserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion;
+    private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
+            laserTextureRegion, laser2TextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion;
 
 
     //Timing
@@ -47,6 +47,7 @@ class GameScreen implements Screen {
     private Player player;
     private Player player2;
     private LinkedList<Laser> laserLinkedList;
+    private LinkedList<Laser> laser2LinkedList;
 
     GameScreen() {
         camera = new OrthographicCamera();
@@ -72,30 +73,33 @@ class GameScreen implements Screen {
 
         // init texture regions
         playerTextureRegion = textureAtlas.findRegion("soldier1_gun");
+        player2TextureRegion = textureAtlas.findRegion("manBlue_gun");
         bearTextureRegion = textureAtlas.findRegion("bear");
-//		crocTextureRegion = textureAtlas.findRegion("crocodile");
+		crocTextureRegion = textureAtlas.findRegion("crocodile");
 //		duckTextureRegion = textureAtlas.findRegion("duck");
 //		goatTextureRegion = textureAtlas.findRegion("goat");
 //		pigTextureRegion = textureAtlas.findRegion("pig");
 //		rabbitTextureRegion = textureAtlas.findRegion("rabbit");
 //		snakeTextureRegion = textureAtlas.findRegion("snake");
-        laserTextureRegion = textureAtlas.findRegion("laserOrange02");
+        laserTextureRegion = textureAtlas.findRegion("laserRed12");
+        laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
 
         // Setup game objects
         player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
                 10, 48,
-                0.4f, 4, 90, .5f,
+                1f, 4, 90, .5f,
                 playerTextureRegion, laserTextureRegion);
 
         // player 2
         player2 = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
                 10, 48,
-                0.4f, 4, 90, .5f,
-                playerTextureRegion, laserTextureRegion);
+                1f, 4, 90, .5f,
+                player2TextureRegion, laser2TextureRegion);
 
         enemyAnimalList = new LinkedList<>();
 
         laserLinkedList = new LinkedList<>();
+        laser2LinkedList = new LinkedList<>();
 
         batch = new SpriteBatch();
     }
@@ -109,6 +113,7 @@ class GameScreen implements Screen {
 
         detectInput(deltaTime);
         player.update(deltaTime);
+        player2.update(deltaTime);
 
         spawnEnemyAnimals(deltaTime);
 
@@ -127,6 +132,7 @@ class GameScreen implements Screen {
 
         // Lasers
         renderLasers(deltaTime);
+        renderLasers2(deltaTime);
 
         //Detect collisions
         detectCollisions();
@@ -271,6 +277,27 @@ class GameScreen implements Screen {
             laser.draw(batch);
             laser.boundingBox.y += laser.movementSpeed*deltaTime;
             if (laser.boundingBox.y + laser.boundingBox.height < 0) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private void renderLasers2(float deltaTime){
+        // Create new lasers
+        if (player2.canFireLaser()) {
+            Laser[] lasers2 = player2.fireLasers();
+            for (Laser laser2 : lasers2) {
+                laser2LinkedList.add(laser2);
+            }
+        }
+        // Draw lasers
+        // Remove old lasers
+        ListIterator<Laser> iterator = laser2LinkedList.listIterator();
+        while(iterator.hasNext()) {
+            Laser laser2 = iterator.next();
+            laser2.draw(batch);
+            laser2.boundingBox.y += laser2.movementSpeed*deltaTime;
+            if (laser2.boundingBox.y + laser2.boundingBox.height < 0) {
                 iterator.remove();
             }
         }
