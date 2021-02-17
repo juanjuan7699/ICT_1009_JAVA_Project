@@ -45,6 +45,7 @@ class GameScreen implements Screen {
     // Game Objects
     private LinkedList<Animals> enemyAnimalList;
     private Player player;
+    private Player player2;
     private LinkedList<Laser> laserLinkedList;
 
     GameScreen() {
@@ -86,6 +87,12 @@ class GameScreen implements Screen {
                 0.4f, 4, 90, .5f,
                 playerTextureRegion, laserTextureRegion);
 
+        // player 2
+        player2 = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
+                10, 48,
+                0.4f, 4, 90, .5f,
+                playerTextureRegion, laserTextureRegion);
+
         enemyAnimalList = new LinkedList<>();
 
         laserLinkedList = new LinkedList<>();
@@ -116,7 +123,7 @@ class GameScreen implements Screen {
 
         // Player
         player.draw(batch);
-        player.draw(batch);
+        player2.draw(batch);
 
         // Lasers
         renderLasers(deltaTime);
@@ -153,6 +160,12 @@ class GameScreen implements Screen {
         rightLimit = WORLD_WIDTH - player.boundingBox.x - player.boundingBox.width;
         upLimit = (float)WORLD_HEIGHT/2 - player.boundingBox.y - player.boundingBox.height;
 
+        float leftLimit2, rightLimit2, upLimit2, downLimit2;
+        leftLimit2 = -player2.boundingBox.x;
+        downLimit2 = -player2.boundingBox.y;
+        rightLimit2 = WORLD_WIDTH - player2.boundingBox.x - player2.boundingBox.width;
+        upLimit2 = (float)WORLD_HEIGHT/2 - player2.boundingBox.y - player2.boundingBox.height;
+
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rightLimit > 0) {
 //            float xChange = player.movementSpeed * deltaTime;
 //            xChange = Math.min(xChange, rightLimit);
@@ -172,8 +185,31 @@ class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.DOWN) && downLimit < 0) {
             player.translate(0f, Math.max(-player.movementSpeed * deltaTime, downLimit));
         }
+
+        //Player 2
+        if (Gdx.input.isKeyPressed(Input.Keys.D) && rightLimit2 > 0) {
+//            float xChange = player.movementSpeed * deltaTime;
+//            xChange = Math.min(xChange, rightLimit);
+//            player.translate(xChange, 0f);
+
+            player2.translate(Math.min(player2.movementSpeed * deltaTime, rightLimit2), 0f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.W) && upLimit2 > 0) {
+            player2.translate(0f, Math.min(player2.movementSpeed * deltaTime, upLimit2));
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.A) && leftLimit2 < 0) {
+            player2.translate(Math.max(-player2.movementSpeed * deltaTime, leftLimit2), 0f);
+        }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.S) && downLimit2 < 0) {
+            player2.translate(0f, Math.max(-player2.movementSpeed * deltaTime, downLimit2));
+        }
+
         // Touch Input (Mouse)
     }
+
 
     private void moveEnemy(Animals enemyAnimal, float deltaTime) {
         // Strategy: determine the max distance the ship can move
