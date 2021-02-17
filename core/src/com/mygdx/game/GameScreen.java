@@ -6,15 +6,22 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.LinkedList;
 import java.util.ListIterator;
+import java.util.Locale;
 
 class GameScreen implements Screen {
 
@@ -27,10 +34,11 @@ class GameScreen implements Screen {
     //	private TextureAtlas textureAtlas;
 //	private Texture background;
     private TextureAtlas textureAtlas;
+    private Texture explosionTexture; 
     private float backgroundHeight; //  of background in world units
     private TextureRegion[] backgrounds;
     private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
-            laserTextureRegion, laser2TextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion;
+            laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion;
 
 
     //Timing
@@ -41,8 +49,8 @@ class GameScreen implements Screen {
     private float enemySpawnTimer = 0;
 
     //World parameters
-    private final int WORLD_WIDTH = 72;
-    private final int WORLD_HEIGHT = 128;
+    private final float WORLD_WIDTH = 72;
+    private final float WORLD_HEIGHT = 128;
 
     // Game Objects
     private LinkedList<Animals> enemyAnimalList;
@@ -50,10 +58,22 @@ class GameScreen implements Screen {
     private Player player2;
     private LinkedList<Laser> laserLinkedList;
     private LinkedList<Laser> laser2LinkedList;
+    private LinkedList<Laser> enemyLaserList;
+    private LinkedList<Explosion> explosionList;
+
+    private int score = 0;
 
     // Sound Effects
     private Sound sound;
     private Music music;
+
+    /*HUD only shows player1, maybe if more players means combine scoregains, lives etc?*/ 
+    //Heads-Up Display
+    BitmapFont font;
+    float hudVerticalMargin, hudLeftX, hudRightX, hudCentreX, hudRow1Y, hudRow2Y, hudSectionWidth;
+
+     /*if want to remove animal laser, gameobjects enemylaserlist, enemylaser linkedlist, 
+    animals variables(class and gamescreen), detectCollisions enemylist, renderlasers 2 lists)  */
 
     GameScreen() {
         camera = new OrthographicCamera();
@@ -89,16 +109,20 @@ class GameScreen implements Screen {
 //		snakeTextureRegion = textureAtlas.findRegion("snake");
         laserTextureRegion = textureAtlas.findRegion("laserRed12");
         laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
+        enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
+        explosionTexture = new Texture("explosion.png");
 
         // Setup game objects
-        player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
-                10, 48,
+        player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 
+                10, 10, 
+                48, 2, 3, 
                 1f, 4, 90, .5f,
                 playerTextureRegion, laserTextureRegion);
 
         // player 2
-        player2 = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 10,
-                10, 48,
+        player2 = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 
+                10, 10, 
+                48, 2, 3,
                 1f, 4, 90, .5f,
                 player2TextureRegion, laser2TextureRegion);
 
@@ -106,8 +130,13 @@ class GameScreen implements Screen {
 
         laserLinkedList = new LinkedList<>();
         laser2LinkedList = new LinkedList<>();
+        enemyLaserList = new LinkedList<>();
+        
+        explosionList = new LinkedList<>();
 
         batch = new SpriteBatch();
+
+        prepareHud();
 
         music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
 
@@ -115,6 +144,34 @@ class GameScreen implements Screen {
         music.setLooping(true);
         music.play();
     }
+
+    private void prepareHud(){
+        //Create a BitmapFont from our font file
+        // FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("TheFoxTailRegular.otf")); //doesnt work
+        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("test.otf"));
+        // FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("killerblack.otf")); //lives doesnt show negative
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        fontParameter.size = 72;
+        fontParameter.borderWidth = 3.6f;
+        fontParameter.color = new Color (1,1,1,0.3f);
+        fontParameter.borderColor = new Color(0,0,0,0.3f);
+
+        font = fontGenerator.generateFont(fontParameter);
+        
+
+        //Scale the font to fit world
+        font.getData().setScale(0.08f);
+
+        //Calculate hud margins, etc
+        hudVerticalMargin = font.getCapHeight() / 2;
+        hudLeftX = hudVerticalMargin; 
+        hudRightX = WORLD_WIDTH * 2 / 3 - hudLeftX;
+        hudCentreX = WORLD_WIDTH / 3; 
+        hudRow1Y = WORLD_HEIGHT - hudVerticalMargin; 
+        hudRow2Y = WORLD_HEIGHT  - hudVerticalMargin * 1.5f- font.getCapHeight(); 
+        hudSectionWidth = WORLD_WIDTH / 3;
+    }    
 
     @Override
     public void render(float deltaTime) {
@@ -145,23 +202,40 @@ class GameScreen implements Screen {
         // Lasers
         renderLasers(deltaTime);
         renderLasers2(deltaTime);
+        renderEnemyLasers(deltaTime);
 
         //Detect collisions
         detectCollisions();
 
         // Explosions
-//        renderExplosions(deltaTime);
+        updateAndRenderExplosions(deltaTime);
+
+        //hud rendering
+        updateAndRenderHUD();
 
         batch.end();
     }
+
+    private void updateAndRenderHUD(){
+        //render top row labels
+        font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
+        font.draw(batch, "Health", hudCentreX, hudRow1Y, hudSectionWidth, Align.center, false);
+        font.draw(batch, "Lives", hudRightX, hudRow1Y, hudSectionWidth, Align.right, false);
+        //render second row values
+        font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
+        font.draw(batch, String.format(Locale.getDefault(), "%02d", player.health), hudCentreX, hudRow2Y, hudSectionWidth, Align.center, false);
+        font.draw(batch, String.format(Locale.getDefault(), "%02d", player.lives), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
+    }    
 
     private void spawnEnemyAnimals(float deltaTime) {
         enemySpawnTimer += deltaTime;
 
         if (enemySpawnTimer > timeBetweenEnemySpawns) {
-            enemyAnimalList.add(new Animals(48, 10,
-                    10, MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5,
-                    WORLD_HEIGHT - 5, bearTextureRegion));
+            enemyAnimalList.add(new Animals(48, 5,
+                                            10, 10, 
+                                            MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT - 5,
+                                            0.8f, 4, 70, .8f,
+                                            bearTextureRegion, enemyLaserTextureRegion));
             enemySpawnTimer -= timeBetweenEnemySpawns;
         }
     }
@@ -251,7 +325,7 @@ class GameScreen implements Screen {
     }
 
     private void detectCollisions(){
-        //Check if laser intersects animal
+        //Check if player1 laser intersects animal
         ListIterator<Laser> laserListIterator = laserLinkedList.listIterator();
         while(laserListIterator.hasNext()) {
             Laser laser = laserListIterator.next();
@@ -261,17 +335,95 @@ class GameScreen implements Screen {
 
                 if (enemyAnimal.intersects(laser.boundingBox)){
                     // Touches animal
-                    enemyAnimal.hit(laser);
+                    if(enemyAnimal.hitAndCheckKilled(laser))
+                    {
+                        enemyAnimalListIterator.remove();
+                            explosionList.add(
+                                new Explosion(explosionTexture, 
+                                       new Rectangle (enemyAnimal.boundingBox), 
+                                                0.7f));
+                        //Killed and obtain score
+                        score += 250;
+                    }
                     laserListIterator.remove();
                     break;
                 }
             }
         }
+            //Check if player2 laser intersects animal
+            ListIterator<Laser> laser2ListIterator = laser2LinkedList.listIterator();
+            while(laser2ListIterator.hasNext()) {
+                Laser laser = laser2ListIterator.next();
+                ListIterator<Animals> enemyAnimalListIterator = enemyAnimalList.listIterator();
+                while (enemyAnimalListIterator.hasNext()) {
+                    Animals enemyAnimal = enemyAnimalListIterator.next();
+    
+                    if (enemyAnimal.intersects(laser.boundingBox)){
+                        // Touches animal
+                        if(enemyAnimal.hitAndCheckKilled(laser))
+                        {
+                            enemyAnimalListIterator.remove();
+                                explosionList.add(
+                                    new Explosion(explosionTexture, 
+                                            new Rectangle (enemyAnimal.boundingBox), 
+                                                    0.7f));
+                            //Killed and obtain score
+                            score += 250;
+                        }
+                        laser2ListIterator.remove();
+                        break;
+                    }
+                }
+            }
+        //Check if laser intersects player1
+        laserListIterator = enemyLaserList.listIterator();
+        while (laserListIterator.hasNext()) {
+            Laser laser = laserListIterator.next();
+            if (player.intersects(laser.boundingBox)) {
+                //contact with player ship
+                if (player.hitAndCheckKilled(laser)) {
+                    explosionList.add(
+                            new Explosion(explosionTexture,
+                                    new Rectangle(player.boundingBox),
+                                    1.6f));
+                    player.health = 2;//need to change this
+                    player.lives --; //0 lives then gameover                      
+                }
+                laserListIterator.remove();
+            }
+        }
+        //Check if laser intersects player2
+        laserListIterator = enemyLaserList.listIterator();
+        while (laserListIterator.hasNext()) {
+            Laser laser = laserListIterator.next();
+            if (player2.intersects(laser.boundingBox)) {
+                //contact with player ship
+                if (player2.hitAndCheckKilled(laser)) {
+                    explosionList.add(
+                            new Explosion(explosionTexture,
+                                    new Rectangle(player2.boundingBox),
+                                    1.6f));
+                    player2.health = 2;//need to change this
+                    player2.lives --; //0 lives then gameover                      
+                }
+                laserListIterator.remove();
+            }
+        }
     }
 
-//    private void renderExplosions(float deltaTime){
-//
-//    }
+    private void updateAndRenderExplosions(float deltaTime){
+        ListIterator<Explosion> explosionListIterator = explosionList.listIterator();
+        while (explosionListIterator.hasNext()){
+            Explosion explosion = explosionListIterator.next();
+            explosion.update(deltaTime);
+            if(explosion.isFinished()){
+                explosionListIterator.remove();
+            }
+            else {
+                explosion.draw(batch);
+            }
+        }
+   }
 
     private void renderLasers(float deltaTime){
         // Create new lasers
@@ -310,6 +462,30 @@ class GameScreen implements Screen {
             laser2.draw(batch);
             laser2.boundingBox.y += laser2.movementSpeed*deltaTime;
             if (laser2.boundingBox.y + laser2.boundingBox.height < 0) {
+                iterator.remove();
+            }
+        }
+    }
+
+    private void renderEnemyLasers(float deltaTime){
+        //Create new lasers
+        ListIterator<Animals> enemyAnimalListIterator = enemyAnimalList.listIterator();
+        while(enemyAnimalListIterator.hasNext()){
+            Animals enemyAnimal = enemyAnimalListIterator.next();
+            if(enemyAnimal.canFireLaser()){
+                Laser[] lasers = enemyAnimal.fireLasers();
+                for (Laser laser: lasers){                    
+                enemyLaserList.add(laser);
+                }
+            }
+        }
+        
+        ListIterator<Laser> iterator = enemyLaserList.listIterator();
+        while(iterator.hasNext()){
+            Laser laser = iterator.next();
+            laser.draw(batch);
+            laser.boundingBox.y -= laser.movementSpeed*deltaTime;
+            if(laser.boundingBox.y + laser.boundingBox.height < 0){
                 iterator.remove();
             }
         }

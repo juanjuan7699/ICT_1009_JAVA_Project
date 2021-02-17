@@ -8,6 +8,8 @@ abstract class Entity {
 
     // Characteristics
     float movementSpeed; // worldunits/second
+    int health, lives;
+
 
     // Position & dimensions
     Rectangle boundingBox;
@@ -33,7 +35,12 @@ abstract class Entity {
         return boundingBox.overlaps(otherRectangle);
     }
 
-    public void hit(Laser laser) {
+    public boolean hitAndCheckKilled(Laser laser) {
+        if (health > 1){
+            health --;
+            return false;
+        }
+        return true;
     }
 
     public void translate(float xChange, float yChange) {

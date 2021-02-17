@@ -6,19 +6,21 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Player extends Entity{
 
-    public Player(float xCentre,
-                  float yCentre, float width, float height, float movementSpeed,
-                  float laserWidth, float laserHeight, float laserMovementSpeed,
-                  float timeBetweenShots,
+    public Player(float xCentre, float yCentre, 
+                  float width, float height, 
+                  float movementSpeed, int health, int lives,
+                  float laserWidth, float laserHeight, float laserMovementSpeed, float timeBetweenShots,
                   TextureRegion entityTextureRegion, TextureRegion laserTextureRegion) {
         this.movementSpeed = movementSpeed;
+        this.health = health;
+        this.lives = lives;
         this.boundingBox = new Rectangle(xCentre - width / 2, yCentre - height / 2, width, height);
         this.laserHeight = laserHeight;
         this.laserWidth = laserWidth;
         this.timeBetweenShots = timeBetweenShots;
         this.laserMovementSpeed = laserMovementSpeed;
         this.entityTextureRegion = entityTextureRegion;
-        this.laserTextureRegion = laserTextureRegion;
+        this.laserTextureRegion = laserTextureRegion;        
     }
 
     public Laser[] fireLasers() {

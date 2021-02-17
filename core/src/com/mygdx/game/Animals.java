@@ -11,12 +11,21 @@ public class Animals extends Entity{
     float timeSinceLastDirectionChange = 0;
     float directionChangeFrequency = 0.75f;
 
-    public Animals(float movementSpeed, float width, float height, float xCentre,
-                   float yBottom, TextureRegion entityTextureRegion) {
+    public Animals(float movementSpeed, int health, 
+                   float width, float height, 
+                   float xCentre, float yBottom, 
+                   float laserWidth, float laserHeight, float laserMovementSpeed, float timeBetweenShots, 
+                   TextureRegion entityTextureRegion, TextureRegion laserTextureRegion ) {
         this.movementSpeed = movementSpeed;
+        this.health = health;
         this.boundingBox = new Rectangle(xCentre - width / 2, yBottom - height, width, height);
+        this.laserHeight = laserHeight;
+        this.laserWidth = laserWidth;
+        this.timeBetweenShots = timeBetweenShots;
+        this.laserMovementSpeed = laserMovementSpeed;        
         this.entityTextureRegion = entityTextureRegion;
-
+        this.laserTextureRegion = laserTextureRegion;
+        
         directionVector = new Vector2(0, -1);
     }
 
@@ -30,14 +39,25 @@ public class Animals extends Entity{
         directionVector.y = (float)Math.cos(bearing);
     }
 
+    public Laser[] fireLasers() {
+        Laser[] laser = new Laser[1];
+        laser[0] = new Laser(boundingBox.x + boundingBox.width *.72f, boundingBox.y - boundingBox.height ,
+                laserWidth, laserHeight, laserMovementSpeed, laserTextureRegion);
+
+        timeSinceLastShot = 0;
+
+        return laser;
+    }
+
     @Override
     public void update(float deltaTime) {
         super.update(deltaTime);
+        timeSinceLastShot += deltaTime;
         timeSinceLastDirectionChange += deltaTime;
         if (timeSinceLastDirectionChange > directionChangeFrequency) {
             randomizeDirectionVector();
             timeSinceLastDirectionChange -= directionChangeFrequency;
-        }
+        }        
     }
 
     public void draw(Batch batch) {
