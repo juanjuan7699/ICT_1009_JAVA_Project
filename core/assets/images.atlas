@@ -158,3 +158,24 @@ gorilla
   orig: 150, 150
   offset: 0, 0
   index: -1
+camel
+  rotate: false
+  xy: 6400, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+grassBackground2
+  rotate: false
+  xy: 6563, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+desertBackground
+  rotate: false
+  xy: 7686, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1

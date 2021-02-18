@@ -40,7 +40,7 @@ class GameScreen implements Screen {
     private TextureRegion[] backgrounds;
     private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
             laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion,
-            elephantTextureRegion, lionTextureRegion, gorillaTextureRegion;
+            elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion;
 
 
     //Timing
@@ -49,8 +49,10 @@ class GameScreen implements Screen {
     private float backgroundMaxScrollingSpeed;
     private float timeBetweenEnemySpawns = 3f;
     private float timeBetweenDamage = 2;
+    private float timeBetweenNewMap = 30f;
     private float enemySpawnTimer = 0;
     private float damageTimer = 0;
+    private float timeElapsed = 0;
 
     //World parameters
     private final float WORLD_WIDTH = 72;
@@ -80,7 +82,8 @@ class GameScreen implements Screen {
     animals variables(class and gamescreen), detectCollisions enemylist, renderlasers 2 lists)  */
 
     Random generator = new Random();
-    TextureRegion[] animalTextures;
+    TextureRegion[] animalForestTextures;
+    TextureRegion[] animalDesertTextures;
 
     GameScreen() {
         camera = new OrthographicCamera();
@@ -93,10 +96,10 @@ class GameScreen implements Screen {
         textureAtlas = new TextureAtlas("images.atlas");
 
         backgrounds = new TextureRegion[4];
-        backgrounds[0] = textureAtlas.findRegion("grassBackground");
-        backgrounds[1] = textureAtlas.findRegion("grassBackground");
-        backgrounds[2] = textureAtlas.findRegion("grassBackground");
-        backgrounds[3] = textureAtlas.findRegion("grassBackground");
+        backgrounds[0] = textureAtlas.findRegion("grassBackground2");
+        backgrounds[1] = textureAtlas.findRegion("grassBackground2");
+        backgrounds[2] = textureAtlas.findRegion("grassBackground2");
+        backgrounds[3] = textureAtlas.findRegion("grassBackground2");
 
         backgroundMaxScrollingSpeed = (float) (WORLD_HEIGHT) / 4;
 
@@ -110,7 +113,10 @@ class GameScreen implements Screen {
         elephantTextureRegion = textureAtlas.findRegion("elephant");
         lionTextureRegion = textureAtlas.findRegion("lion");
         gorillaTextureRegion = textureAtlas.findRegion("gorilla");
-        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion};
+        camelTextureRegion = textureAtlas.findRegion("camel");
+//        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion};
+        animalForestTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion};
+        animalDesertTextures = new TextureRegion[]{lionTextureRegion, camelTextureRegion};
 
 //		duckTextureRegion = textureAtlas.findRegion("duck");
 //		goatTextureRegion = textureAtlas.findRegion("goat");
@@ -239,14 +245,37 @@ class GameScreen implements Screen {
 
     private void spawnEnemyAnimals(float deltaTime) {
         enemySpawnTimer += deltaTime;
-        int randomIndex = generator.nextInt(animalTextures.length);
+        timeElapsed += deltaTime;
+
+        int randomIndex = generator.nextInt(animalForestTextures.length);
+
+        if (timeElapsed > timeBetweenNewMap) {
+            if (backgrounds[0].toString().equals("desertBackground")) {
+                backgrounds[0] = textureAtlas.findRegion("grassBackground2");
+                backgrounds[1] = textureAtlas.findRegion("grassBackground2");
+                backgrounds[2] = textureAtlas.findRegion("grassBackground2");
+                backgrounds[3] = textureAtlas.findRegion("grassBackground2");
+            } else {
+                backgrounds[0] = textureAtlas.findRegion("desertBackground");
+                backgrounds[1] = textureAtlas.findRegion("desertBackground");
+                backgrounds[2] = textureAtlas.findRegion("desertBackground");
+                backgrounds[3] = textureAtlas.findRegion("desertBackground");
+            }
+            timeElapsed -= timeBetweenNewMap;
+        }
 
         if (enemySpawnTimer > timeBetweenEnemySpawns && enemyAnimalList.size() < 10) {
+            TextureRegion animalTexture;
+            if (backgrounds[0].toString().equals("desertBackground")) {
+                animalTexture = animalDesertTextures[randomIndex];
+            } else {
+                animalTexture = animalForestTextures[randomIndex];
+            }
             enemyAnimalList.add(new Animals(48, 5,
                                             20, 20,
                                             MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT,
                                             0.8f, 4, 70, .8f,
-                                            animalTextures[randomIndex], enemyLaserTextureRegion));
+                                            animalTexture, enemyLaserTextureRegion));
             enemySpawnTimer -= timeBetweenEnemySpawns;
         }
     }
