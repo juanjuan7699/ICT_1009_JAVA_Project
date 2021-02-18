@@ -22,6 +22,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.LinkedList;
 import java.util.ListIterator;
 import java.util.Locale;
+import java.util.Random;
 
 class GameScreen implements Screen {
 
@@ -38,7 +39,8 @@ class GameScreen implements Screen {
     private float backgroundHeight; //  of background in world units
     private TextureRegion[] backgrounds;
     private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
-            laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion;
+            laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion,
+            elephantTextureRegion, lionTextureRegion, gorillaTextureRegion;
 
 
     //Timing
@@ -77,6 +79,9 @@ class GameScreen implements Screen {
      /*if want to remove animal laser, gameobjects enemylaserlist, enemylaser linkedlist, 
     animals variables(class and gamescreen), detectCollisions enemylist, renderlasers 2 lists)  */
 
+    Random generator = new Random();
+    TextureRegion[] animalTextures;
+
     GameScreen() {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
@@ -98,13 +103,21 @@ class GameScreen implements Screen {
         // init texture regions
         playerTextureRegion = textureAtlas.findRegion("soldier1_gun");
         player2TextureRegion = textureAtlas.findRegion("manBlue_gun");
-        bearTextureRegion = textureAtlas.findRegion("bear");
+
+        // Animal textures
+        bearTextureRegion = textureAtlas.findRegion("bear2");
 		crocTextureRegion = textureAtlas.findRegion("crocodile");
+        elephantTextureRegion = textureAtlas.findRegion("elephant");
+        lionTextureRegion = textureAtlas.findRegion("lion");
+        gorillaTextureRegion = textureAtlas.findRegion("gorilla");
+        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion};
+
 //		duckTextureRegion = textureAtlas.findRegion("duck");
 //		goatTextureRegion = textureAtlas.findRegion("goat");
 //		pigTextureRegion = textureAtlas.findRegion("pig");
 //		rabbitTextureRegion = textureAtlas.findRegion("rabbit");
 //		snakeTextureRegion = textureAtlas.findRegion("snake");
+
         laserTextureRegion = textureAtlas.findRegion("laserRed12");
         laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
         enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
@@ -226,13 +239,14 @@ class GameScreen implements Screen {
 
     private void spawnEnemyAnimals(float deltaTime) {
         enemySpawnTimer += deltaTime;
+        int randomIndex = generator.nextInt(animalTextures.length);
 
-        if (enemySpawnTimer > timeBetweenEnemySpawns) {
+        if (enemySpawnTimer > timeBetweenEnemySpawns && enemyAnimalList.size() < 10) {
             enemyAnimalList.add(new Animals(48, 5,
-                                            10, 10, 
+                                            20, 20,
                                             MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT,
                                             0.8f, 4, 70, .8f,
-                                            bearTextureRegion, enemyLaserTextureRegion));
+                                            animalTextures[randomIndex], enemyLaserTextureRegion));
             enemySpawnTimer -= timeBetweenEnemySpawns;
         }
     }

@@ -1,5 +1,5 @@
 
-images.png
+images2.png
 size: 8192, 2048
 format: RGBA8888
 filter: Nearest, Nearest
@@ -128,5 +128,33 @@ soldier1_gun
   xy: 2, 41
   size: 43, 52
   orig: 43, 52
+  offset: 0, 0
+  index: -1
+bear2
+  rotate: false
+  xy: 5813, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+elephant
+  rotate: false
+  xy: 5963, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+lion
+  rotate: false
+  xy: 6113, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+gorilla
+  rotate: false
+  xy: 6263, 1873
+  size: 150, 150
+  orig: 150, 150
   offset: 0, 0
   index: -1
