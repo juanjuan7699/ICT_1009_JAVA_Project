@@ -10,7 +10,6 @@ abstract class Entity {
     float movementSpeed; // worldunits/second
     int health, lives;
 
-
     // Position & dimensions
     Rectangle boundingBox;
 

@@ -46,7 +46,9 @@ class GameScreen implements Screen {
     private float[] backgroundOffsets = {0, 0, 0, 0};
     private float backgroundMaxScrollingSpeed;
     private float timeBetweenEnemySpawns = 3f;
+    private float timeBetweenDamage = 2;
     private float enemySpawnTimer = 0;
+    private float damageTimer = 0;
 
     //World parameters
     private final float WORLD_WIDTH = 72;
@@ -90,10 +92,6 @@ class GameScreen implements Screen {
         backgrounds[1] = textureAtlas.findRegion("grassBackground");
         backgrounds[2] = textureAtlas.findRegion("grassBackground");
         backgrounds[3] = textureAtlas.findRegion("grassBackground");
-//        backgrounds[0] = textureAtlas.findRegion("Starscape00");
-//        backgrounds[1] = textureAtlas.findRegion("Starscape01");
-//        backgrounds[2] = textureAtlas.findRegion("Starscape02");
-//        backgrounds[3] = textureAtlas.findRegion("Starscape03");
 
         backgroundMaxScrollingSpeed = (float) (WORLD_HEIGHT) / 4;
 
@@ -202,14 +200,13 @@ class GameScreen implements Screen {
         // Lasers
         renderLasers(deltaTime);
         renderLasers2(deltaTime);
-        renderEnemyLasers(deltaTime);
+//        renderEnemyLasers(deltaTime);
 
         //Detect collisions
-        detectCollisions();
+        detectCollisions(deltaTime);
 
         // Explosions
         updateAndRenderExplosions(deltaTime);
-
         //hud rendering
         updateAndRenderHUD();
 
@@ -233,7 +230,7 @@ class GameScreen implements Screen {
         if (enemySpawnTimer > timeBetweenEnemySpawns) {
             enemyAnimalList.add(new Animals(48, 5,
                                             10, 10, 
-                                            MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT - 5,
+                                            MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT,
                                             0.8f, 4, 70, .8f,
                                             bearTextureRegion, enemyLaserTextureRegion));
             enemySpawnTimer -= timeBetweenEnemySpawns;
@@ -243,20 +240,20 @@ class GameScreen implements Screen {
     private void detectInput(float deltaTime) {
         // Keyboard Input
 
-        // Strategy: determine the max distance the ship can move
+        // Strategy: determine the max distance the player can move
         // Check each key that matters and move accordingly
 
         float leftLimit, rightLimit, upLimit, downLimit;
         leftLimit = -player.boundingBox.x;
         downLimit = -player.boundingBox.y;
         rightLimit = WORLD_WIDTH - player.boundingBox.x - player.boundingBox.width;
-        upLimit = (float)WORLD_HEIGHT/2 - player.boundingBox.y - player.boundingBox.height;
+        upLimit = WORLD_HEIGHT - player.boundingBox.y - player.boundingBox.height;
 
         float leftLimit2, rightLimit2, upLimit2, downLimit2;
         leftLimit2 = -player2.boundingBox.x;
         downLimit2 = -player2.boundingBox.y;
         rightLimit2 = WORLD_WIDTH - player2.boundingBox.x - player2.boundingBox.width;
-        upLimit2 = (float)WORLD_HEIGHT/2 - player2.boundingBox.y - player2.boundingBox.height;
+        upLimit2 = WORLD_HEIGHT - player2.boundingBox.y - player2.boundingBox.height;
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rightLimit > 0) {
 //            float xChange = player.movementSpeed * deltaTime;
@@ -298,17 +295,15 @@ class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.S) && downLimit2 < 0) {
             player2.translate(0f, Math.max(-player2.movementSpeed * deltaTime, downLimit2));
         }
-
-        // Touch Input (Mouse)
     }
 
 
     private void moveEnemy(Animals enemyAnimal, float deltaTime) {
-        // Strategy: determine the max distance the ship can move
+        // Strategy: determine the max distance the enemy can move
 
         float leftLimit, rightLimit, upLimit, downLimit;
         leftLimit = -enemyAnimal.boundingBox.x;
-        downLimit = (float)WORLD_HEIGHT/2 - enemyAnimal.boundingBox.y;
+        downLimit = -enemyAnimal.boundingBox.y;
         rightLimit = WORLD_WIDTH - enemyAnimal.boundingBox.x - enemyAnimal.boundingBox.width;
         upLimit = WORLD_HEIGHT - enemyAnimal.boundingBox.y - enemyAnimal.boundingBox.height;
 
@@ -324,8 +319,10 @@ class GameScreen implements Screen {
         enemyAnimal.translate(xMove,yMove);
     }
 
-    private void detectCollisions(){
+    private void detectCollisions(float deltaTime){
         //Check if player1 laser intersects animal
+        damageTimer += deltaTime;
+
         ListIterator<Laser> laserListIterator = laserLinkedList.listIterator();
         while(laserListIterator.hasNext()) {
             Laser laser = laserListIterator.next();
@@ -347,6 +344,22 @@ class GameScreen implements Screen {
                     }
                     laserListIterator.remove();
                     break;
+                }
+
+                // Player 1 takes damage from enemy hitbox
+                if (enemyAnimal.intersects(player.boundingBox)){
+                    if (damageTimer > timeBetweenDamage) {
+                        player.health --;
+                        damageTimer -= timeBetweenDamage;
+                    }
+                }
+
+                // Player 2 takes damage from enemy hitbox
+                if (enemyAnimal.intersects(player2.boundingBox)){
+                    if (damageTimer > timeBetweenDamage) {
+                        player2.health --;
+                        damageTimer -= timeBetweenDamage;
+                    }
                 }
             }
         }
@@ -373,6 +386,11 @@ class GameScreen implements Screen {
                         laser2ListIterator.remove();
                         break;
                     }
+
+                    if (enemyAnimal.intersects(player2.boundingBox)){
+                        player2.health --;//need to change this
+                        player2.lives --;
+                    }
                 }
             }
         //Check if laser intersects player1
@@ -380,13 +398,13 @@ class GameScreen implements Screen {
         while (laserListIterator.hasNext()) {
             Laser laser = laserListIterator.next();
             if (player.intersects(laser.boundingBox)) {
-                //contact with player ship
+                //contact with player
                 if (player.hitAndCheckKilled(laser)) {
                     explosionList.add(
                             new Explosion(explosionTexture,
                                     new Rectangle(player.boundingBox),
                                     1.6f));
-                    player.health = 2;//need to change this
+                    player.health --;//need to change this
                     player.lives --; //0 lives then gameover                      
                 }
                 laserListIterator.remove();
@@ -397,13 +415,13 @@ class GameScreen implements Screen {
         while (laserListIterator.hasNext()) {
             Laser laser = laserListIterator.next();
             if (player2.intersects(laser.boundingBox)) {
-                //contact with player ship
+                //contact with player
                 if (player2.hitAndCheckKilled(laser)) {
                     explosionList.add(
                             new Explosion(explosionTexture,
                                     new Rectangle(player2.boundingBox),
                                     1.6f));
-                    player2.health = 2;//need to change this
+                    player2.health --;//need to change this
                     player2.lives --; //0 lives then gameover                      
                 }
                 laserListIterator.remove();
