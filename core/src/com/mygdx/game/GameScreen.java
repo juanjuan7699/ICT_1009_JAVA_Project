@@ -67,7 +67,9 @@ class GameScreen implements Screen {
     private LinkedList<Laser> enemyLaserList;
     private LinkedList<Explosion> explosionList;
 
+    private int level = 0;
     private int score = 0;
+    private int levelScore = 0;
 
     // Sound Effects
     private Sound sound;
@@ -159,7 +161,7 @@ class GameScreen implements Screen {
         prepareHud();
 
         try{
-            music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valleys.ogg"));
+            music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
 
             music.setVolume(0.2f);
             music.setLooping(true);
@@ -237,6 +239,8 @@ class GameScreen implements Screen {
         //Detect collisions
         detectCollisions(deltaTime);
 
+        updateLevel();
+
         // Explosions
         updateAndRenderExplosions(deltaTime);
         //hud rendering
@@ -245,14 +249,37 @@ class GameScreen implements Screen {
         batch.end();
     }
 
+    private void updateLevel(){
+        if(levelScore /  1000  == 1){
+            levelScore = 0;
+            level += 1;
+        }
+
+        if (level % 2 == 0) {
+            backgrounds[0] = textureAtlas.findRegion("grassBackground2");
+            backgrounds[1] = textureAtlas.findRegion("grassBackground2");
+            backgrounds[2] = textureAtlas.findRegion("grassBackground2");
+            backgrounds[3] = textureAtlas.findRegion("grassBackground2");
+        }else {
+            backgrounds[0] = textureAtlas.findRegion("desertBackground");
+            backgrounds[1] = textureAtlas.findRegion("desertBackground");
+            backgrounds[2] = textureAtlas.findRegion("desertBackground");
+            backgrounds[3] = textureAtlas.findRegion("desertBackground");
+        }
+    }
+
+    private int getLevel(){
+        return level;
+    }
+
     private void updateAndRenderHUD(){
         //render top row labels
         font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
-        font.draw(batch, "Health", hudCentreX, hudRow1Y, hudSectionWidth, Align.center, false);
+        font.draw(batch, "Level", hudCentreX, hudRow1Y, hudSectionWidth, Align.center, false);
         font.draw(batch, "Lives", hudRightX, hudRow1Y, hudSectionWidth, Align.right, false);
         //render second row values
         font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
-        font.draw(batch, String.format(Locale.getDefault(), "%02d", player.health), hudCentreX, hudRow2Y, hudSectionWidth, Align.center, false);
+        font.draw(batch, String.format(Locale.getDefault(), "%02d", level), hudCentreX, hudRow2Y, hudSectionWidth, Align.center, false);
         font.draw(batch, String.format(Locale.getDefault(), "%02d", player.lives), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
     }    
 
@@ -262,27 +289,12 @@ class GameScreen implements Screen {
 
         int randomIndex = generator.nextInt(animalForestTextures.length);
 
-        if (timeElapsed > timeBetweenNewMap) {
-            if (backgrounds[0].toString().equals("desertBackground")) {
-                backgrounds[0] = textureAtlas.findRegion("grassBackground2");
-                backgrounds[1] = textureAtlas.findRegion("grassBackground2");
-                backgrounds[2] = textureAtlas.findRegion("grassBackground2");
-                backgrounds[3] = textureAtlas.findRegion("grassBackground2");
-            } else {
-                backgrounds[0] = textureAtlas.findRegion("desertBackground");
-                backgrounds[1] = textureAtlas.findRegion("desertBackground");
-                backgrounds[2] = textureAtlas.findRegion("desertBackground");
-                backgrounds[3] = textureAtlas.findRegion("desertBackground");
-            }
-            timeElapsed -= timeBetweenNewMap;
-        }
-
         if (enemySpawnTimer > timeBetweenEnemySpawns && enemyAnimalList.size() < 10) {
             TextureRegion animalTexture;
-            if (backgrounds[0].toString().equals("desertBackground")) {
-                animalTexture = animalDesertTextures[randomIndex];
-            } else {
+            if (level % 2 == 0) {
                 animalTexture = animalForestTextures[randomIndex];
+            } else {
+                animalTexture = animalDesertTextures[randomIndex];
             }
             enemyAnimalList.add(new Animals(48, 5,
                                             20, 20,
@@ -397,6 +409,7 @@ class GameScreen implements Screen {
                                                 0.7f));
                         //Killed and obtain score
                         score += 250;
+                        levelScore += 250;
                     }
                     laserListIterator.remove();
                     break;
@@ -404,16 +417,19 @@ class GameScreen implements Screen {
 
                 // Player 1 takes damage from enemy hitbox
                 if (enemyAnimal.intersects(player.boundingBox)){
-                    if (damageTimer > timeBetweenDamage) {
-                        player.health --;
-                        damageTimer -= timeBetweenDamage;
+                    if (damageTimer > timeBetweenDamage && player.lives > 0) {
+                        player.lives --;
+                        damageTimer = 0;
+                    }else if(damageTimer > timeBetweenDamage){
+                        damageTimer = 0;
+                        player.lives --;
                     }
                 }
 
                 // Player 2 takes damage from enemy hitbox
                 if (enemyAnimal.intersects(player2.boundingBox)){
                     if (damageTimer > timeBetweenDamage) {
-                        player2.health --;
+                        player2.lives --;
                         damageTimer -= timeBetweenDamage;
                     }
                 }
@@ -438,13 +454,13 @@ class GameScreen implements Screen {
                                                     0.7f));
                             //Killed and obtain score
                             score += 250;
+                            levelScore += 250;
                         }
                         laser2ListIterator.remove();
                         break;
                     }
 
                     if (enemyAnimal.intersects(player2.boundingBox)){
-                        player2.health --;//need to change this
                         player2.lives --;
                     }
                 }
@@ -460,7 +476,6 @@ class GameScreen implements Screen {
                             new Explosion(explosionTexture,
                                     new Rectangle(player.boundingBox),
                                     1.6f));
-                    player.health --;//need to change this
                     player.lives --; //0 lives then gameover                      
                 }
                 laserListIterator.remove();
@@ -477,7 +492,6 @@ class GameScreen implements Screen {
                             new Explosion(explosionTexture,
                                     new Rectangle(player2.boundingBox),
                                     1.6f));
-                    player2.health --;//need to change this
                     player2.lives --; //0 lives then gameover                      
                 }
                 laserListIterator.remove();
