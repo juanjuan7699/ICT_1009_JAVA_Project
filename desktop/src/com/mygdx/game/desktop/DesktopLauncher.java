@@ -9,6 +9,11 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.height = 640;
 		config.width = 360;
-		new LwjglApplication(new MyGdxGame(), config);
+		try{
+			new LwjglApplication(new MyGdxGame(), config);
+		}catch(NullPointerException e){
+			System.out.println("Unable to start application: " + e);
+		}
+
 	}
 }

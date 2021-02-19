@@ -96,12 +96,12 @@ class GameScreen implements Screen {
         textureAtlas = new TextureAtlas("images.atlas");
 
         backgrounds = new TextureRegion[4];
+
         backgrounds[0] = textureAtlas.findRegion("grassBackground2");
         backgrounds[1] = textureAtlas.findRegion("grassBackground2");
         backgrounds[2] = textureAtlas.findRegion("grassBackground2");
         backgrounds[3] = textureAtlas.findRegion("grassBackground2");
 
-        backgroundMaxScrollingSpeed = (float) (WORLD_HEIGHT) / 4;
 
         // init texture regions
         playerTextureRegion = textureAtlas.findRegion("soldier1_gun");
@@ -109,11 +109,19 @@ class GameScreen implements Screen {
 
         // Animal textures
         bearTextureRegion = textureAtlas.findRegion("bear2");
-		crocTextureRegion = textureAtlas.findRegion("crocodile");
+        crocTextureRegion = textureAtlas.findRegion("crocodile");
         elephantTextureRegion = textureAtlas.findRegion("elephant");
         lionTextureRegion = textureAtlas.findRegion("lion");
         gorillaTextureRegion = textureAtlas.findRegion("gorilla");
         camelTextureRegion = textureAtlas.findRegion("camel");
+
+        laserTextureRegion = textureAtlas.findRegion("laserRed12");
+        laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
+        enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
+        explosionTexture = new Texture("explosion.png");
+
+        backgroundMaxScrollingSpeed = (float) (WORLD_HEIGHT) / 4;
+
 //        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion};
         animalForestTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion};
         animalDesertTextures = new TextureRegion[]{lionTextureRegion, camelTextureRegion};
@@ -123,11 +131,6 @@ class GameScreen implements Screen {
 //		pigTextureRegion = textureAtlas.findRegion("pig");
 //		rabbitTextureRegion = textureAtlas.findRegion("rabbit");
 //		snakeTextureRegion = textureAtlas.findRegion("snake");
-
-        laserTextureRegion = textureAtlas.findRegion("laserRed12");
-        laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
-        enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
-        explosionTexture = new Texture("explosion.png");
 
         // Setup game objects
         player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 
@@ -155,30 +158,40 @@ class GameScreen implements Screen {
 
         prepareHud();
 
-        music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
+        try{
+            music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valleys.ogg"));
 
-        music.setVolume(0.2f);
-        music.setLooping(true);
-        music.play();
+            music.setVolume(0.2f);
+            music.setLooping(true);
+            music.play();
+        }catch (RuntimeException e){
+            System.out.println("Music file not found: " + e);
+        }
+
     }
 
     private void prepareHud(){
         //Create a BitmapFont from our font file
         // FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("TheFoxTailRegular.otf")); //doesnt work
-        FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("test.otf"));
-        // FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("killerblack.otf")); //lives doesnt show negative
-        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        try{
+            FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("test.otf"));
+            // FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("killerblack.otf")); //lives doesnt show negative
+            FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
-        fontParameter.size = 72;
-        fontParameter.borderWidth = 3.6f;
-        fontParameter.color = new Color (1,1,1,0.3f);
-        fontParameter.borderColor = new Color(0,0,0,0.3f);
+            fontParameter.size = 72;
+            fontParameter.borderWidth = 3.6f;
+            fontParameter.color = new Color (1,1,1,0.3f);
+            fontParameter.borderColor = new Color(0,0,0,0.3f);
 
-        font = fontGenerator.generateFont(fontParameter);
-        
+            font = fontGenerator.generateFont(fontParameter);
 
-        //Scale the font to fit world
-        font.getData().setScale(0.08f);
+            //Scale the font to fit world
+            font.getData().setScale(0.08f);
+        }catch (RuntimeException e){
+            System.out.println("Font file not found: " + e);
+        }
+
+
 
         //Calculate hud margins, etc
         hudVerticalMargin = font.getCapHeight() / 2;
@@ -188,7 +201,7 @@ class GameScreen implements Screen {
         hudRow1Y = WORLD_HEIGHT - hudVerticalMargin; 
         hudRow2Y = WORLD_HEIGHT  - hudVerticalMargin * 1.5f- font.getCapHeight(); 
         hudSectionWidth = WORLD_WIDTH / 3;
-    }    
+    }
 
     @Override
     public void render(float deltaTime) {
@@ -214,11 +227,11 @@ class GameScreen implements Screen {
 
         // Player
         player.draw(batch);
-        player2.draw(batch);
+//        player2.draw(batch);
 
         // Lasers
         renderLasers(deltaTime);
-        renderLasers2(deltaTime);
+//        renderLasers2(deltaTime);
 //        renderEnemyLasers(deltaTime);
 
         //Detect collisions
@@ -273,7 +286,7 @@ class GameScreen implements Screen {
             }
             enemyAnimalList.add(new Animals(48, 5,
                                             20, 20,
-                                            MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT,
+                                            MyGdxGame.random.nextFloat() * (WORLD_WIDTH - 10) + 5, WORLD_HEIGHT + 30,
                                             0.8f, 4, 70, .8f,
                                             animalTexture, enemyLaserTextureRegion));
             enemySpawnTimer -= timeBetweenEnemySpawns;
