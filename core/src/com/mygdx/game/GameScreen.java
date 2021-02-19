@@ -133,14 +133,14 @@ class GameScreen implements Screen {
         player = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 
                 10, 10, 
                 48, 2, 3, 
-                1f, 4, 90, .5f,
+                1f, 4, 120, .35f,
                 playerTextureRegion, laserTextureRegion);
 
         // player 2
         player2 = new Player(WORLD_WIDTH / 2, WORLD_HEIGHT / 4, 
                 10, 10, 
                 48, 2, 3,
-                1f, 4, 90, .5f,
+                1f, 4, 120, .35f,
                 player2TextureRegion, laser2TextureRegion);
 
         enemyAnimalList = new LinkedList<>();
