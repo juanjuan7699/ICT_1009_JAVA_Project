@@ -89,6 +89,10 @@ public class Pickup extends Entity {
                 break;
         }
 
+        //picking up a buff means you will increase the level difficulty by a fixed rate of 0.20
+        //score += 200; //but will not add to total score of hunted animals
+        levelScore += 200;
+
         this.setPendingRemoval(true);
     }
 

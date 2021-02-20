@@ -13,7 +13,7 @@ public class Laser extends Entity {
         this.owner = owner;
         this.team = team;
         this.setMovementSpeed(100);
-        this.setDamageScale(5);
+        this.setDamageScale(6);
         this.setSprite(GameScreen.textureAtlas.findRegion("laserRed12")); //defaults
         this.setBoundingBox(new Rectangle(owner.getBoundingBox().x + owner.getBoundingBox().width *.72f, owner.getBoundingBox().y + owner.getBoundingBox().height *.98f,1,4));
     }

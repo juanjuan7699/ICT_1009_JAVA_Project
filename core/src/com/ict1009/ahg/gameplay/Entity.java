@@ -219,6 +219,6 @@ public abstract class Entity {
     }
 
     public void setAttacks(int attacks) {
-        this.attacks = attacks;
+        this.attacks = Math.min(5, attacks);
     }
 }

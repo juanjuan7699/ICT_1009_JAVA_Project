@@ -47,7 +47,7 @@ public class GameScreen implements Screen {
     /**Timing**/
     private final float[] backgroundOffsets = {0, 0, 0, 0};
     private final float backgroundMaxScrollingSpeed;
-    private float timeBetweenEnemySpawns = 3;
+    private float timeBetweenEnemySpawns = 2.45f;
     private float timeBetweenDamage = 2;
     private float timeBetweenNewMap = 30;
     private float enemySpawnTimer = 0;
@@ -66,6 +66,7 @@ public class GameScreen implements Screen {
     public static int level = 0;
     public static int score = 0;
     public static int levelScore = 0;
+    private int maxMobs = 10;
 
     // Sound Effects
     private Sound sound;
@@ -210,9 +211,11 @@ public class GameScreen implements Screen {
     }
 
     private void updateLevel(){
-        if(levelScore /  1000  == 1){
+        if(levelScore /  1000  >= 1){ //level scaling needs to be exponential
             levelScore = 0;
             level += 1;
+            timeBetweenEnemySpawns = (float) Math.max(1, timeBetweenEnemySpawns * 0.9);
+            maxMobs = Math.min(40, maxMobs+1); //hard cap 40 mobs
         }
 
         if (level % 2 == 0) {
@@ -226,6 +229,9 @@ public class GameScreen implements Screen {
             backgrounds[2] = textureAtlas.findRegion("desertBackground");
             backgrounds[3] = textureAtlas.findRegion("desertBackground");
         }
+
+
+
     }
 
     private int getLevel(){
@@ -249,7 +255,7 @@ public class GameScreen implements Screen {
 
         int randomIndex = generator.nextInt(animalForestTextures.length);
 
-        if (enemySpawnTimer > timeBetweenEnemySpawns && mobs.size() < 10) {
+        if (enemySpawnTimer > timeBetweenEnemySpawns && mobs.size() < maxMobs) {
             TextureRegion animalTexture;
             if (level % 2 == 0) {
                 animalTexture = animalForestTextures[randomIndex];
@@ -405,7 +411,7 @@ public class GameScreen implements Screen {
                     entity.onDestroy(players.get(0));
                 }
                 else if (players.get(1).collisionTest(entity)) {
-                    entity.onDestroy(players.get(0));
+                    entity.onDestroy(players.get(1));
                 }
                 if (entity.isPendingRemoval()) {
                     laserListIterator.remove();

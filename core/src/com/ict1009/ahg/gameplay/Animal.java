@@ -13,11 +13,11 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
 
     private Vector2 directionVector;
 
-    public Animal() {
-        this.setMovementSpeed(48);
-        this.setMaxHealth(20);
-        this.modifyHealth(20);
-        this.setDamageScale(5);
+    public Animal() { //scaling per level
+        this.setMovementSpeed(Math.min(100, 24 + 3 * level));
+        this.setMaxHealth(5 + 3 * level);
+        this.modifyHealth(5 + 3 * level);
+        this.setDamageScale(1 + 0.5f * level);
         this.setBoundingBox(new Rectangle(generator.nextFloat() * (WORLD_WIDTH - 10) + 5 - 10, WORLD_HEIGHT + 30 - 10, 20, 20));
         this.setSprite(animalForestTextures[0]);
 
@@ -53,8 +53,8 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
     public void onDestroy(Entity instigator) { //pending removal
         explosionList.add(new Explosion(explosionTexture, new Rectangle (this.getBoundingBox()), 0.7f));
         //Killed and obtain score
-        score += 250;
-        levelScore += 250;
+        score += 105 + 25 * level;
+        levelScore += 105 + 25 * level;
 
         //instigator //add points to instigator or smth
 
