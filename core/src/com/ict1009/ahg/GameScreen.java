@@ -63,10 +63,11 @@ public class GameScreen implements Screen {
     public static List<Explosion> explosionList;
 
     //gs
-    public static int level = 0;
+    public static int level = 1;
     public static int score = 0;
     public static int levelScore = 0;
     private int maxMobs = 10;
+    private int spawnPerCycle = 1;
 
     // Sound Effects
     private Sound sound;
@@ -214,8 +215,9 @@ public class GameScreen implements Screen {
         if(levelScore /  1000  >= 1){ //level scaling needs to be exponential
             levelScore = 0;
             level += 1;
-            timeBetweenEnemySpawns = (float) Math.max(1, timeBetweenEnemySpawns * 0.9);
+            timeBetweenEnemySpawns = (float) Math.max(0.9, timeBetweenEnemySpawns * 0.9);
             maxMobs = Math.min(40, maxMobs+1); //hard cap 40 mobs
+            spawnPerCycle = Math.min(4, 1 + level/30); //inccrease mob spawn rate per level, max 4 per spawn cycle
         }
 
         if (level % 2 == 0) {
@@ -262,7 +264,9 @@ public class GameScreen implements Screen {
             } else {
                 animalTexture = animalDesertTextures[randomIndex];
             }
-            new Animal().addToRenderQueue();
+            for (int i = 0; i < spawnPerCycle; i++) {
+                new Animal().addToRenderQueue();
+            }
             enemySpawnTimer -= timeBetweenEnemySpawns;
         }
     }
