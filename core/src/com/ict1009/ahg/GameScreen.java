@@ -51,6 +51,8 @@ public class GameScreen implements Screen {
     private float timeBetweenDamage = 2;
     private float timeBetweenNewMap = 30;
     private float enemySpawnTimer = 0;
+    private float pickupSpawnTimer = 0; // temp only testing
+    private float timeBetweenPickup = 2; //temp only
     private float damageTimer = 0;
     private float timeElapsed = 0;
 
@@ -180,12 +182,18 @@ public class GameScreen implements Screen {
         }
 
         spawnEnemyAnimals(deltaTime);//change to spawnpoint
+        spawnPickup(deltaTime);
 
         //animal renderer queue
         for (Animal mob : mobs) {
             moveEnemy(mob, deltaTime);
             mob.update(deltaTime);
             mob.draw(batch);
+        }
+
+        for (Entity entity : renderQueue) {
+            entity.update(deltaTime);
+            entity.draw(batch);
         }
 
         renderLasers(deltaTime);
@@ -224,7 +232,7 @@ public class GameScreen implements Screen {
         return level;
     }
 
-    private void updateAndRenderHUD(){
+    private void updateAndRenderHUD() {
         //render top row labels
         font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
         font.draw(batch, "Level", hudCentreX, hudRow1Y, hudSectionWidth, Align.center, false);
@@ -250,6 +258,15 @@ public class GameScreen implements Screen {
             }
             new Animal().addToRenderQueue();
             enemySpawnTimer -= timeBetweenEnemySpawns;
+        }
+    }
+
+    private void spawnPickup(float deltaTime) { //temporary
+        pickupSpawnTimer += deltaTime;
+
+        if (pickupSpawnTimer > timeBetweenPickup) {
+            new Pickup(false).addToRenderQueue();
+            pickupSpawnTimer -= timeBetweenPickup;
         }
     }
 
@@ -314,6 +331,11 @@ public class GameScreen implements Screen {
     }
 
 
+    private void movePickup(Pickup enemyAnimal, float deltaTime) {
+        // Strategy: determine the max distance the enemy can move
+        enemyAnimal.translate(0,-10);
+    }
+
     private void moveEnemy(Animal enemyAnimal, float deltaTime) {
         // Strategy: determine the max distance the enemy can move
 
@@ -375,6 +397,18 @@ public class GameScreen implements Screen {
                             damageTimer -= timeBetweenDamage;
                         }
                     }
+                }
+            }
+
+            else if (entity instanceof Pickup) {
+                if (players.get(0).collisionTest(entity)) {
+                    entity.onDestroy(players.get(0));
+                }
+                else if (players.get(1).collisionTest(entity)) {
+                    entity.onDestroy(players.get(0));
+                }
+                if (entity.isPendingRemoval()) {
+                    laserListIterator.remove();
                 }
             }
 

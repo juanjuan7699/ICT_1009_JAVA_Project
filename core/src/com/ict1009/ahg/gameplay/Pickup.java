@@ -6,8 +6,7 @@ import com.ict1009.ahg.GameScreen;
 import com.ict1009.ahg.enums.ItemType;
 import com.ict1009.ahg.enums.Rarity;
 
-import static com.ict1009.ahg.GameScreen.animalDesertTextures;
-import static com.ict1009.ahg.GameScreen.generator;
+import static com.ict1009.ahg.GameScreen.*;
 
 public class Pickup extends Entity {
 
@@ -16,40 +15,40 @@ public class Pickup extends Entity {
 
     private boolean inventoryItem; //false for instant buffs
 
-    Pickup() { //random generation
+    public Pickup(boolean inventoryItem) { //random generation
         this.setDamageScale(1 + generator.nextFloat()); //scaling of the pickup itself regardless if its damage, health, attack speed
-        this.inventoryItem = generator.nextBoolean();
+        this.inventoryItem = inventoryItem;
         //get spawn area then set bounding box
-        this.setBoundingBox(new Rectangle()); //need more images
-        this.setSprite(animalDesertTextures[0]); //temporary
+        this.setBoundingBox(new Rectangle((float)generator.nextInt((int)WORLD_WIDTH - 5), WORLD_HEIGHT-20, 20, 20)); //need more images
+        this.setSprite(animalDesertTextures[1]); //temporary
+        this.pickupType = ItemType.NONE;
 
         if (this.inventoryItem) {
             //drop non buffs
             this.onDestroy(this); //temporarily no inventory items
+            System.out.println("A non buff was generated");
         }
         else { //drop buffs
             int rng = generator.nextInt(4);
             switch (rng) {
                 case 0:
                     this.pickupType = ItemType.ATTACKSPEED_BUFF;
-                    this.setSprite(animalDesertTextures[0]); //temporary
+                    this.setSprite(animalDesertTextures[1]); //temporary
                     break;
                 case 1:
                     this.pickupType = ItemType.REGEN_BUFF;
-                    this.setSprite(animalDesertTextures[0]); //temporary
+                    this.setSprite(animalDesertTextures[1]); //temporary
                     break;
                 case 2:
                     this.pickupType = ItemType.DAMAGE_BUFF;
-                    this.setSprite(animalDesertTextures[0]); //temporary
+                    this.setSprite(animalDesertTextures[1]); //temporary
                     break;
                 case 3:
                     this.pickupType = ItemType.EXTRA_LASER_BUFF;
-                    this.setSprite(animalDesertTextures[0]); //temporary
+                    this.setSprite(animalDesertTextures[1]); //temporary
                     break;
             }
         }
-
-        this.addToRenderQueue();
     }
 
     @Override
@@ -73,16 +72,20 @@ public class Pickup extends Entity {
 
         switch (pickupType) {
             case DAMAGE_BUFF: //exponential buff
-                instigator.setDamageScale(instigator.getDamageScale() * 1.2f);
+                instigator.setDamageScale(instigator.getDamageScale() * 1.15f);
+                System.out.println("buffed dmg now " + instigator.getDamageScale());
                 break;
             case ATTACKSPEED_BUFF:
                 instigator.setAttackSpeed(instigator.getAttackSpeed() * .9f);
+                System.out.println("buffed spd now " + instigator.getAttackSpeed());
                 break;
             case REGEN_BUFF:
-                instigator.setHealthRegen(instigator.getHealthRegen() + .1f);
+                instigator.setHealthRegen(instigator.getHealthRegen() + .01f);
+                System.out.println("buffed healthreg now " + instigator.getHealthRegen());
                 break;
             case EXTRA_LASER_BUFF:
                 instigator.setAttacks(instigator.getAttacks() + 1);
+                System.out.println("buffed attks now " + instigator.getAttacks());
                 break;
         }
 
@@ -91,6 +94,6 @@ public class Pickup extends Entity {
 
     @Override
     public void update(float deltaTime) {
-
+        this.translate(0, -1f);
     }
 }
