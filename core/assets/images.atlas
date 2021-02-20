@@ -1,0 +1,181 @@
+
+images2.png
+size: 8192, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+Starscape00
+  rotate: false
+  xy: 2166, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+Starscape01
+  rotate: false
+  xy: 2, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+Starscape02
+  rotate: false
+  xy: 3248, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+Starscape03
+  rotate: false
+  xy: 1084, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+bear
+  rotate: false
+  xy: 5412, 1629
+  size: 162, 128
+  orig: 162, 128
+  offset: 0, 0
+  index: -1
+crocodile
+  rotate: false
+  xy: 5412, 1499
+  size: 129, 128
+  orig: 129, 128
+  offset: 0, 0
+  index: -1
+darkPurpleStarscape
+  rotate: false
+  xy: 5412, 1759
+  size: 256, 256
+  orig: 256, 256
+  offset: 0, 0
+  index: -1
+grassBackground
+  rotate: false
+  xy: 4330, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+laserBlue02
+  rotate: false
+  xy: 2, 2
+  size: 13, 37
+  orig: 13, 37
+  offset: 0, 0
+  index: -1
+laserBlue12
+  rotate: false
+  xy: 5412, 1440
+  size: 13, 57
+  orig: 13, 57
+  offset: 0, 0
+  index: -1
+laserOrange02
+  rotate: false
+  xy: 5576, 1669
+  size: 13, 37
+  orig: 13, 37
+  offset: 0, 0
+  index: -1
+laserOrange10
+  rotate: false
+  xy: 5670, 1835
+  size: 37, 36
+  orig: 37, 36
+  offset: 0, 0
+  index: -1
+laserOrange12
+  rotate: false
+  xy: 5800, 1958
+  size: 13, 57
+  orig: 13, 57
+  offset: 0, 0
+  index: -1
+laserRed02
+  rotate: false
+  xy: 47, 56
+  size: 13, 37
+  orig: 13, 37
+  offset: 0, 0
+  index: -1
+laserRed12
+  rotate: false
+  xy: 5543, 1570
+  size: 13, 57
+  orig: 13, 57
+  offset: 0, 0
+  index: -1
+manBlue_gun
+  rotate: false
+  xy: 5576, 1708
+  size: 43, 49
+  orig: 43, 49
+  offset: 0, 0
+  index: -1
+snake
+  rotate: false
+  xy: 5670, 1873
+  size: 128, 142
+  orig: 128, 142
+  offset: 0, 0
+  index: -1
+soldier1_gun
+  rotate: false
+  xy: 2, 41
+  size: 43, 52
+  orig: 43, 52
+  offset: 0, 0
+  index: -1
+bear2
+  rotate: false
+  xy: 5813, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+elephant
+  rotate: false
+  xy: 5963, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+lion
+  rotate: false
+  xy: 6113, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+gorilla
+  rotate: false
+  xy: 6263, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+camel
+  rotate: false
+  xy: 6400, 1873
+  size: 150, 150
+  orig: 150, 150
+  offset: 0, 0
+  index: -1
+grassBackground2
+  rotate: false
+  xy: 6563, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+desertBackground
+  rotate: false
+  xy: 7686, 95
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
