@@ -14,7 +14,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
@@ -229,11 +228,11 @@ public class GameScreen implements Screen {
         //render top row labels
         font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
         font.draw(batch, "Level", hudCentreX, hudRow1Y, hudSectionWidth, Align.center, false);
-        font.draw(batch, "Lives", hudRightX, hudRow1Y, hudSectionWidth, Align.right, false);
+        font.draw(batch, "HP", hudRightX, hudRow1Y, hudSectionWidth, Align.right, false);
         //render second row values
         font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
         font.draw(batch, String.format(Locale.getDefault(), "%02d", level), hudCentreX, hudRow2Y, hudSectionWidth, Align.center, false);
-        font.draw(batch, String.format(Locale.getDefault(), "%02f/%02f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
+        font.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
     }
 
     private void spawnEnemyAnimals(float deltaTime) {
@@ -352,7 +351,7 @@ public class GameScreen implements Screen {
 
                     if (enemyAnimal.collisionTest(laser)){
                         // Touches animal
-                        enemyAnimal.takeDamage(laser.getDamageScale() * laser.getOwner().getDamageScale(), 0);
+                        enemyAnimal.takeDamage(laser.getDamageScale() * laser.getOwner().getDamageScale(), 0, laser.getOwner());
                         if(enemyAnimal.isPendingRemoval())
                         {
                             enemyAnimalListIterator.remove();
@@ -364,7 +363,7 @@ public class GameScreen implements Screen {
                     // Player 1 takes damage from enemy hitbox
                     if (enemyAnimal.collisionTest(players.get(0))){
                         if (damageTimer > timeBetweenDamage) {
-                            players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0);
+                            players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
                             damageTimer = 0;
                         }
                     }
@@ -372,7 +371,7 @@ public class GameScreen implements Screen {
                     // Player 2 takes damage from enemy hitbox
                     if (enemyAnimal.collisionTest(players.get(1))){
                         if (damageTimer > timeBetweenDamage) {
-                            players.get(1).takeDamage(enemyAnimal.getDamageScale(), 0);
+                            players.get(1).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
                             damageTimer -= timeBetweenDamage;
                         }
                     }

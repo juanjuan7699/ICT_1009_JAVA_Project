@@ -13,7 +13,6 @@ public class Player extends Entity implements ICollidable, IDamageHandler {
 
     private Laser weapon;
     private float timeSinceLastShot;
-    private float timeBetweenShots;
     private boolean invulnerable;
 
     public Player() {
@@ -25,7 +24,16 @@ public class Player extends Entity implements ICollidable, IDamageHandler {
         this.setDamageScale(1);
         this.weapon = new Laser(this, 0);
         this.timeSinceLastShot = 0;
-        this.timeBetweenShots = 1;
+        this.setAttackSpeed(1.45f);
+        this.setHealthRegen(.01f);
+    }
+
+    public void resetBuffs() {
+        this.setMaxHealth(100);
+        this.modifyHealth(100);
+        this.setMovementSpeed(48);
+        this.setDamageScale(1);
+        this.setHealthRegen(.01f);
     }
 
     @Override
@@ -34,17 +42,18 @@ public class Player extends Entity implements ICollidable, IDamageHandler {
     }
 
     @Override
-    public void takeDamage(float damage, int damageType) {
+    public void takeDamage(float damage, int damageType, Entity instigator) {
         this.modifyHealth(-damage);
         //do something else when it gets damaged
-        onTakeDamage();
+        onTakeDamage(instigator);
     }
 
     @Override
-    public void onTakeDamage() {
+    public void onTakeDamage(Entity instigator) {
         //show hurt etc
         if (getCurrentHealth() <= 0) {
             //downed state or die
+            //this.onDestroy(instigator);
         }
     }
 
@@ -59,23 +68,20 @@ public class Player extends Entity implements ICollidable, IDamageHandler {
     }
 
     @Override
-    public void usePickup(Entity pickup) {
-
-    }
-
-    @Override
     public void addToRenderQueue() {
         GameScreen.players.add(this);
     }
 
     @Override
-    public void onDestroy() { //what happens when the player dies
+    public void onDestroy(Entity instigator) { //what happens when the player dies
 
     }
 
     @Override
     public void update(float deltaTime) {
+
         timeSinceLastShot += deltaTime;
+        this.modifyHealth(this.getHealthRegen());
     }
 
     public Laser[] attack() {
@@ -87,7 +93,7 @@ public class Player extends Entity implements ICollidable, IDamageHandler {
     }
 
     public boolean canFireLaser() {
-        return (timeSinceLastShot - timeBetweenShots >= 0);
+        return (timeSinceLastShot - this.getAttackSpeed() >= 0);
     }
 
 }

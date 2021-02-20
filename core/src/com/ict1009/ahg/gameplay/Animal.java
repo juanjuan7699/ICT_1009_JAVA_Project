@@ -45,21 +45,19 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
     }
 
     @Override
-    public void usePickup(Entity pickup) {
-
-    }
-
-    @Override
     public void addToRenderQueue() {
         GameScreen.mobs.add(this);
     }
 
     @Override
-    public void onDestroy() { //pending removal
+    public void onDestroy(Entity instigator) { //pending removal
         explosionList.add(new Explosion(explosionTexture, new Rectangle (this.getBoundingBox()), 0.7f));
         //Killed and obtain score
         score += 250;
         levelScore += 250;
+
+        //instigator //add points to instigator or smth
+
         this.setPendingRemoval(true);
     }
 
@@ -74,15 +72,15 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
     }
 
     @Override
-    public void takeDamage(float damage, int damageType) {
+    public void takeDamage(float damage, int damageType, Entity instigator) {
         this.modifyHealth(-damage);
-        onTakeDamage();
+        onTakeDamage(instigator);
     }
 
     @Override
-    public void onTakeDamage() {
+    public void onTakeDamage(Entity instigator) {
         if (this.getCurrentHealth() <= 0) {
-            onDestroy();
+            onDestroy(instigator);
         }
         //blink animation?
     }

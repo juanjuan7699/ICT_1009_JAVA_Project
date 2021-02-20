@@ -14,7 +14,5 @@ public interface IStatus { //this is for status effects
     void removeAllStatus();
     boolean hasStatus(StatusType status);
 
-    default List<StatusType> getStatuses() {
-        return statuses;
-    }
+    List<StatusType> getStatuses();
 }

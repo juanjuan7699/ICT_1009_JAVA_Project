@@ -1,9 +1,11 @@
 package com.ict1009.ahg.interfaces;
 
+import com.ict1009.ahg.gameplay.Entity;
+
 public interface IDamageHandler { //if you inplement this class, you will take and deal damage
 
-    void takeDamage(float damage, int damageType);
+    void takeDamage(float damage, int damageType, Entity instigator);
 
-    void onTakeDamage();
+    void onTakeDamage(Entity instigator);
 
 }

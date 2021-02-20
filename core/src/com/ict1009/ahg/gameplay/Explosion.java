@@ -3,11 +3,9 @@ package com.ict1009.ahg.gameplay;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Batch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.ict1009.ahg.GameScreen;
 
 public class Explosion extends Entity {
 
@@ -57,16 +55,11 @@ public class Explosion extends Entity {
     }
 
     @Override
-    public void usePickup(Entity pickup) {
-        //null
-    }
-
-    @Override
     public void addToRenderQueue() {
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy(Entity instigator) {
 
     }
 

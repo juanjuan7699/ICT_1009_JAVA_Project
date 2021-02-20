@@ -6,5 +6,15 @@ public enum ItemType {
     GOLD,
     WEAPON,
     POTION,
-    NONE
+
+    //buffs
+    ATTACKSPEED_BUFF,
+    REGEN_BUFF,
+    DAMAGE_BUFF,
+    EXTRA_LASER_BUFF,
+    TRINITY_BUFF,
+
+    INSTANT_HEAL,
+
+    NONE,
 }

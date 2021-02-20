@@ -29,17 +29,12 @@ public class Laser extends Entity {
     }
 
     @Override
-    public void usePickup(Entity pickup) {
-
-    }
-
-    @Override
     public void addToRenderQueue() {
         GameScreen.renderQueue.add(this);
     }
 
     @Override
-    public void onDestroy() {
+    public void onDestroy(Entity instigator) {
 
     }
 

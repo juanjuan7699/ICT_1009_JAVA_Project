@@ -17,8 +17,10 @@ public abstract class Entity {
     private float damageScale;
     private float attackSpeed; //higher the faster ROF, -1 = cannot attack, 0 = tickrate attackspeed (infinite)
     private float movementSpeed; // movspeed
+    private float healthRegen;
 
     private int team;
+    private int attacks;
 
     private boolean movable; //check if object is supposed to move, "(wall) coded as minions"
     private boolean visible; //to draw on canvas (some entities can be invisible walls)
@@ -33,9 +35,8 @@ public abstract class Entity {
 
     public abstract void tryMove(int direction);
     public abstract void tryTeleport(Vector3 targetLocation);
-    public abstract void usePickup(Entity pickup);
     public abstract void addToRenderQueue();
-    public abstract void onDestroy(); //explosions, death animations here
+    public abstract void onDestroy(Entity instigator); //explosions, death animations here
     public abstract void update(float deltaTime);
 
     public Entity() {
@@ -203,5 +204,21 @@ public abstract class Entity {
 
     public void setPendingRemoval(boolean pendingRemoval) {
         this.pendingRemoval = pendingRemoval;
+    }
+
+    public float getHealthRegen() {
+        return healthRegen;
+    }
+
+    public void setHealthRegen(float healthRegen) {
+        this.healthRegen = healthRegen;
+    }
+
+    public int getAttacks() {
+        return attacks;
+    }
+
+    public void setAttacks(int attacks) {
+        this.attacks = attacks;
     }
 }
