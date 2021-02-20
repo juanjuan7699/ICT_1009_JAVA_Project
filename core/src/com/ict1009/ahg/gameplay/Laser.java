@@ -1,5 +1,6 @@
 package com.ict1009.ahg.gameplay;
 
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.GameScreen;
 
@@ -11,9 +12,10 @@ public class Laser extends Entity {
     public Laser(Entity owner, int team) {
         this.owner = owner;
         this.team = team;
-        this.setMovementSpeed(1);
+        this.setMovementSpeed(100);
+        this.setDamageScale(5);
         this.setSprite(GameScreen.textureAtlas.findRegion("laserRed12")); //defaults
-        this.setBoundingBox();
+        this.setBoundingBox(new Rectangle(owner.getBoundingBox().x + owner.getBoundingBox().width *.72f, owner.getBoundingBox().y + owner.getBoundingBox().height *.98f,1,4));
     }
 
     @Override
@@ -44,5 +46,23 @@ public class Laser extends Entity {
     @Override
     public void update(float deltaTime) {
 
+    }
+
+    public Entity getOwner() {
+        return owner;
+    }
+
+    public void setOwner(Entity owner) {
+        this.owner = owner;
+    }
+
+    @Override
+    public int getTeam() {
+        return team;
+    }
+
+    @Override
+    public void setTeam(int team) {
+        this.team = team;
     }
 }

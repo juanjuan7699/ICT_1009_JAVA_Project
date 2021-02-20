@@ -23,6 +23,7 @@ public abstract class Entity {
     private boolean movable; //check if object is supposed to move, "(wall) coded as minions"
     private boolean visible; //to draw on canvas (some entities can be invisible walls)
     private boolean combat; //is in combat?
+    private boolean pendingRemoval;
 
     private String UID; //for networking
     private String name;
@@ -38,7 +39,7 @@ public abstract class Entity {
     public abstract void update(float deltaTime);
 
     public Entity() {
-
+        this.visible = true;
     }
 
     public void draw(Batch batch) {
@@ -194,5 +195,13 @@ public abstract class Entity {
 
     public void setTeam(int team) {
         this.team = team;
+    }
+
+    public boolean isPendingRemoval() {
+        return pendingRemoval;
+    }
+
+    public void setPendingRemoval(boolean pendingRemoval) {
+        this.pendingRemoval = pendingRemoval;
     }
 }
