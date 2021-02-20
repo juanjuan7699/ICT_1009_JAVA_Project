@@ -103,7 +103,7 @@ public class GameScreen implements Screen {
 
         laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
         enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
-        explosionTexture = new Texture("explosion.png");
+        explosionTexture = new Texture("bloodsprite3.png"); 
 
         backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
 

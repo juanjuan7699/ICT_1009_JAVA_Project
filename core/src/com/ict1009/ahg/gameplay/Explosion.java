@@ -18,7 +18,7 @@ public class Explosion extends Entity {
         this.boundingBox = boundingBox;
 
         //split texture
-        TextureRegion[][] textureRegion2D = TextureRegion.split(texture, 64 , 64);
+        TextureRegion[][] textureRegion2D = TextureRegion.split(texture, 480 , 480);
 
         //convert to 1D array
         TextureRegion[] textureRegion1D = new TextureRegion[16];
