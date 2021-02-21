@@ -116,17 +116,19 @@ public class GameScreen implements Screen {
 
         //1f, 4, 120, .35f //laser data
         mobs = new ArrayList<>();
-        renderQueue = new ArrayList<>();
+        renderQueue = Collections.synchronizedList(new ArrayList<Entity>());
         players = new ArrayList<>();
         explosionList = new ArrayList<>();
+        batch = new SpriteBatch();
+        prepareHud();
 
         for (int i = 0; i < 2; i++) { //set to amount of players
-            new Player().addToRenderQueue(); //temporary
+            Player player = new Player();
+            player.addToRenderQueue(); //send to render
+            player.startAttacking(); //request to start attacking
         }
 
-        batch = new SpriteBatch();
-
-        prepareHud();
+        //prepare mob spawning here
 
         try{
             music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
@@ -171,12 +173,16 @@ public class GameScreen implements Screen {
     }
 
     @Override
-    public void render(float deltaTime) {
+    public void render(float deltaTime) { //render method should only have rendering stuff, spawning should be other area
         batch.begin();
 
         //Scrolling background
         renderBackground(deltaTime);
         detectInput(deltaTime);
+
+        //move out from render q
+        spawnEnemyAnimals(deltaTime);//change to spawnpoint
+        spawnPickup(deltaTime);
 
         //player renderer queue
         for (Player player : players) {
@@ -184,29 +190,29 @@ public class GameScreen implements Screen {
             player.draw(batch);
         }
 
-        spawnEnemyAnimals(deltaTime);//change to spawnpoint
-        spawnPickup(deltaTime);
-
         //animal renderer queue
         for (Animal mob : mobs) {
-            moveEnemy(mob, deltaTime);
+            moveEnemy(mob, deltaTime); //move to animal AI
             mob.update(deltaTime);
             mob.draw(batch);
         }
 
-        for (Entity entity : renderQueue) {
-            entity.update(deltaTime);
-            entity.draw(batch);
+
+
+        synchronized (renderQueue) {
+            //misc rendering
+            for (Entity entity : renderQueue) {
+                entity.update(deltaTime);
+                entity.draw(batch);
+            }
+
+            renderLasers(deltaTime); //removing old lasers only
+            detectCollisions(deltaTime);
         }
 
-        renderLasers(deltaTime);
-        detectCollisions(deltaTime);
+        updateLevel();
 
-        updateLevel(deltaTime);
-
-        // Explosions
         updateAndRenderExplosions(deltaTime);
-        //hud rendering
         updateAndRenderHUD();
 
         batch.end();
@@ -223,7 +229,7 @@ public class GameScreen implements Screen {
             mapTimer -= timeBetweenNewMap;
         }
 
-        if (level % 2 == 0) {
+        if (level % 25 == 0) { //stop flashing for now
             backgrounds[0] = textureAtlas.findRegion("grassBackground2");
             backgrounds[1] = textureAtlas.findRegion("grassBackground2");
             backgrounds[2] = textureAtlas.findRegion("grassBackground2");
@@ -468,16 +474,8 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void renderLasers(float deltaTime){
-        // Create new lasers
-        if (players.get(0).canFireLaser()) {
-            Laser[] lasers = players.get(0).attack();
-            for (Laser laser : lasers) {
-                laser.addToRenderQueue();
-            }
-        }
-        // Draw lasers
-        // Remove old lasers
+    private void renderLasers(float deltaTime) {
+
         ListIterator<Entity> iterator = renderQueue.listIterator();
         while(iterator.hasNext()) {
             Entity entity = iterator.next();
@@ -485,11 +483,12 @@ public class GameScreen implements Screen {
                 Laser laser = (Laser)entity;
                 laser.draw(batch);
                 laser.getBoundingBox().y += laser.getMovementSpeed()*deltaTime;
+
+                // Remove old lasers
                 if (laser.getBoundingBox().y + laser.getBoundingBox().height < 0) {
                     iterator.remove();
                 }
             }
-
         }
     }
 

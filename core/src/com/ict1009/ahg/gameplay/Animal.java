@@ -7,6 +7,9 @@ import com.ict1009.ahg.GameScreen;
 import com.ict1009.ahg.interfaces.ICollidable;
 import com.ict1009.ahg.interfaces.IDamageHandler;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import static com.ict1009.ahg.GameScreen.*;
 
 public class Animal extends Entity implements ICollidable, IDamageHandler {
@@ -22,6 +25,8 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
         this.setSprite(animalForestTextures[0]);
 
         this.directionVector = new Vector2(0 ,-1);
+        randomizeDirectionVector();
+
     }
 
     public Vector2 getDirectionVector() {
@@ -29,9 +34,17 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
     }
 
     private void randomizeDirectionVector() {
-        double bearing = generator.nextDouble() * 6.283185; // 0 to 2*Pi
-        directionVector.x = (float)Math.sin(bearing);
-        directionVector.y = (float)Math.cos(bearing);
+
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                double bearing = generator.nextDouble() * 6.283185; // 0 to 2*Pi
+                directionVector.x = (float)Math.sin(bearing);
+                directionVector.y = (float)Math.cos(bearing);
+            }
+        }, 0, 4000);
+
+        //find target enemy
     }
 
     @Override
@@ -63,7 +76,6 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
 
     @Override
     public void update(float deltaTime) {
-        randomizeDirectionVector();
     }
 
     @Override

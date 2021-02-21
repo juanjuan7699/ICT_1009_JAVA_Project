@@ -7,10 +7,9 @@ import java.util.List;
 
 public interface IStatus { //this is for status effects
 
-    List<StatusType> statuses = new ArrayList<>();
-
-    void addStatus();
-    void removeStatus();
+    void addStatus(StatusType status);
+    void removeStatus(StatusType status);
+    void removeStatus(int index);
     void removeAllStatus();
     boolean hasStatus(StatusType status);
 
