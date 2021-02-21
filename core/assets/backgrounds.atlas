@@ -1,0 +1,34 @@
+
+backgrounds.png
+size: 8192, 2048
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+desertBackground
+  rotate: false
+  xy: 2, 2
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+grassBackground2
+  rotate: false
+  xy: 3248, 2
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+rockBackground
+  rotate: false
+  xy: 1084, 2
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1
+snowBackground
+  rotate: false
+  xy: 2166, 2
+  size: 1080, 1920
+  orig: 1080, 1920
+  offset: 0, 0
+  index: -1

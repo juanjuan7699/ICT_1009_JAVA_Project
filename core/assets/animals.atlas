@@ -1,0 +1,90 @@
+
+animals.png
+size: 4096, 256
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+bear
+  rotate: false
+  xy: 1012, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+camel
+  rotate: false
+  xy: 406, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+chimera
+  rotate: false
+  xy: 1214, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+deer
+  rotate: false
+  xy: 810, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+dinosaur
+  rotate: false
+  xy: 2224, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+elephant
+  rotate: false
+  xy: 1820, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+goat
+  rotate: false
+  xy: 1416, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+gorilla
+  rotate: false
+  xy: 204, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+lion
+  rotate: false
+  xy: 1618, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+wolf
+  rotate: false
+  xy: 2022, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+werewolf
+  rotate: false
+  xy: 2, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+yeti
+  rotate: false
+  xy: 608, 2
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1

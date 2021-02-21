@@ -36,12 +36,17 @@ public class GameScreen implements Screen {
 
     private final SpriteBatch batch;
     public static final TextureAtlas textureAtlas = new TextureAtlas("images.atlas");
+    public static final TextureAtlas animalTextureAtlas = new TextureAtlas("animals.atlas");
+    public static final TextureAtlas backgroundTextureAtlas = new TextureAtlas("backgrounds.atlas");
+    public static final TextureAtlas potionsTextureAtlas = new TextureAtlas("potions.atlas");
 
     public static Texture explosionTexture;
     private TextureRegion[] backgrounds;
     private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
             laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion,
-            elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion;
+            elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion, wolfTextureRegion,
+            deerTextureRegion, dinosaurTextureRegion, chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion,
+            potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion;
 
 
     /**Timing**/
@@ -85,6 +90,10 @@ public class GameScreen implements Screen {
     public static Random generator = new Random();
     public static TextureRegion[] animalForestTextures;
     public static TextureRegion[] animalDesertTextures;
+    public static TextureRegion[] animalSnowTextures;
+    public static TextureRegion[] animalRockTextures;
+    public static TextureRegion[] animalBossTextures;
+    public static TextureRegion[] potionTextures;
 
     GameScreen() {
         camera = new OrthographicCamera();
@@ -103,17 +112,35 @@ public class GameScreen implements Screen {
         lionTextureRegion = textureAtlas.findRegion("lion");
         gorillaTextureRegion = textureAtlas.findRegion("gorilla");
         camelTextureRegion = textureAtlas.findRegion("camel");
+        wolfTextureRegion = animalTextureAtlas.findRegion("wolf");
+        deerTextureRegion = animalTextureAtlas.findRegion("deer");
+        dinosaurTextureRegion = animalTextureAtlas.findRegion("dinosaur");
+        goatTextureRegion = animalTextureAtlas.findRegion("goat");
+
+        // Boss textures
+        chimeraTextureRegion = animalTextureAtlas.findRegion("chimera");
+        werewolfTextureRegion = animalTextureAtlas.findRegion("werewolf");
+        yetiTextureRegion = animalTextureAtlas.findRegion("yeti");
 
         laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
         enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
-        explosionTexture = new Texture("bloodsprite3.png"); 
+        explosionTexture = new Texture("bloodsprite3.png");
+
+        // Potion textures
+        potion1TextureRegion = potionsTextureAtlas.findRegion("potion1");
+        potion2TextureRegion = potionsTextureAtlas.findRegion("potion2");
+        potion3TextureRegion = potionsTextureAtlas.findRegion("potion3");
+        potion4TextureRegion = potionsTextureAtlas.findRegion("potion4");
 
         backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
 
 //        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion};
         animalForestTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion};
         animalDesertTextures = new TextureRegion[]{lionTextureRegion, camelTextureRegion};
-
+        animalSnowTextures = new TextureRegion[]{wolfTextureRegion, deerTextureRegion};
+        animalRockTextures = new TextureRegion[]{dinosaurTextureRegion, goatTextureRegion};
+        animalBossTextures = new TextureRegion[]{chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion};
+        potionTextures = new TextureRegion[]{potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion};
 
         //1f, 4, 120, .35f //laser data
         mobs = new ArrayList<>();
@@ -242,20 +269,27 @@ public class GameScreen implements Screen {
             mapTimer -= timeBetweenNewMap;
         }
 
-        if (level % 25 == 0) { //stop flashing for now
-            backgrounds[0] = textureAtlas.findRegion("grassBackground2");
-            backgrounds[1] = textureAtlas.findRegion("grassBackground2");
-            backgrounds[2] = textureAtlas.findRegion("grassBackground2");
-            backgrounds[3] = textureAtlas.findRegion("grassBackground2");
-        }else {
-            backgrounds[0] = textureAtlas.findRegion("desertBackground");
-            backgrounds[1] = textureAtlas.findRegion("desertBackground");
-            backgrounds[2] = textureAtlas.findRegion("desertBackground");
-            backgrounds[3] = textureAtlas.findRegion("desertBackground");
+        if (level % 4 == 0) { //stop flashing for now
+            backgrounds[0] = backgroundTextureAtlas.findRegion("grassBackground2");
+            backgrounds[1] = backgroundTextureAtlas.findRegion("grassBackground2");
+            backgrounds[2] = backgroundTextureAtlas.findRegion("grassBackground2");
+            backgrounds[3] = backgroundTextureAtlas.findRegion("grassBackground2");
+        } else if (level % 4 == 1) {
+            backgrounds[0] = backgroundTextureAtlas.findRegion("desertBackground");
+            backgrounds[1] = backgroundTextureAtlas.findRegion("desertBackground");
+            backgrounds[2] = backgroundTextureAtlas.findRegion("desertBackground");
+            backgrounds[3] = backgroundTextureAtlas.findRegion("desertBackground");
+        } else if (level % 4 == 2) {
+            backgrounds[0] = backgroundTextureAtlas.findRegion("snowBackground");
+            backgrounds[1] = backgroundTextureAtlas.findRegion("snowBackground");
+            backgrounds[2] = backgroundTextureAtlas.findRegion("snowBackground");
+            backgrounds[3] = backgroundTextureAtlas.findRegion("snowBackground");
+        } else {
+            backgrounds[0] = backgroundTextureAtlas.findRegion("rockBackground");
+            backgrounds[1] = backgroundTextureAtlas.findRegion("rockBackground");
+            backgrounds[2] = backgroundTextureAtlas.findRegion("rockBackground");
+            backgrounds[3] = backgroundTextureAtlas.findRegion("rockBackground");
         }
-
-
-
     }
 
     private void updateAndRenderHUD() {
@@ -277,10 +311,14 @@ public class GameScreen implements Screen {
 
         if (enemySpawnTimer > timeBetweenEnemySpawns && mobs.size() < maxMobs) {
             TextureRegion animalTexture;
-            if (level % 2 == 0) {
+            if (level % 4 == 0) {
                 animalTexture = animalForestTextures[randomIndex];
-            } else {
+            } else if (level % 4 == 1) {
                 animalTexture = animalDesertTextures[randomIndex];
+            } else if (level % 4 == 2) {
+                animalTexture = animalSnowTextures[randomIndex];
+            } else {
+                animalTexture = animalRockTextures[randomIndex];
             }
             for (int i = 0; i < spawnPerCycle; i++) {
                 new Animal().addToRenderQueue();
@@ -411,7 +449,7 @@ public class GameScreen implements Screen {
                     }
 
                     // Player 1 takes damage from enemy hitbox
-                    if (enemyAnimal.collisionTest(players.get(0))){
+                    if (enemyAnimal.collisionTest(players.get(0))) {
                         if (damageTimer > timeBetweenDamage) {
                             players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
                             damageTimer = 0;

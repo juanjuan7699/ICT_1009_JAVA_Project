@@ -71,6 +71,8 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
         if (getCurrentHealth() <= 0) {
             //downed state or die
             //this.onDestroy(instigator);
+            this.addStatus(StatusType.DOWNED);
+            this.removeStatus(StatusType.ALIVE);
         }
     }
 
@@ -97,7 +99,9 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
 
     @Override
     public void update(float deltaTime) {
-        this.modifyHealth(this.getHealthRegen()); //move to timer to slow down
+
+        if (!this.hasStatus(StatusType.DOWNED)) //if downed cannot regen until revived
+            this.modifyHealth(this.getHealthRegen()); //move to timer to slow down
     }
 
     public void startAttacking() { //now in a fixed timer instead of running the method every tick
