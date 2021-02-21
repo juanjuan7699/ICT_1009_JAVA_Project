@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
+import menu.MenuScreen;
 
 import java.util.Locale;
 
@@ -56,10 +57,12 @@ public class EndScreen implements Screen {
 
         font.draw(batch, "Game Over", GameScreen.WORLD_WIDTH * 2, GameScreen.WORLD_HEIGHT * 5);
         font.draw(batch, String.format(Locale.getDefault(), "Score: %06d", GameScreen.score), 265, GameScreen.WORLD_HEIGHT * 4, GameScreen.WORLD_WIDTH, Align.center, false);
-        font2.draw(batch, "Press R to restart", 160, GameScreen.WORLD_HEIGHT * 2);
+        font2.draw(batch, "Press R to restart\n\nPress B to go to menu", 160, GameScreen.WORLD_HEIGHT * 2);
 
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
             game.setScreen(new GameScreen(game));
+        } else if (Gdx.input.isKeyPressed(Input.Keys.B)) {
+            game.setScreen(new MenuScreen(game));
         }
 
         batch.end();
