@@ -77,6 +77,9 @@ public class Pickup extends Entity {
                 break;
             case ATTACKSPEED_BUFF:
                 instigator.setAttackSpeed(instigator.getAttackSpeed() * .9f);
+                if (instigator instanceof Player)
+                    ((Player)instigator).startAttacking();
+
                 System.out.println("buffed spd now " + instigator.getAttackSpeed());
                 break;
             case REGEN_BUFF:

@@ -210,7 +210,7 @@ public class GameScreen implements Screen {
             detectCollisions(deltaTime);
         }
 
-        updateLevel();
+        updateLevel(deltaTime);
 
         updateAndRenderExplosions(deltaTime);
         updateAndRenderHUD();

@@ -101,6 +101,10 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
     }
 
     public void startAttacking() { //now in a fixed timer instead of running the method every tick
+
+        attackTimer.cancel();
+        attackTimer = new Timer();
+
         attackTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
@@ -116,7 +120,7 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
                     laser.addToRenderQueue();
                 }
             }
-        }, 0, (long) this.getAttackSpeed() * 1000);
+        }, 0, (long) (this.getAttackSpeed() * 1000));
     }
 
 
