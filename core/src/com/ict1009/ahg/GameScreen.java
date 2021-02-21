@@ -273,7 +273,8 @@ public class GameScreen implements Screen {
     }
 
     private void getHealth(){
-        if (players.get(0).getCurrentHealth() == 0 || players.get(1).getCurrentHealth() == 0) {
+        if (Gdx.input.isKeyPressed(Input.Keys.ENTER)) {
+//        if (players.get(0).getCurrentHealth() == 0 || players.get(1).getCurrentHealth() == 0) {
             game.setScreen(new EndScreen(game));
         }
     }

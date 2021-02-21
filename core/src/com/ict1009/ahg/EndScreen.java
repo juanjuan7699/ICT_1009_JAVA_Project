@@ -2,6 +2,7 @@ package com.ict1009.ahg;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -16,7 +17,8 @@ public class EndScreen implements Screen {
 
     private AnimalHunter game;
     private final SpriteBatch batch = new SpriteBatch();
-    BitmapFont font = new BitmapFont();
+    private BitmapFont font = new BitmapFont();
+    private BitmapFont font2 = new BitmapFont();
 
     EndScreen(AnimalHunter game) {
         this.game = game;
@@ -33,6 +35,16 @@ public class EndScreen implements Screen {
         fontParameter.borderColor = new Color(0,0,0,0.3f);
 
         font = fontGenerator.generateFont(fontParameter);
+
+        FreeTypeFontGenerator fontGenerator2 = new FreeTypeFontGenerator(Gdx.files.internal("test.otf"));
+        FreeTypeFontGenerator.FreeTypeFontParameter fontParameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+        fontParameter2.size = 30;
+        fontParameter2.borderWidth = 3.6f;
+        fontParameter2.color = new Color(1,1,1,0.3f);
+        fontParameter2.borderColor = new Color(0,0,0,0.3f);
+
+        font2 = fontGenerator2.generateFont(fontParameter2);
     }
 
     @Override
@@ -43,7 +55,12 @@ public class EndScreen implements Screen {
         batch.begin();
 
         font.draw(batch, "Game Over", GameScreen.WORLD_WIDTH * 2, GameScreen.WORLD_HEIGHT * 5);
-        font.draw(batch, String.format(Locale.getDefault(), "Score: %06d", GameScreen.score), 265, GameScreen.WORLD_HEIGHT * 3, GameScreen.WORLD_WIDTH, Align.center, false);
+        font.draw(batch, String.format(Locale.getDefault(), "Score: %06d", GameScreen.score), 265, GameScreen.WORLD_HEIGHT * 4, GameScreen.WORLD_WIDTH, Align.center, false);
+        font2.draw(batch, "Press R to restart", 160, GameScreen.WORLD_HEIGHT * 2);
+
+        if (Gdx.input.isKeyPressed(Input.Keys.R)) {
+            game.setScreen(new GameScreen(game));
+        }
 
         batch.end();
     }
