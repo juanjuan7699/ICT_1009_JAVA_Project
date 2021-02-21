@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import java.util.Random;
 
 public class AnimalHunter extends Game {
-	GameScreen gameScreen;
+	private GameScreen gameScreen;
 
 	@Override
 	public void create () {

@@ -20,7 +20,7 @@ public class EndScreen implements Screen {
     private BitmapFont font = new BitmapFont();
     private BitmapFont font2 = new BitmapFont();
 
-    EndScreen(AnimalHunter game) {
+    public EndScreen(AnimalHunter game) {
         this.game = game;
         prepareHud();
     }

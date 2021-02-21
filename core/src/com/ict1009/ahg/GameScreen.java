@@ -98,7 +98,7 @@ public class GameScreen implements Screen {
     public static TextureRegion[] potionTextures;
     public static TextureRegion[] playerTextures;
 
-    GameScreen(AnimalHunter game) {
+    public GameScreen(AnimalHunter game) {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
