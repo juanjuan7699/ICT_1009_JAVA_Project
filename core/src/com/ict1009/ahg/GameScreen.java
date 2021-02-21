@@ -48,7 +48,7 @@ public class GameScreen implements Screen {
     private final float[] backgroundOffsets = {0, 0, 0, 0};
     private final float backgroundMaxScrollingSpeed;
     private float timeBetweenEnemySpawns = 2.45f;
-    private float timeBetweenDamage = 2;
+    private float timeBetweenDamage = 0.2f;
     private float timeBetweenNewMap = 10;
     private float enemySpawnTimer = 0;
     private float pickupSpawnTimer = 0; // temp only testing
@@ -265,7 +265,6 @@ public class GameScreen implements Screen {
         //render second row values
         font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
         font.draw(batch, String.format(Locale.getDefault(), "%02d", level), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
-//        font.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
         font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), players.get(0).getBoundingBox().x - 6, players.get(0).getBoundingBox().y, hudSectionWidth, Align.center, false);
         font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(1).getCurrentHealth(), players.get(1).getMaxHealth()), players.get(1).getBoundingBox().x - 6, players.get(1).getBoundingBox().y, hudSectionWidth, Align.center, false);
     }
