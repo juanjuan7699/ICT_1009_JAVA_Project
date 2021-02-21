@@ -1,6 +1,5 @@
-package com.ict1009.ahg;
+package com.ict1009.ahg.screens;
 
-import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
@@ -10,7 +9,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
-import menu.MenuScreen;
+import com.ict1009.ahg.AnimalHunter;
 
 import java.util.Locale;
 

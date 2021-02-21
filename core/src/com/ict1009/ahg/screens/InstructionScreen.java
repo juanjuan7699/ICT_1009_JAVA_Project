@@ -1,4 +1,4 @@
-package menu;
+package com.ict1009.ahg.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;

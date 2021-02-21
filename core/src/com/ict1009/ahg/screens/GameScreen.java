@@ -1,4 +1,4 @@
-package com.ict1009.ahg;
+package com.ict1009.ahg.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
@@ -17,12 +17,14 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.ict1009.ahg.AnimalHunter;
 import com.ict1009.ahg.gameplay.*;
 
 import java.util.*;
 
 public class GameScreen implements Screen {
 
+    private static TextureRegion animalTexture;
     private AnimalHunter game;
 
     /**Screen**/
@@ -224,6 +226,10 @@ public class GameScreen implements Screen {
         hudSectionWidth = WORLD_WIDTH / 3;
     }
 
+    public static TextureRegion getAnimalTexture() {
+        return animalTexture;
+    }
+
     @Override
     public void render(float deltaTime) { //render method should only have rendering stuff, spawning should be other area
         batch.begin();
@@ -332,7 +338,6 @@ public class GameScreen implements Screen {
         int randomIndex = generator.nextInt(animalForestTextures.length);
 
         if (enemySpawnTimer > timeBetweenEnemySpawns && mobs.size() < maxMobs) {
-            TextureRegion animalTexture;
             if (level % 4 == 0) {
                 animalTexture = animalForestTextures[randomIndex];
             } else if (level % 4 == 1) {

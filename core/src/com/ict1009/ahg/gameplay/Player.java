@@ -2,7 +2,7 @@ package com.ict1009.ahg.gameplay;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.ict1009.ahg.GameScreen;
+import com.ict1009.ahg.screens.GameScreen;
 import com.ict1009.ahg.enums.StatusType;
 import com.ict1009.ahg.interfaces.ICollidable;
 import com.ict1009.ahg.interfaces.IDamageHandler;
@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.ict1009.ahg.GameScreen.*;
+import static com.ict1009.ahg.screens.GameScreen.*;
 
 public class Player extends Entity implements ICollidable, IDamageHandler, IStatus {
 

@@ -1,4 +1,4 @@
-package menu;//package menu;
+package com.ict1009.ahg.screens;//package menu;
 //
 //import com.badlogic.gdx.Gdx;
 //import com.badlogic.gdx.Screen;
@@ -50,7 +50,6 @@ package menu;//package menu;
 //}
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -58,7 +57,6 @@ import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ict1009.ahg.AnimalHunter;
-import com.ict1009.ahg.GameScreen;
 
 public class SplashScreen implements Screen {
     private Texture splashtexture;

@@ -2,14 +2,10 @@ package com.ict1009.ahg;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import menu.MenuScreen;
-import menu.SplashScreen;
-
-import java.util.Random;
+import com.ict1009.ahg.screens.GameScreen;
+import com.ict1009.ahg.screens.MenuScreen;
+import com.ict1009.ahg.screens.SplashScreen;
 
 public class AnimalHunter extends Game {
 	private GameScreen gameScreen;

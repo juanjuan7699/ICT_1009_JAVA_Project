@@ -2,9 +2,9 @@ package com.ict1009.ahg.gameplay;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.ict1009.ahg.GameScreen;
+import com.ict1009.ahg.screens.GameScreen;
 
-import static com.ict1009.ahg.GameScreen.playerTextures;
+import static com.ict1009.ahg.screens.GameScreen.playerTextures;
 
 public class Laser extends Entity {
 

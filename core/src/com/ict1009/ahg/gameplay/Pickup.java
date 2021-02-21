@@ -2,11 +2,11 @@ package com.ict1009.ahg.gameplay;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.ict1009.ahg.GameScreen;
+import com.ict1009.ahg.screens.GameScreen;
 import com.ict1009.ahg.enums.ItemType;
 import com.ict1009.ahg.enums.Rarity;
 
-import static com.ict1009.ahg.GameScreen.*;
+import static com.ict1009.ahg.screens.GameScreen.*;
 
 public class Pickup extends Entity {
 
