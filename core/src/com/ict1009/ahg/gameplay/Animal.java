@@ -14,7 +14,7 @@ import static com.ict1009.ahg.screens.GameScreen.*;
 
 public class Animal extends Entity implements ICollidable, IDamageHandler {
 
-    private Vector2 directionVector;
+    public Vector2 directionVector;
 
     public Animal() { //scaling per level
         this.setMovementSpeed(Math.min(100, 24 + 3 * level));
@@ -34,7 +34,7 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
         return directionVector;
     }
 
-    private void randomizeDirectionVector() {
+    public void randomizeDirectionVector() {
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override

@@ -25,6 +25,7 @@ import java.util.*;
 public class GameScreen implements Screen {
 
     private static TextureRegion animalTexture;
+    private static TextureRegion bossTexture;
     private AnimalHunter game;
 
     /**Screen**/
@@ -58,7 +59,7 @@ public class GameScreen implements Screen {
     private final float backgroundMaxScrollingSpeed;
     private float timeBetweenEnemySpawns = 2.45f;
     private float timeBetweenDamage = 0.2f;
-    private float timeBetweenNewMap = 10;
+    private float timeBetweenNewMap = 15;
     private float enemySpawnTimer = 0;
     private float pickupSpawnTimer = 0; // temp only testing
     private float timeBetweenPickup = 2; //temp only
@@ -70,6 +71,7 @@ public class GameScreen implements Screen {
     public static List<Player> players; //all players goes here
     public static List<Entity> renderQueue; //all simple rendered stuff here, short lived stuff only
     public static List<Animal> mobs; //enemies
+    public static List<Boss> bosses; //all players goes here
     public static List<Explosion> explosionList;
 
     //gs
@@ -77,7 +79,9 @@ public class GameScreen implements Screen {
     public static int score = 0;
     public static int levelScore = 0;
     private int maxMobs = 10;
+    private int maxBosses = 1;
     private int spawnPerCycle = 1;
+    private boolean bossSpawned = false;
 
     // Sound Effects
     private Sound sound;
@@ -111,12 +115,11 @@ public class GameScreen implements Screen {
         backgrounds[3] = textureAtlas.findRegion("grassBackground2");
 
         // Animal textures
-        bearTextureRegion = textureAtlas.findRegion("bear2");
-        crocTextureRegion = textureAtlas.findRegion("crocodile");
-        elephantTextureRegion = textureAtlas.findRegion("elephant");
-        lionTextureRegion = textureAtlas.findRegion("lion");
-        gorillaTextureRegion = textureAtlas.findRegion("gorilla");
-        camelTextureRegion = textureAtlas.findRegion("camel");
+        bearTextureRegion = animalTextureAtlas.findRegion("bear");
+        elephantTextureRegion = animalTextureAtlas.findRegion("elephant");
+        lionTextureRegion = animalTextureAtlas.findRegion("lion");
+        gorillaTextureRegion = animalTextureAtlas.findRegion("gorilla");
+        camelTextureRegion = animalTextureAtlas.findRegion("camel");
         wolfTextureRegion = animalTextureAtlas.findRegion("wolf");
         deerTextureRegion = animalTextureAtlas.findRegion("deer");
         dinosaurTextureRegion = animalTextureAtlas.findRegion("dinosaur");
@@ -156,6 +159,7 @@ public class GameScreen implements Screen {
 
         //1f, 4, 120, .35f //laser data
         mobs = new ArrayList<>();
+        bosses = new ArrayList<>();
         renderQueue = Collections.synchronizedList(new ArrayList<Entity>());
         players = new ArrayList<>();
         explosionList = new ArrayList<>();
@@ -229,6 +233,10 @@ public class GameScreen implements Screen {
         return animalTexture;
     }
 
+    public static TextureRegion getBossTexture() {
+        return bossTexture;
+    }
+
     @Override
     public void render(float deltaTime) { //render method should only have rendering stuff, spawning should be other area
         batch.begin();
@@ -252,6 +260,12 @@ public class GameScreen implements Screen {
             moveEnemy(mob, deltaTime); //move to animal AI
             mob.update(deltaTime);
             mob.draw(batch);
+        }
+
+        for (Boss boss : bosses) {
+            moveEnemy(boss, deltaTime); //move to animal AI
+            boss.update(deltaTime);
+            boss.draw(batch);
         }
 
         synchronized (renderQueue) {
@@ -298,6 +312,7 @@ public class GameScreen implements Screen {
 
         if(mapTimer > timeBetweenNewMap){
             level += 1;
+            bossSpawned = false;
             timeBetweenEnemySpawns = (float) Math.max(0.9, timeBetweenEnemySpawns * 0.9);
             maxMobs = Math.min(40, maxMobs+1); //hard cap 40 mobs
             spawnPerCycle = Math.min(4, 1 + level/30); //increase mob spawn rate per level, max 4 per spawn cycle
@@ -343,7 +358,6 @@ public class GameScreen implements Screen {
         timeElapsed += deltaTime;
 
         int randomIndex = generator.nextInt(animalForestTextures.length);
-
         if (enemySpawnTimer > timeBetweenEnemySpawns && mobs.size() < maxMobs) {
             if (level % 4 == 0) {
                 animalTexture = animalForestTextures[randomIndex];
@@ -354,8 +368,28 @@ public class GameScreen implements Screen {
             } else {
                 animalTexture = animalRockTextures[randomIndex];
             }
+
+            if (level % 5 == 0) {
+                if (level % 4 == 0) {
+                    bossTexture = animalBossTextures[0];
+                }
+                else if (level % 4 == 1) {
+                    bossTexture = animalBossTextures[0];
+                }
+                else if (level % 4 == 2) {
+                    bossTexture = animalBossTextures[2];
+                }
+                else {
+                    bossTexture = animalBossTextures[1];
+                }
+            }
+
             for (int i = 0; i < spawnPerCycle; i++) {
                 new Animal().addToRenderQueue();
+
+                if (level % 5 == 0 && !bossSpawned) {
+                    new Boss().addToRenderQueue();
+                }
             }
             enemySpawnTimer -= timeBetweenEnemySpawns;
         }
@@ -389,10 +423,6 @@ public class GameScreen implements Screen {
         upLimit2 = WORLD_HEIGHT - players.get(1).getBoundingBox().y - players.get(1).getBoundingBox().height;
 
         if (Gdx.input.isKeyPressed(Input.Keys.RIGHT) && rightLimit > 0) {
-//            float xChange = player.movementSpeed * deltaTime;
-//            xChange = Math.min(xChange, rightLimit);
-//            player.translate(xChange, 0f);
-
             players.get(0).translate(Math.min(players.get(0).getMovementSpeed() * deltaTime, rightLimit), 0f);
         }
 
@@ -410,10 +440,6 @@ public class GameScreen implements Screen {
 
         //Player 2
         if (Gdx.input.isKeyPressed(Input.Keys.D) && rightLimit2 > 0) {
-//            float xChange = player.movementSpeed * deltaTime;
-//            xChange = Math.min(xChange, rightLimit);
-//            player.translate(xChange, 0f);
-
             players.get(1).translate(Math.min(players.get(1).getMovementSpeed() * deltaTime, rightLimit2), 0f);
         }
 
@@ -470,6 +496,9 @@ public class GameScreen implements Screen {
                 ListIterator<Animal> enemyAnimalListIterator = mobs.listIterator();
                 while (enemyAnimalListIterator.hasNext()) {
                     Animal enemyAnimal = enemyAnimalListIterator.next();
+                    if (String.valueOf(enemyAnimal).toLowerCase().indexOf("boss".toLowerCase()) != -1) {
+                        bossSpawned = true;
+                    }
 
                     if (enemyAnimal.collisionTest(laser)){
                         // Touches animal
