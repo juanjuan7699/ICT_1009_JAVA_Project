@@ -7,6 +7,8 @@ import com.ict1009.ahg.AnimalHunter;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
+		config.height = 900;
+		config.width = 600;
 		new LwjglApplication(new AnimalHunter(), config);
 	}
 }

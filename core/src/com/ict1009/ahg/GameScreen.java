@@ -76,6 +76,7 @@ public class GameScreen implements Screen {
 
     /*HUD only shows player1, maybe if more players means combine scoregains, lives etc?*/
     BitmapFont font;
+    BitmapFont font2;
     float hudVerticalMargin, hudLeftX, hudRightX, hudCentreX, hudRow1Y, hudRow2Y, hudSectionWidth;
 
      /*if want to remove animal laser, gameobjects enemylaserlist, enemylaser linkedlist,
@@ -143,10 +144,9 @@ public class GameScreen implements Screen {
 
     private void prepareHud() {
         //Create a BitmapFont from our font file
-        // FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("TheFoxTailRegular.otf")); //doesnt work
         try{
+            //Font for HUD
             FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("test.otf"));
-            // FreeTypeFontGenerator fontGenerator = new FreeTypeFontGenerator(Gdx.files.internal("killerblack.otf")); //lives doesnt show negative
             FreeTypeFontGenerator.FreeTypeFontParameter fontParameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
 
             fontParameter.size = 72;
@@ -158,6 +158,19 @@ public class GameScreen implements Screen {
 
             //Scale the font to fit world
             font.getData().setScale(0.08f);
+
+            //Font for player
+            FreeTypeFontGenerator.FreeTypeFontParameter fontParameter2 = new FreeTypeFontGenerator.FreeTypeFontParameter();
+
+            fontParameter2.size = 50;
+            fontParameter2.borderWidth = 3.6f;
+            fontParameter2.color = new Color (0,255,0,1f);
+            fontParameter2.borderColor = new Color(0,0,0,0.3f);
+
+            font2 = fontGenerator.generateFont(fontParameter2);
+
+            //Scale the font to fit world
+            font2.getData().setScale(0.08f);
         }catch (RuntimeException e){
             System.out.println("Font file not found: " + e);
         }
@@ -248,12 +261,13 @@ public class GameScreen implements Screen {
     private void updateAndRenderHUD() {
         //render top row labels
         font.draw(batch, "Score", hudLeftX, hudRow1Y, hudSectionWidth, Align.left, false);
-        font.draw(batch, "Level", hudCentreX, hudRow1Y, hudSectionWidth, Align.center, false);
-        font.draw(batch, "HP", hudRightX, hudRow1Y, hudSectionWidth, Align.right, false);
+        font.draw(batch, "Level", hudRightX, hudRow1Y, hudSectionWidth, Align.right, false);
         //render second row values
         font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
-        font.draw(batch, String.format(Locale.getDefault(), "%02d", level), hudCentreX, hudRow2Y, hudSectionWidth, Align.center, false);
-        font.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
+        font.draw(batch, String.format(Locale.getDefault(), "%02d", level), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
+//        font.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
+        font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), players.get(0).getBoundingBox().x - 6, players.get(0).getBoundingBox().y, hudSectionWidth, Align.center, false);
+        font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(1).getCurrentHealth(), players.get(1).getMaxHealth()), players.get(1).getBoundingBox().x - 6, players.get(1).getBoundingBox().y, hudSectionWidth, Align.center, false);
     }
 
     private void spawnEnemyAnimals(float deltaTime) {
