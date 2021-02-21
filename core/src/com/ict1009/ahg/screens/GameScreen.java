@@ -180,7 +180,6 @@ public class GameScreen implements Screen {
         }
 
         this.game = game;
-
     }
 
     private void prepareHud() {
@@ -255,8 +254,6 @@ public class GameScreen implements Screen {
             mob.draw(batch);
         }
 
-
-
         synchronized (renderQueue) {
             //misc rendering
             for (Entity entity : renderQueue) {
@@ -275,7 +272,17 @@ public class GameScreen implements Screen {
 
         getHealth();
 
+        if (players.get(0).getCurrentHealth() == 0 || players.get(1).getCurrentHealth() == 0) {
+            music.dispose();
+            game.setScreen(new EndScreen(game));
+        }
+
         batch.end();
+    }
+
+    public static void gameReset() {
+        level = 1;
+        score = 0;
     }
 
     private void getHealth(){

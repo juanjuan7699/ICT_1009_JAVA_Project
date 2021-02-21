@@ -59,8 +59,10 @@ public class EndScreen implements Screen {
         font2.draw(batch, "Press R to restart\n\nPress B to go to menu", 160, GameScreen.WORLD_HEIGHT * 2);
 
         if (Gdx.input.isKeyPressed(Input.Keys.R)) {
+            GameScreen.gameReset();
             game.setScreen(new GameScreen(game));
         } else if (Gdx.input.isKeyPressed(Input.Keys.B)) {
+            GameScreen.gameReset();
             game.setScreen(new MenuScreen(game));
         }
 
