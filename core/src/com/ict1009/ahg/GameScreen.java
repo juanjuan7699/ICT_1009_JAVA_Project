@@ -412,7 +412,7 @@ public class GameScreen implements Screen {
                     }
 
                     // Player 1 takes damage from enemy hitbox
-                    if (enemyAnimal.collisionTest(players.get(0))){
+                    if (enemyAnimal.collisionTest(players.get(0))) {
                         if (damageTimer > timeBetweenDamage) {
                             players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
                             damageTimer = 0;

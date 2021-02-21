@@ -76,7 +76,7 @@ public class Pickup extends Entity {
                 System.out.println("buffed dmg now " + instigator.getDamageScale());
                 break;
             case ATTACKSPEED_BUFF:
-                instigator.setAttackSpeed(instigator.getAttackSpeed() * .9f);
+                instigator.setAttackSpeed(Math.max(0.2f, instigator.getAttackSpeed() * .9f));
                 if (instigator instanceof Player)
                     ((Player)instigator).startAttacking();
 
