@@ -19,8 +19,8 @@ public class Pickup extends Entity {
         this.setDamageScale(1 + generator.nextFloat()); //scaling of the pickup itself regardless if its damage, health, attack speed
         this.inventoryItem = inventoryItem;
         //get spawn area then set bounding box
-        this.setBoundingBox(new Rectangle((float)generator.nextInt((int)WORLD_WIDTH - 5), WORLD_HEIGHT-20, 20, 20)); //need more images
-        this.setSprite(animalDesertTextures[1]); //temporary
+        this.setBoundingBox(new Rectangle((float)generator.nextInt((int)WORLD_WIDTH - 5), WORLD_HEIGHT-20, 15, 15)); //need more images
+        this.setSprite(potionTextures[0]); //temporary
         this.pickupType = ItemType.NONE;
 
         if (this.inventoryItem) {
@@ -33,19 +33,19 @@ public class Pickup extends Entity {
             switch (rng) {
                 case 0:
                     this.pickupType = ItemType.ATTACKSPEED_BUFF;
-                    this.setSprite(animalDesertTextures[1]); //temporary
+                    this.setSprite(potionTextures[0]); //temporary
                     break;
                 case 1:
                     this.pickupType = ItemType.REGEN_BUFF;
-                    this.setSprite(animalDesertTextures[1]); //temporary
+                    this.setSprite(potionTextures[1]); //temporary
                     break;
                 case 2:
                     this.pickupType = ItemType.DAMAGE_BUFF;
-                    this.setSprite(animalDesertTextures[1]); //temporary
+                    this.setSprite(potionTextures[2]); //temporary
                     break;
                 case 3:
                     this.pickupType = ItemType.EXTRA_LASER_BUFF;
-                    this.setSprite(animalDesertTextures[1]); //temporary
+                    this.setSprite(potionTextures[3]); //temporary
                     break;
             }
         }

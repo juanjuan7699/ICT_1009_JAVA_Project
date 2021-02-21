@@ -38,13 +38,15 @@ public class GameScreen implements Screen {
     public static final TextureAtlas textureAtlas = new TextureAtlas("images.atlas");
     public static final TextureAtlas animalTextureAtlas = new TextureAtlas("animals.atlas");
     public static final TextureAtlas backgroundTextureAtlas = new TextureAtlas("backgrounds.atlas");
+    public static final TextureAtlas potionsTextureAtlas = new TextureAtlas("potions.atlas");
 
     public static Texture explosionTexture;
     private TextureRegion[] backgrounds;
     private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
             laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion,
             elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion, wolfTextureRegion,
-            deerTextureRegion, dinosaurTextureRegion, chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion;;
+            deerTextureRegion, dinosaurTextureRegion, chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion,
+            potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion;
 
 
     /**Timing**/
@@ -91,6 +93,7 @@ public class GameScreen implements Screen {
     public static TextureRegion[] animalSnowTextures;
     public static TextureRegion[] animalRockTextures;
     public static TextureRegion[] animalBossTextures;
+    public static TextureRegion[] potionTextures;
 
     GameScreen() {
         camera = new OrthographicCamera();
@@ -123,6 +126,12 @@ public class GameScreen implements Screen {
         enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
         explosionTexture = new Texture("bloodsprite3.png");
 
+        // Potion textures
+        potion1TextureRegion = potionsTextureAtlas.findRegion("potion1");
+        potion2TextureRegion = potionsTextureAtlas.findRegion("potion2");
+        potion3TextureRegion = potionsTextureAtlas.findRegion("potion3");
+        potion4TextureRegion = potionsTextureAtlas.findRegion("potion4");
+
         backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
 
 //        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion};
@@ -131,6 +140,7 @@ public class GameScreen implements Screen {
         animalSnowTextures = new TextureRegion[]{wolfTextureRegion, deerTextureRegion};
         animalRockTextures = new TextureRegion[]{dinosaurTextureRegion, goatTextureRegion};
         animalBossTextures = new TextureRegion[]{chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion};
+        potionTextures = new TextureRegion[]{potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion};
 
         //1f, 4, 120, .35f //laser data
         mobs = new ArrayList<>();
