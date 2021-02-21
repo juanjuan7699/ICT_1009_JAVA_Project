@@ -49,11 +49,12 @@ public class GameScreen implements Screen {
     private final float backgroundMaxScrollingSpeed;
     private float timeBetweenEnemySpawns = 2.45f;
     private float timeBetweenDamage = 2;
-    private float timeBetweenNewMap = 30;
+    private float timeBetweenNewMap = 10;
     private float enemySpawnTimer = 0;
     private float pickupSpawnTimer = 0; // temp only testing
     private float timeBetweenPickup = 2; //temp only
     private float damageTimer = 0;
+    private float mapTimer = 0;
     private float timeElapsed = 0;
 
     /** Render Queue **/
@@ -201,7 +202,7 @@ public class GameScreen implements Screen {
         renderLasers(deltaTime);
         detectCollisions(deltaTime);
 
-        updateLevel();
+        updateLevel(deltaTime);
 
         // Explosions
         updateAndRenderExplosions(deltaTime);
@@ -211,13 +212,15 @@ public class GameScreen implements Screen {
         batch.end();
     }
 
-    private void updateLevel(){
-        if(levelScore /  1000  >= 1){ //level scaling needs to be exponential
-            levelScore = 0;
+    private void updateLevel(float deltaTime){
+        mapTimer += deltaTime;
+
+        if(mapTimer > timeBetweenNewMap){
             level += 1;
             timeBetweenEnemySpawns = (float) Math.max(0.9, timeBetweenEnemySpawns * 0.9);
             maxMobs = Math.min(40, maxMobs+1); //hard cap 40 mobs
-            spawnPerCycle = Math.min(4, 1 + level/30); //inccrease mob spawn rate per level, max 4 per spawn cycle
+            spawnPerCycle = Math.min(4, 1 + level/30); //increase mob spawn rate per level, max 4 per spawn cycle
+            mapTimer -= timeBetweenNewMap;
         }
 
         if (level % 2 == 0) {
@@ -234,10 +237,6 @@ public class GameScreen implements Screen {
 
 
 
-    }
-
-    private int getLevel(){
-        return level;
     }
 
     private void updateAndRenderHUD() {
