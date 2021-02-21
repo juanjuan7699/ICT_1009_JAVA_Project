@@ -23,6 +23,8 @@ import java.util.*;
 
 public class GameScreen implements Screen {
 
+    private AnimalHunter game;
+
     /**Screen**/
     private final Camera camera;
     private final Viewport viewport;
@@ -95,7 +97,7 @@ public class GameScreen implements Screen {
     public static TextureRegion[] animalBossTextures;
     public static TextureRegion[] potionTextures;
 
-    GameScreen() {
+    GameScreen(AnimalHunter game) {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
@@ -166,6 +168,8 @@ public class GameScreen implements Screen {
         }catch (RuntimeException e){
             System.out.println("Music file not found: " + e);
         }
+
+        this.game = game;
 
     }
 
@@ -255,7 +259,15 @@ public class GameScreen implements Screen {
         updateAndRenderExplosions(deltaTime);
         updateAndRenderHUD();
 
+        getHealth();
+
         batch.end();
+    }
+
+    private void getHealth(){
+        if (players.get(0).getCurrentHealth() == 0 || players.get(1).getCurrentHealth() == 0) {
+            game.setScreen(new EndScreen(game));
+        }
     }
 
     private void updateLevel(float deltaTime){
