@@ -94,6 +94,7 @@ public class GameScreen implements Screen {
     public static TextureRegion[] animalRockTextures;
     public static TextureRegion[] animalBossTextures;
     public static TextureRegion[] potionTextures;
+    public static TextureRegion[] playerTextures;
 
     GameScreen() {
         camera = new OrthographicCamera();
@@ -117,6 +118,13 @@ public class GameScreen implements Screen {
         dinosaurTextureRegion = animalTextureAtlas.findRegion("dinosaur");
         goatTextureRegion = animalTextureAtlas.findRegion("goat");
 
+        //player textures //temp only
+        playerTextures = new TextureRegion[4];
+        playerTextures[0] = textureAtlas.findRegion("soldier1_gun");
+        playerTextures[1] = textureAtlas.findRegion("manBlue_gun");
+        playerTextures[2] = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
+        playerTextures[3] = textureAtlas.findRegion("laserOrange12");
+        explosionTexture = new Texture("bloodsprite3.png"); 
         // Boss textures
         chimeraTextureRegion = animalTextureAtlas.findRegion("chimera");
         werewolfTextureRegion = animalTextureAtlas.findRegion("werewolf");
@@ -151,7 +159,7 @@ public class GameScreen implements Screen {
         prepareHud();
 
         for (int i = 0; i < 2; i++) { //set to amount of players
-            Player player = new Player();
+            Player player = new Player(i);
             player.addToRenderQueue(); //send to render
             player.startAttacking(); //request to start attacking
         }

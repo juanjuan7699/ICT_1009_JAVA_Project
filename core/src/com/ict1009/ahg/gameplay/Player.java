@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.ict1009.ahg.GameScreen.WORLD_HEIGHT;
-import static com.ict1009.ahg.GameScreen.WORLD_WIDTH;
+import static com.ict1009.ahg.GameScreen.*;
 
 public class Player extends Entity implements ICollidable, IDamageHandler, IStatus {
 
@@ -22,14 +21,17 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
     private float timeSinceLastShot;
     private boolean invulnerable;
     private List<StatusType> statuses;
+    private int playerIndex;
 
     private Timer attackTimer = new Timer();
 
 
     //runnable here to destroy onDestroy
 
-    public Player() {
-        this.setSprite(GameScreen.textureAtlas.findRegion("soldier1_gun"));
+    public Player(int playerIndex) {
+        this.playerIndex = Math.min(playerIndex, 1);   //temporarily because only 2 players
+
+        this.setSprite(playerTextures[playerIndex]);
         this.setMaxHealth(100);
         this.modifyHealth(100);
         this.setMovementSpeed(48);
@@ -159,5 +161,13 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
     @Override
     public List<StatusType> getStatuses() {
         return this.statuses;
+    }
+
+    public int getPlayerIndex() {
+        return playerIndex;
+    }
+
+    public void setPlayerIndex(int playerIndex) {
+        this.playerIndex = playerIndex;
     }
 }

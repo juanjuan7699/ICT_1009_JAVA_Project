@@ -4,6 +4,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.GameScreen;
 
+import static com.ict1009.ahg.GameScreen.playerTextures;
+
 public class Laser extends Entity {
 
     private Entity owner;
@@ -14,7 +16,11 @@ public class Laser extends Entity {
         this.team = team;
         this.setMovementSpeed(100);
         this.setDamageScale(6);
-        this.setSprite(GameScreen.textureAtlas.findRegion("laserRed12")); //defaults
+        if (owner instanceof Player)
+            this.setSprite(playerTextures[((Player)owner).getPlayerIndex() + 2]);
+        else
+            this.setSprite(playerTextures[2]); //defaults
+
         this.setBoundingBox(new Rectangle(owner.getBoundingBox().x + owner.getBoundingBox().width *.72f, owner.getBoundingBox().y + owner.getBoundingBox().height *.98f,1,4));
     }
 
