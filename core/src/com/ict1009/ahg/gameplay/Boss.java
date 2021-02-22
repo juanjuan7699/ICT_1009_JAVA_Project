@@ -10,8 +10,8 @@ import static com.ict1009.ahg.screens.GameScreen.WORLD_HEIGHT;
 public class Boss extends Animal {
     public Boss() {
         this.setMovementSpeed(Math.min(100, 24 + 3 * level));
-        this.setMaxHealth(25 + 3 * level);
-        this.modifyHealth(5 + 3 * level);
+        this.setMaxHealth(5 + 3 * level * level * level);
+        this.modifyHealth(5 + 3 * level * level * level);
         this.setDamageScale(5 + 0.5f * level);
         this.setBoundingBox(new Rectangle(generator.nextFloat() * (WORLD_WIDTH - 10) + 5 - 10, WORLD_HEIGHT + 30 - 10, 30, 30));
 //        this.setSprite(animalForestTextures[0]);
