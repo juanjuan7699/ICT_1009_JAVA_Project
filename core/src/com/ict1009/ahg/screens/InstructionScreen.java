@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -28,13 +29,25 @@ public class InstructionScreen implements Screen {
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
-        Label instruction = new Label("Player 1\n Up:'W'\n Left: 'A' \nDown: 'S'\n Right:'D'\n \nPlayer 2\n Up:'Up Arrow'\n " +
-                "Left: 'Left Arrow'\n Down: 'Down Arrow'\n Right:'Right Arrow' ", AnimalHunter.gameSkin,"black");
-        instruction.setFontScale(1.2f, 1.2f);
-        instruction.setAlignment(Align.center);
-        instruction.setY(Gdx.graphics.getHeight()*2/5);
-        instruction.setWidth(Gdx.graphics.getWidth());
-        stage.addActor(instruction);
+        Label instruction1 = new Label("Player 1\nUp:'W'\nLeft: 'A'\nDown: 'S'\nRight:'D'", AnimalHunter.gameSkin,"black");
+        instruction1.setFontScale(1.2f, 1.2f);
+        Label space = new Label("     ", AnimalHunter.gameSkin,"black");
+        Label instruction2 = new Label("Player 2\nUp:'Up Arrow'\nLeft: 'Left Arrow'\nDown: 'Down Arrow'\nRight:'Right Arrow'", AnimalHunter.gameSkin,"black");
+        instruction2.setFontScale(1.2f, 1.2f);
+        Label buff = new Label("Blue: Attack Speed Buff\n Red: Regen Buff\n Green: Damage Buff\n Purple: Extra Laser Buff", AnimalHunter.gameSkin,"black");
+        buff.setFontScale(1.2f, 1.2f);
+        buff.setAlignment(Align.center);
+        buff.setY(Gdx.graphics.getHeight()*2/5);
+        buff.setWidth(Gdx.graphics.getWidth());
+
+        Table table = new Table();
+        // add items to first row
+        table.add(instruction1);
+        table.add(space);
+        table.add(instruction2);
+        table.setPosition(Gdx.graphics.getWidth()/2-table.getWidth()/2,550-table.getHeight()/2);
+        stage.addActor(table);
+        stage.addActor(buff);
 
         // to go back to menu page
         TextButton backButton = new TextButton("Back",AnimalHunter.gameSkin);
