@@ -56,7 +56,7 @@ public class MenuScreen implements Screen {
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
                 music.dispose();
                 game.setScreen(new GameScreen(game));
-
+                Gdx.input.setInputProcessor(null);
                 return true;
             }
         });
