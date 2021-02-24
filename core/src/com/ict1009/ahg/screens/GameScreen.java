@@ -47,7 +47,11 @@ public class GameScreen implements Screen {
     public static final TextureAtlas backgroundTextureAtlas = new TextureAtlas("backgrounds.atlas");
     public static final TextureAtlas potionsTextureAtlas = new TextureAtlas("potions.atlas");
 
-    public static Texture explosionTexture;
+    public static Texture explosionTexture;     //480 by 480
+    public static Texture onHitTexture;         //100 by 100 
+    public static Texture onHitSwarmTexture;    //64 by 64
+    public static Texture onHitGenericTexture; //96 by 96
+    public static Texture onHitStasisTexture;  //96 by 96
     private TextureRegion[] backgrounds;
     private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
             laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion,
@@ -72,7 +76,7 @@ public class GameScreen implements Screen {
     public static List<Player> players; //all players goes here
     public static List<Entity> renderQueue; //all simple rendered stuff here, short lived stuff only
     public static List<Animal> mobs; //enemies
-    public static List<Explosion> explosionList;
+    public static List<OnHitAndExplosion> onHitAndExplosionList;
 
     /** spawners  **/
     private ISpawnPoint pickupSpawner;
@@ -136,6 +140,10 @@ public class GameScreen implements Screen {
         playerTextures[3] = textureAtlas.findRegion("laserOrange12");
         playerTextures[4] = textureAtlas.findRegion("laserRed12");
         explosionTexture = new Texture("bloodsprite3.png");
+        onHitTexture = new Texture("testblood.png");        
+        onHitGenericTexture = new Texture("GenericLaserSprite.png");
+        onHitSwarmTexture = new Texture("SwarmLaserSprite.png");
+        onHitStasisTexture = new Texture("IceCastSprite.png");
         // Boss textures
         chimeraTextureRegion = animalTextureAtlas.findRegion("chimera");
         werewolfTextureRegion = animalTextureAtlas.findRegion("werewolf");
@@ -164,7 +172,7 @@ public class GameScreen implements Screen {
         mobs =  new ArrayList<>();
         renderQueue = Collections.synchronizedList(new ArrayList<Entity>());
         players = new ArrayList<>();
-        explosionList = new ArrayList<>();
+        onHitAndExplosionList = new ArrayList<>();
         batch = new SpriteBatch();
         prepareHud();
 
@@ -280,7 +288,7 @@ public class GameScreen implements Screen {
 
         updateLevel(deltaTime);
 
-        updateAndRenderExplosions(deltaTime);
+        updateAndRenderOnHitAndExplosions(deltaTime);
         updateAndRenderHUD();
 
         getHealth();
@@ -598,17 +606,17 @@ public class GameScreen implements Screen {
         }
     }
 
-    private void updateAndRenderExplosions(float deltaTime) {
+    private void updateAndRenderOnHitAndExplosions(float deltaTime) {
         try {
-            ListIterator<Explosion> explosionListIterator = explosionList.listIterator();
-            while (explosionListIterator.hasNext()){
-                Explosion explosion = explosionListIterator.next();
-                explosion.update(deltaTime);
-                if(explosion.isFinished()){
-                    explosionListIterator.remove();
+            ListIterator<OnHitAndExplosion> onHitandExplosionListIterator = onHitAndExplosionList.listIterator();
+            while (onHitandExplosionListIterator.hasNext()){
+                OnHitAndExplosion onHitAndExplosion = onHitandExplosionListIterator.next();
+                onHitAndExplosion.update(deltaTime);
+                if(onHitAndExplosion.isFinished()){
+                    onHitandExplosionListIterator.remove();
                 }
                 else {
-                    explosion.draw(batch);
+                    onHitAndExplosion.draw(batch);
                 }
             }
         }

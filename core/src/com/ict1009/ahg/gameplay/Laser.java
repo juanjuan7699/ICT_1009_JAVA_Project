@@ -4,6 +4,9 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.screens.GameScreen;
 
+
+import static com.ict1009.ahg.screens.GameScreen.onHitAndExplosionList;
+import static com.ict1009.ahg.screens.GameScreen.onHitGenericTexture;
 import static com.ict1009.ahg.screens.GameScreen.playerTextures;
 import static com.ict1009.ahg.screens.GameScreen.renderQueue;
 
@@ -23,7 +26,7 @@ public class Laser extends Entity {
     }
 
     public void applyOnHit(Entity target) {
-
+        onHitAndExplosionList.add(new OnHitAndExplosion(onHitGenericTexture, new Rectangle (target.getBoundingBox()), 0.3f,96,96));
     }
 
     @Override

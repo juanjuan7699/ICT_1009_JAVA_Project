@@ -77,6 +77,7 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
     @Override
     public void onTakeDamage(Entity instigator) {
         //show hurt etc
+        onHitAndExplosionList.add(new OnHitAndExplosion(onHitTexture, new Rectangle (this.getBoundingBox()), 0.7f,100,100));
         if (getCurrentHealth() <= 0) {
             //downed state or die
             //this.onDestroy(instigator);

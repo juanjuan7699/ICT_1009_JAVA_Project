@@ -2,6 +2,11 @@ package com.ict1009.ahg.gameplay;
 
 import static com.ict1009.ahg.screens.GameScreen.playerTextures;
 
+import com.badlogic.gdx.math.Rectangle;
+
+import static com.ict1009.ahg.screens.GameScreen.onHitAndExplosionList;
+import static com.ict1009.ahg.screens.GameScreen.onHitStasisTexture;;
+
 public class StasisLaser extends Laser {
 
     public StasisLaser(Entity owner, int team) {
@@ -13,7 +18,7 @@ public class StasisLaser extends Laser {
 
     @Override
     public void applyOnHit(Entity target) { //freeze forever
-        super.applyOnHit(target);
+        onHitAndExplosionList.add(new OnHitAndExplosion(onHitStasisTexture, new Rectangle (target.getBoundingBox()), 0.3f,96,96));
         target.setMovementSpeed(0f);
     }
 }

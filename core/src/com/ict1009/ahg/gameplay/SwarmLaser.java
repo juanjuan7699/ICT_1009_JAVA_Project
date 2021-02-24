@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.ict1009.ahg.screens.GameScreen.explosionTexture;
+import static com.ict1009.ahg.screens.GameScreen.onHitSwarmTexture;
 import static com.ict1009.ahg.screens.GameScreen.playerTextures;
 
 public class SwarmLaser extends Laser {
@@ -18,7 +18,7 @@ public class SwarmLaser extends Laser {
 
     @Override
     public void applyOnHit(Entity target) { //freeze forever
-        super.applyOnHit(target);
+        // super.applyOnHit(target);
 
         //animate bombs 5 times
         if (target instanceof Animal) {
@@ -30,7 +30,7 @@ public class SwarmLaser extends Laser {
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        new Explosion(explosionTexture, new Rectangle(targett.getBoundingBox()), 0.7f).addToRenderQueue();
+                        new OnHitAndExplosion(onHitSwarmTexture, new Rectangle(targett.getBoundingBox()), 0.15f,64,64).addToRenderQueue();
                     }
                 }, 100 * i);
 

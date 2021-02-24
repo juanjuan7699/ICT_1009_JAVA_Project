@@ -74,7 +74,7 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
     public void onDestroy(Entity instigator) { //pending removal
 
         if (this.statuses.contains(StatusType.DOWNED)) {
-            explosionList.add(new Explosion(explosionTexture, new Rectangle (this.getBoundingBox()), 0.7f));
+            onHitAndExplosionList.add(new OnHitAndExplosion(explosionTexture, new Rectangle (this.getBoundingBox()), 0.7f,480,480));
             //Killed and obtain score
             score += 105 + 25 * level;
             levelScore += 105 + 25 * level;
