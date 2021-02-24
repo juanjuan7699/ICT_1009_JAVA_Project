@@ -57,9 +57,7 @@ public class GameScreen implements Screen {
             deerTextureRegion, dinosaurTextureRegion, chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion,
             potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion,
             yellowGunTextureRegion, orangeGunTextureRegion,blueGunTextureRegion,
-            purpleGunTextureRegion, greenGunTextureRegion, redGunTextureRegion,
-            redLaserTextureRegion, orangeLaserTextureRegion, greenLaserTextureRegion;
-
+            purpleGunTextureRegion, greenGunTextureRegion, redGunTextureRegion;
 
     /**Timing**/
     private final float[] backgroundOffsets = {0, 0, 0, 0};
@@ -142,6 +140,7 @@ public class GameScreen implements Screen {
         playerTextures[3] = textureAtlas.findRegion("laserOrange12");
         playerTextures[4] = textureAtlas.findRegion("laserRed12");
         explosionTexture = new Texture("bloodsprite3.png");
+
         // Boss textures
         chimeraTextureRegion = animalTextureAtlas.findRegion("chimera");
         werewolfTextureRegion = animalTextureAtlas.findRegion("werewolf");
@@ -159,26 +158,40 @@ public class GameScreen implements Screen {
         // Gun textures
         yellowGunTextureRegion = gunsTextureAtlas.findRegion("yellow_gun");
         orangeGunTextureRegion = gunsTextureAtlas.findRegion("orange_gun");
-        blueGunTextureRegion = gunsTextureAtlas.findRegion("blue_gun");
+        blueGunTextureRegion = gunsTextureAtlas.findRegion("darkblue_gun");
         purpleGunTextureRegion = gunsTextureAtlas.findRegion("purple_gun");
         greenGunTextureRegion = gunsTextureAtlas.findRegion("green_gun");
         redGunTextureRegion = gunsTextureAtlas.findRegion("red_gun");
 
         // New player textures
-        newPlayerTextures = new TextureRegion[9];
+        newPlayerTextures = new TextureRegion[18];
         newPlayerTextures[0] = newPlayerTextureAtlas.findRegion("manBlue_redGun");
         newPlayerTextures[1] = newPlayerTextureAtlas.findRegion("soldier1_redGun");
-        newPlayerTextures[2] = newPlayerTextureAtlas.findRegion("laserRed12");
-        newPlayerTextures[3] = newPlayerTextureAtlas.findRegion("laserOrange12");
+
+        // Laser textures
+        newPlayerTextures[2] = newPlayerTextureAtlas.findRegion("laserOrange12");
+        newPlayerTextures[3] = newPlayerTextureAtlas.findRegion("laserPurple12");
         newPlayerTextures[4] = newPlayerTextureAtlas.findRegion("laserBlue12");
-        newPlayerTextures[5] = newPlayerTextureAtlas.findRegion("manBlue_orangeGun");
-        newPlayerTextures[6] = newPlayerTextureAtlas.findRegion("manBlue_gun");
-        newPlayerTextures[7] = newPlayerTextureAtlas.findRegion("soldier1_orangeGun");
-        newPlayerTextures[8] = newPlayerTextureAtlas.findRegion("soldier1_blueGun");
+        newPlayerTextures[5] = newPlayerTextureAtlas.findRegion("laserRed12");
+        newPlayerTextures[6] = newPlayerTextureAtlas.findRegion("laserYellow12");
+        newPlayerTextures[7] = newPlayerTextureAtlas.findRegion("laserGreen12");
+
+        // Player 0 with guns textures
+        newPlayerTextures[8] = newPlayerTextureAtlas.findRegion("manBlue_greenGun");
+        newPlayerTextures[9] = newPlayerTextureAtlas.findRegion("manBlue_yellowGun");
+        newPlayerTextures[10] = newPlayerTextureAtlas.findRegion("manBlue_purpleGun");
+        newPlayerTextures[11] = newPlayerTextureAtlas.findRegion("manBlue_blueGun");
+        newPlayerTextures[12] = newPlayerTextureAtlas.findRegion("manBlue_orangeGun");
+
+        // Player 1 with guns textures
+        newPlayerTextures[13] = newPlayerTextureAtlas.findRegion("soldier1_greenGun");
+        newPlayerTextures[14] = newPlayerTextureAtlas.findRegion("soldier1_yellowGun");
+        newPlayerTextures[15] = newPlayerTextureAtlas.findRegion("soldier1_purpleGun");
+        newPlayerTextures[16] = newPlayerTextureAtlas.findRegion("soldier1_blueGun");
+        newPlayerTextures[17] = newPlayerTextureAtlas.findRegion("soldier1_orangeGun");
 
         backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
 
-//        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion};
         animalForestTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion};
         animalDesertTextures = new TextureRegion[]{lionTextureRegion, camelTextureRegion};
         animalSnowTextures = new TextureRegion[]{wolfTextureRegion, deerTextureRegion};

@@ -230,10 +230,10 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
                     this.setSprite(newPlayerTextures[0]);
                     break;
                 case STASIS_LASER:
-                    this.setSprite(newPlayerTextures[6]);
+                    this.setSprite(newPlayerTextures[11]);
                     break;
                 case SWARM_LASER:
-                    this.setSprite(newPlayerTextures[5]);
+                    this.setSprite(newPlayerTextures[12]);
                     break;
             }
         } else {
@@ -242,10 +242,10 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
                     this.setSprite(newPlayerTextures[1]);
                     break;
                 case STASIS_LASER:
-                    this.setSprite(newPlayerTextures[8]);
+                    this.setSprite(newPlayerTextures[16]);
                     break;
                 case SWARM_LASER:
-                    this.setSprite(newPlayerTextures[7]);
+                    this.setSprite(newPlayerTextures[17]);
                     break;
             }
         }
