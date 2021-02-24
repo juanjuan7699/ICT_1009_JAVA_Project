@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.screens.GameScreen;
 
 import static com.ict1009.ahg.screens.GameScreen.playerTextures;
+import static com.ict1009.ahg.screens.GameScreen.renderQueue;
 
 public class Laser extends Entity {
 
@@ -14,14 +15,15 @@ public class Laser extends Entity {
     public Laser(Entity owner, int team) {
         this.owner = owner;
         this.team = team;
-        this.setMovementSpeed(100);
+        this.setMovementSpeed(460);
         this.setDamageScale(6);
-        if (owner instanceof Player)
-            this.setSprite(playerTextures[((Player)owner).getPlayerIndex() + 2]);
-        else
-            this.setSprite(playerTextures[2]); //defaults
+        this.setSprite(playerTextures[3]); //defaults
 
         this.setBoundingBox(new Rectangle(owner.getBoundingBox().x + owner.getBoundingBox().width *.72f, owner.getBoundingBox().y + owner.getBoundingBox().height *.98f,1,4));
+    }
+
+    public void applyOnHit(Entity target) {
+
     }
 
     @Override
@@ -36,7 +38,9 @@ public class Laser extends Entity {
 
     @Override
     public void addToRenderQueue() {
-        GameScreen.renderQueue.add(this);
+        synchronized (renderQueue) {
+            GameScreen.renderQueue.add(this);
+        }
     }
 
     @Override

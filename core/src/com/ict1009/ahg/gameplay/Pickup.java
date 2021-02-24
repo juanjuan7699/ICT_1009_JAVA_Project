@@ -15,7 +15,15 @@ public class Pickup extends Entity {
 
     private boolean inventoryItem; //false for instant buffs
 
+    public Pickup(float x, float y, float scale, boolean inventoryItem) { //to spawn at boss location
+        this(inventoryItem);
+        this.setBoundingBox(new Rectangle(x + (float)generator.nextInt(8),y + (float)generator.nextInt(8), 15, 15));
+        this.setDamageScale(scale);
+        this.setMovementSpeed(0.25f);
+    }
+
     public Pickup(boolean inventoryItem) { //random generation
+        this.setMovementSpeed(0.5f);
         this.setDamageScale(1 + generator.nextFloat()); //scaling of the pickup itself regardless if its damage, health, attack speed
         this.inventoryItem = inventoryItem;
         //get spawn area then set bounding box
@@ -25,25 +33,62 @@ public class Pickup extends Entity {
 
         if (this.inventoryItem) {
             //drop non buffs
-            this.onDestroy(this); //temporarily no inventory items
+            int rng = generator.nextInt(6);
             System.out.println("A non buff was generated");
-        }
-        else { //drop buffs
-            int rng = generator.nextInt(4);
             switch (rng) {
                 case 0:
+                    this.pickupType = ItemType.GENERIC_LASER;
+                    this.setSprite(playerTextures[0]); //temporary
+                    break;
+                case 1:
+                    this.pickupType = ItemType.STASIS_LASER;
+                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+                    System.out.println("stasis");
+                    break;
+                case 2:
+                    this.pickupType = ItemType.SWARM_LASER;
+                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+                    break;
+                case 3:
+                    this.pickupType = ItemType.SWARM_LASER;
+                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+                    break;
+                case 4:
+                    this.pickupType = ItemType.SWARM_LASER;
+                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+                    break;
+                case 5:
+                    this.pickupType = ItemType.SWARM_LASER;
+                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+                    break;
+
+            }
+        }
+        else { //drop buffs
+            int rng = generator.nextInt(10);
+            switch (rng) {
+                case 0:
+                case 1:
                     this.pickupType = ItemType.ATTACKSPEED_BUFF;
                     this.setSprite(potionTextures[0]); //temporary
                     break;
-                case 1:
+                case 2:
+                case 3:
                     this.pickupType = ItemType.REGEN_BUFF;
                     this.setSprite(potionTextures[1]); //temporary
                     break;
-                case 2:
+                case 4:
+                case 5:
+                    this.pickupType = ItemType.HEALTH_BUFF;
+                    this.setSprite(potionTextures[1]);
+                    break;
+                case 6:
+                case 7:
+                case 8:
                     this.pickupType = ItemType.DAMAGE_BUFF;
                     this.setSprite(potionTextures[2]); //temporary
                     break;
-                case 3:
+                case 9:
                     this.pickupType = ItemType.EXTRA_LASER_BUFF;
                     this.setSprite(potionTextures[3]); //temporary
                     break;
@@ -72,23 +117,34 @@ public class Pickup extends Entity {
 
         switch (pickupType) {
             case DAMAGE_BUFF: //exponential buff
-                instigator.setDamageScale(instigator.getDamageScale() * 1.15f);
+                instigator.setDamageScale(instigator.getDamageScale() * (this.getDamageScale() * 1.25f));
                 System.out.println("buffed dmg now " + instigator.getDamageScale());
                 break;
             case ATTACKSPEED_BUFF:
-                instigator.setAttackSpeed(Math.max(0.2f, instigator.getAttackSpeed() * .9f));
+                instigator.setAttackSpeed((float) Math.max(0.2f, instigator.getAttackSpeed() - (0.1 * this.getDamageScale())));
                 if (instigator instanceof Player)
                     ((Player)instigator).startAttacking();
 
                 System.out.println("buffed spd now " + instigator.getAttackSpeed());
                 break;
             case REGEN_BUFF:
-                instigator.setHealthRegen(instigator.getHealthRegen() + .01f);
+                instigator.setHealthRegen((float) (instigator.getHealthRegen() + (Math.pow(.03f, this.getDamageScale()))));
                 System.out.println("buffed healthreg now " + instigator.getHealthRegen());
                 break;
             case EXTRA_LASER_BUFF:
                 instigator.setAttacks(instigator.getAttacks() + 1);
                 System.out.println("buffed attks now " + instigator.getAttacks());
+                break;
+            case HEALTH_BUFF:
+                instigator.setMaxHealth(instigator.getMaxHealth() + 5);
+                System.out.println("buffed hp now " + instigator.getMaxHealth());
+                break;
+            case GENERIC_LASER:
+            case STASIS_LASER:
+            case SWARM_LASER:
+                if (instigator instanceof Player) {
+                    ((Player)instigator).addWeapon(pickupType);
+                }
                 break;
         }
 
@@ -101,6 +157,6 @@ public class Pickup extends Entity {
 
     @Override
     public void update(float deltaTime) {
-        this.translate(0, -1f);
+        this.translate(0, -this.getMovementSpeed());
     }
 }

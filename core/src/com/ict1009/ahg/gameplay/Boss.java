@@ -20,4 +20,16 @@ public class Boss extends Animal {
         super.directionVector = new Vector2(0 ,-1);
         randomizeDirectionVector();
     }
+
+    @Override
+    public void onDestroy(Entity instigator) { //boss spawns 5 pickups per kill
+        super.onDestroy(instigator);
+
+        for (int i = 0; i < 5; i++) {
+            new Pickup(this.getBoundingBox().getX(), this.getBoundingBox().getY(), 2, false).addToRenderQueue();
+        }
+
+        //also drops one weapon per boss death
+        new Pickup(this.getBoundingBox().getX(), this.getBoundingBox().getY(), 2, true).addToRenderQueue();
+    }
 }

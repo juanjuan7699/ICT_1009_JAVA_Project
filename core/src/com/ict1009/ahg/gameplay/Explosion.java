@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.ict1009.ahg.screens.GameScreen;
 
 public class Explosion extends Entity {
 
@@ -56,6 +57,7 @@ public class Explosion extends Entity {
 
     @Override
     public void addToRenderQueue() {
+        GameScreen.explosionList.add(this);
     }
 
     @Override

@@ -3,18 +3,23 @@ package com.ict1009.ahg.gameplay;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.ict1009.ahg.enums.StatusType;
+import com.ict1009.ahg.interfaces.IStatus;
 import com.ict1009.ahg.screens.GameScreen;
 import com.ict1009.ahg.interfaces.ICollidable;
 import com.ict1009.ahg.interfaces.IDamageHandler;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.ict1009.ahg.screens.GameScreen.*;
 
-public class Animal extends Entity implements ICollidable, IDamageHandler {
+public class Animal extends Entity implements ICollidable, IDamageHandler, IStatus {
 
     public Vector2 directionVector;
+    private List<StatusType> statuses;
 
     public Animal() { //scaling per level
         this.setMovementSpeed(Math.min(100, 24 + 3 * level));
@@ -28,6 +33,8 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
         this.directionVector = new Vector2(0 ,-1);
         randomizeDirectionVector();
 
+        this.statuses = new ArrayList<>();
+        this.addStatus(StatusType.ALIVE);
     }
 
     public Vector2 getDirectionVector() {
@@ -65,14 +72,21 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
 
     @Override
     public void onDestroy(Entity instigator) { //pending removal
-        explosionList.add(new Explosion(explosionTexture, new Rectangle (this.getBoundingBox()), 0.7f));
-        //Killed and obtain score
-        score += 105 + 25 * level;
-        levelScore += 105 + 25 * level;
 
-        //instigator //add points to instigator or smth
+        if (this.statuses.contains(StatusType.DOWNED)) {
+            explosionList.add(new Explosion(explosionTexture, new Rectangle (this.getBoundingBox()), 0.7f));
+            //Killed and obtain score
+            score += 105 + 25 * level;
+            levelScore += 105 + 25 * level;
 
-        this.setPendingRemoval(true);
+            //instigator //add points to instigator or smth
+
+            this.setPendingRemoval(true);
+            this.statuses.add(StatusType.DEAD);
+            this.statuses.remove(StatusType.DOWNED);
+        }
+
+
     }
 
     @Override
@@ -93,8 +107,40 @@ public class Animal extends Entity implements ICollidable, IDamageHandler {
     @Override
     public void onTakeDamage(Entity instigator) {
         if (this.getCurrentHealth() <= 0) {
+            this.addStatus(StatusType.DOWNED);
+            this.removeStatus(StatusType.ALIVE);
             onDestroy(instigator);
         }
         //blink animation?
+    }
+
+    @Override
+    public void addStatus(StatusType status) {
+        this.statuses.add(status);
+    }
+
+    @Override
+    public void removeStatus(StatusType status) {
+        this.statuses.remove(status);
+    }
+
+    @Override
+    public void removeStatus(int index) {
+        this.statuses.remove(index);
+    }
+
+    @Override
+    public void removeAllStatus() {
+        this.statuses = new ArrayList<>();
+    }
+
+    @Override
+    public boolean hasStatus(StatusType status) {
+        return this.statuses.contains(status);
+    }
+
+    @Override
+    public List<StatusType> getStatuses() {
+        return this.statuses;
     }
 }

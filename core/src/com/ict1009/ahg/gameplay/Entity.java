@@ -204,6 +204,7 @@ public abstract class Entity {
 
     public void setPendingRemoval(boolean pendingRemoval) {
         this.pendingRemoval = pendingRemoval;
+        //this.setVisible(false);
     }
 
     public float getHealthRegen() {

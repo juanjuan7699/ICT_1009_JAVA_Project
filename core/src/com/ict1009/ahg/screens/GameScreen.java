@@ -18,7 +18,9 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.ict1009.ahg.AnimalHunter;
+import com.ict1009.ahg.enums.StatusType;
 import com.ict1009.ahg.gameplay.*;
+import com.ict1009.ahg.interfaces.ISpawnPoint;
 
 import java.util.*;
 
@@ -61,8 +63,6 @@ public class GameScreen implements Screen {
     private float timeBetweenDamage = 0.2f;
     private float timeBetweenNewMap = 15;
     private float enemySpawnTimer = 0;
-    private float pickupSpawnTimer = 0; // temp only testing
-    private float timeBetweenPickup = 2; //temp only
     private float damageTimer = 0;
     private float mapTimer = 0;
     private float timeElapsed = 0;
@@ -71,8 +71,10 @@ public class GameScreen implements Screen {
     public static List<Player> players; //all players goes here
     public static List<Entity> renderQueue; //all simple rendered stuff here, short lived stuff only
     public static List<Animal> mobs; //enemies
-    public static List<Boss> bosses; //all players goes here
     public static List<Explosion> explosionList;
+
+    /** spawners  **/
+    private ISpawnPoint pickupSpawner;
 
     //gs
     public static int level = 1;
@@ -126,12 +128,13 @@ public class GameScreen implements Screen {
         goatTextureRegion = animalTextureAtlas.findRegion("goat");
 
         //player textures //temp only
-        playerTextures = new TextureRegion[4];
+        playerTextures = new TextureRegion[5];
         playerTextures[0] = textureAtlas.findRegion("soldier1_gun");
         playerTextures[1] = textureAtlas.findRegion("manBlue_gun");
         playerTextures[2] = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
         playerTextures[3] = textureAtlas.findRegion("laserOrange12");
-        explosionTexture = new Texture("bloodsprite3.png"); 
+        playerTextures[4] = textureAtlas.findRegion("laserRed12");
+        explosionTexture = new Texture("bloodsprite3.png");
         // Boss textures
         chimeraTextureRegion = animalTextureAtlas.findRegion("chimera");
         werewolfTextureRegion = animalTextureAtlas.findRegion("werewolf");
@@ -139,7 +142,6 @@ public class GameScreen implements Screen {
 
         laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
         enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
-        explosionTexture = new Texture("bloodsprite3.png");
 
         // Potion textures
         potion1TextureRegion = potionsTextureAtlas.findRegion("potion1");
@@ -158,8 +160,7 @@ public class GameScreen implements Screen {
         potionTextures = new TextureRegion[]{potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion};
 
         //1f, 4, 120, .35f //laser data
-        mobs = new ArrayList<>();
-        bosses = new ArrayList<>();
+        mobs =  new ArrayList<>();
         renderQueue = Collections.synchronizedList(new ArrayList<Entity>());
         players = new ArrayList<>();
         explosionList = new ArrayList<>();
@@ -173,6 +174,8 @@ public class GameScreen implements Screen {
         }
 
         //prepare mob spawning here
+        pickupSpawner = new PickupSpawner();
+        pickupSpawner.startSpawning();
 
         try{
             music = Gdx.audio.newMusic(Gdx.files.internal("across_the_valley.ogg"));
@@ -247,7 +250,6 @@ public class GameScreen implements Screen {
 
         //move out from render q
         spawnEnemyAnimals(deltaTime);//change to spawnpoint
-        spawnPickup(deltaTime);
 
         //player renderer queue
         for (Player player : players) {
@@ -262,12 +264,6 @@ public class GameScreen implements Screen {
             mob.draw(batch);
         }
 
-        for (Boss boss : bosses) {
-            moveEnemy(boss, deltaTime); //move to animal AI
-            boss.update(deltaTime);
-            boss.draw(batch);
-        }
-
         synchronized (renderQueue) {
             //misc rendering
             for (Entity entity : renderQueue) {
@@ -275,9 +271,11 @@ public class GameScreen implements Screen {
                 entity.draw(batch);
             }
 
-            renderLasers(deltaTime); //removing old lasers only
+            removePending(deltaTime); //removing old lasers only
             detectCollisions(deltaTime);
         }
+
+
 
         updateLevel(deltaTime);
 
@@ -286,7 +284,7 @@ public class GameScreen implements Screen {
 
         getHealth();
 
-        if (players.get(0).getCurrentHealth() == 0 || players.get(1).getCurrentHealth() == 0) {
+        if (players.get(0).hasStatus(StatusType.DOWNED) && players.get(1).hasStatus(StatusType.DOWNED)) {
             music.dispose();
             game.setScreen(new EndScreen(game));
         }
@@ -295,6 +293,9 @@ public class GameScreen implements Screen {
     }
 
     public static void gameReset() {
+        for (Player p : players) {
+            p.attackTimer.cancel();
+        }
         level = 1;
         score = 0;
     }
@@ -349,8 +350,20 @@ public class GameScreen implements Screen {
         //render second row values
         font.draw(batch, String.format(Locale.getDefault(), "%06d", score), hudLeftX, hudRow2Y, hudSectionWidth, Align.left, false);
         font.draw(batch, String.format(Locale.getDefault(), "%02d", level), hudRightX, hudRow2Y, hudSectionWidth, Align.right, false);
-        font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), players.get(0).getBoundingBox().x - 6, players.get(0).getBoundingBox().y, hudSectionWidth, Align.center, false);
-        font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(1).getCurrentHealth(), players.get(1).getMaxHealth()), players.get(1).getBoundingBox().x - 6, players.get(1).getBoundingBox().y, hudSectionWidth, Align.center, false);
+
+        if (players.get(0).hasStatus(StatusType.DOWNED)) {
+            font2.draw(batch, "DOWNED", players.get(0).getBoundingBox().x - 6, players.get(0).getBoundingBox().y, hudSectionWidth, Align.center, false);
+        }
+        else {
+            font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(0).getCurrentHealth(), players.get(0).getMaxHealth()), players.get(0).getBoundingBox().x - 6, players.get(0).getBoundingBox().y, hudSectionWidth, Align.center, false);
+        }
+
+        if (players.get(1).hasStatus(StatusType.DOWNED)) {
+            font2.draw(batch, "DOWNED", players.get(1).getBoundingBox().x - 6, players.get(1).getBoundingBox().y, hudSectionWidth, Align.center, false);
+        }
+        else {
+            font2.draw(batch, String.format(Locale.getDefault(), "%.0f/%.0f", players.get(1).getCurrentHealth(), players.get(1).getMaxHealth()), players.get(1).getBoundingBox().x - 6, players.get(1).getBoundingBox().y, hudSectionWidth, Align.center, false);
+        }
     }
 
     private void spawnEnemyAnimals(float deltaTime) {
@@ -389,20 +402,13 @@ public class GameScreen implements Screen {
 
                 if (level % 5 == 0 && !bossSpawned) {
                     new Boss().addToRenderQueue();
+                    bossSpawned = true;
                 }
             }
             enemySpawnTimer -= timeBetweenEnemySpawns;
         }
     }
 
-    private void spawnPickup(float deltaTime) { //temporary
-        pickupSpawnTimer += deltaTime;
-
-        if (pickupSpawnTimer > timeBetweenPickup) {
-            new Pickup(false).addToRenderQueue();
-            pickupSpawnTimer -= timeBetweenPickup;
-        }
-    }
 
     private void detectInput(float deltaTime) {
         // Keyboard Input
@@ -438,6 +444,28 @@ public class GameScreen implements Screen {
             players.get(0).translate(0f, Math.max(-players.get(0).getMovementSpeed() * deltaTime, downLimit));
         }
 
+        if (Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)) { //revive and heal
+            if (players.get(0).collisionTest(players.get(1)) && players.get(1).hasStatus(StatusType.DOWNED)) {
+                players.get(1).removeStatus(StatusType.DOWNED);
+                players.get(1).addStatus(StatusType.ALIVE);
+                players.get(1).modifyHealth(25);
+                players.get(1).resetBuffs();
+            }
+        }
+
+
+
+        //switch weapon
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)) {
+            players.get(1).setWeapon(0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
+            players.get(1).setWeapon(1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_6)) {
+            players.get(1).setWeapon(2);
+        }
+
         //Player 2
         if (Gdx.input.isKeyPressed(Input.Keys.D) && rightLimit2 > 0) {
             players.get(1).translate(Math.min(players.get(1).getMovementSpeed() * deltaTime, rightLimit2), 0f);
@@ -454,6 +482,28 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.S) && downLimit2 < 0) {
             players.get(1).translate(0f, Math.max(-players.get(1).getMovementSpeed() * deltaTime, downLimit2));
         }
+
+        if (Gdx.input.isKeyPressed(Input.Keys.Q)) { //revive and heal
+            if (players.get(1).collisionTest(players.get(0)) && players.get(0).hasStatus(StatusType.DOWNED)) {
+                players.get(0).removeStatus(StatusType.DOWNED);
+                players.get(0).addStatus(StatusType.ALIVE);
+                players.get(0).modifyHealth(25);
+                players.get(0).resetBuffs();
+            }
+        }
+
+        //switch wepaon
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
+            players.get(0).setWeapon(0);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
+            players.get(0).setWeapon(1);
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
+            players.get(0).setWeapon(2);
+        }
+
+
     }
 
 
@@ -487,123 +537,111 @@ public class GameScreen implements Screen {
         //Check if player1 laser intersects animal
         damageTimer += deltaTime;
 
-        ListIterator<Entity> laserListIterator = renderQueue.listIterator();
-        while(laserListIterator.hasNext()) {
-            Entity entity = laserListIterator.next();
-            if (entity instanceof Laser) {
-                Laser laser = (Laser)entity;
+        //Collision test with animals
+        try {
+            ListIterator<Entity> laserListIterator = renderQueue.listIterator();
+            while (laserListIterator.hasNext()) {
+                Entity entity = laserListIterator.next();
+                if (entity instanceof Laser) {
+                    Laser laser = (Laser) entity;
 
-                ListIterator<Animal> enemyAnimalListIterator = mobs.listIterator();
-                while (enemyAnimalListIterator.hasNext()) {
-                    Animal enemyAnimal = enemyAnimalListIterator.next();
-                    if (String.valueOf(enemyAnimal).toLowerCase().indexOf("boss".toLowerCase()) != -1) {
-                        bossSpawned = true;
-                    }
+                    ListIterator<Animal> enemyAnimalListIterator = mobs.listIterator();
+                    while (enemyAnimalListIterator.hasNext()) {
+                        Animal enemyAnimal = enemyAnimalListIterator.next();
 
-                    if (enemyAnimal.collisionTest(laser)){
-                        // Touches animal
-                        enemyAnimal.takeDamage(laser.getDamageScale() * laser.getOwner().getDamageScale(), 0, laser.getOwner());
-                        if(enemyAnimal.isPendingRemoval())
-                        {
-                            enemyAnimalListIterator.remove();
+
+                        if (enemyAnimal.collisionTest(laser)) {
+                            // Touches animal
+                            enemyAnimal.takeDamage(laser.getDamageScale() * laser.getOwner().getDamageScale(), 0, laser.getOwner());
+                            laser.applyOnHit(enemyAnimal);
+                            if (enemyAnimal.isPendingRemoval()) {
+                                enemyAnimalListIterator.remove();
+                                if (enemyAnimal instanceof Boss) { //boss killed, immediately go next level
+                                    bossSpawned = false;
+                                    level +=1;
+                                }
+                            }
+                            laser.setPendingRemoval(true);
+                            break;
                         }
-                        laserListIterator.remove();
-                        break;
-                    }
 
-                    // Player 1 takes damage from enemy hitbox
-                    if (enemyAnimal.collisionTest(players.get(0))) {
-                        if (damageTimer > timeBetweenDamage) {
-                            players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
-                            damageTimer = 0;
+                        // Player 1 takes damage from enemy hitbox
+                        if (enemyAnimal.collisionTest(players.get(0))) {
+                            if (damageTimer > timeBetweenDamage) {
+                                players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
+                                damageTimer = 0;
+                            }
+                        }
+
+                        // Player 2 takes damage from enemy hitbox
+                        if (enemyAnimal.collisionTest(players.get(1))) {
+                            if (damageTimer > timeBetweenDamage) {
+                                players.get(1).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
+                                damageTimer = 0;
+                            }
                         }
                     }
-
-                    // Player 2 takes damage from enemy hitbox
-                    if (enemyAnimal.collisionTest(players.get(1))){
-                        if (damageTimer > timeBetweenDamage) {
-                            players.get(1).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
-                            damageTimer -= timeBetweenDamage;
+                } else if (entity instanceof Pickup) {
+                    for (Player p : players) {
+                        if (p.collisionTest(entity)) {
+                            entity.onDestroy(p);
                         }
                     }
+                }
+
+            }
+        }
+        catch (Exception e) {
+            System.out.println("cannot detect collision now, trying later");
+        }
+    }
+
+    private void updateAndRenderExplosions(float deltaTime) {
+        try {
+            ListIterator<Explosion> explosionListIterator = explosionList.listIterator();
+            while (explosionListIterator.hasNext()){
+                Explosion explosion = explosionListIterator.next();
+                explosion.update(deltaTime);
+                if(explosion.isFinished()){
+                    explosionListIterator.remove();
+                }
+                else {
+                    explosion.draw(batch);
                 }
             }
+        }
 
-            else if (entity instanceof Pickup) {
-                if (players.get(0).collisionTest(entity)) {
-                    entity.onDestroy(players.get(0));
-                }
-                else if (players.get(1).collisionTest(entity)) {
-                    entity.onDestroy(players.get(1));
-                }
+        catch (Exception e) {
+            System.out.println("cannot render explosions now, try again later");
+        }
+
+    }
+
+    private void removePending(float deltaTime) {
+        try {
+            ListIterator<Entity> iterator = renderQueue.listIterator();
+            while(iterator.hasNext()) {
+                Entity entity = iterator.next();
                 if (entity.isPendingRemoval()) {
-                    laserListIterator.remove();
-                }
-            }
-
-        }
-        //Check if player2 laser intersects animal
-//        ListIterator<Laser> laser2ListIterator = laser2LinkedList.listIterator();
-//        while(laser2ListIterator.hasNext()) {
-//            Laser laser = laser2ListIterator.next();
-//            ListIterator<Animals> enemyAnimalListIterator = enemyAnimalList.listIterator();
-//            while (enemyAnimalListIterator.hasNext()) {
-//                Animals enemyAnimal = enemyAnimalListIterator.next();
-//
-//                if (enemyAnimal.intersects(laser.boundingBox)){
-//                    // Touches animal
-//                    if(enemyAnimal.hitAndCheckKilled(laser))
-//                    {
-//                        enemyAnimalListIterator.remove();
-//                        explosionList.add(
-//                                new Explosion(explosionTexture,
-//                                        new Rectangle (enemyAnimal.boundingBox),
-//                                        0.7f));
-//                        //Killed and obtain score
-//                        score += 250;
-//                        levelScore += 250;
-//                    }
-//                    laser2ListIterator.remove();
-//                    break;
-//                }
-//
-//                if (enemyAnimal.intersects(player2.boundingBox)){
-//                    player2.lives --;
-//                }
-//            }
-//        }
-    }
-
-    private void updateAndRenderExplosions(float deltaTime){
-        ListIterator<Explosion> explosionListIterator = explosionList.listIterator();
-        while (explosionListIterator.hasNext()){
-            Explosion explosion = explosionListIterator.next();
-            explosion.update(deltaTime);
-            if(explosion.isFinished()){
-                explosionListIterator.remove();
-            }
-            else {
-                explosion.draw(batch);
-            }
-        }
-    }
-
-    private void renderLasers(float deltaTime) {
-
-        ListIterator<Entity> iterator = renderQueue.listIterator();
-        while(iterator.hasNext()) {
-            Entity entity = iterator.next();
-            if (entity instanceof Laser) {
-                Laser laser = (Laser)entity;
-                laser.draw(batch);
-                laser.getBoundingBox().y += laser.getMovementSpeed()*deltaTime;
-
-                // Remove old lasers
-                if (laser.getBoundingBox().y + laser.getBoundingBox().height < 0) {
                     iterator.remove();
+                    continue;
+                }
+
+                if (entity instanceof Laser) {
+                    Laser laser = (Laser)entity;
+                    laser.draw(batch);
+                    laser.getBoundingBox().y += laser.getMovementSpeed()*deltaTime;
+
+                    if (laser.getBoundingBox().y + laser.getBoundingBox().height < 0) {
+                        laser.setPendingRemoval(true);
+                    }
                 }
             }
         }
+        catch (Exception e) {
+            System.out.println("Cannot modify right now, trying later");
+        }
+
     }
 
     private void renderBackground(float deltaTime) {

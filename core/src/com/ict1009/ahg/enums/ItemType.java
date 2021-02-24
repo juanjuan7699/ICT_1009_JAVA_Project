@@ -12,7 +12,16 @@ public enum ItemType {
     REGEN_BUFF,
     DAMAGE_BUFF,
     EXTRA_LASER_BUFF,
+    HEALTH_BUFF,
     TRINITY_BUFF,
+
+    //weapons
+    GENERIC_LASER,
+    STASIS_LASER,
+    NOVA_LASER,
+    BLAZE_LASER,
+    SWARM_LASER,
+    NANO_LASER,
 
     INSTANT_HEAL,
 
