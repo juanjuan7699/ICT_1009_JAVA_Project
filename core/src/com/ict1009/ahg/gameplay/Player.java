@@ -1,5 +1,7 @@
 package com.ict1009.ahg.gameplay;
 
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.enums.ItemType;
@@ -37,13 +39,13 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
         this.weapon = -1; //get from db later
         this.weapons = new ArrayList<>();
         this.addWeapon(ItemType.GENERIC_LASER);
-        this.addWeapon(ItemType.STASIS_LASER);
+//        this.addWeapon(ItemType.STASIS_LASER);
 
-        this.setSprite(playerTextures[playerIndex]);
+        this.setSprite(newPlayerTextures[playerIndex]);
         this.setMaxHealth(100);
         this.modifyHealth(100);
         this.setMovementSpeed(48);
-        this.setBoundingBox(new Rectangle(WORLD_WIDTH/2 - 5, WORLD_HEIGHT/2 - 5, 10, 10));
+        this.setBoundingBox(new Rectangle(WORLD_WIDTH/2 - 5, WORLD_HEIGHT/2 - 5, 10, 14));
         this.setDamageScale(1);
         this.setAttackSpeed(1.45f);
         this.setHealthRegen(.01f);
@@ -212,7 +214,40 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
         this.weapon = Math.min(this.weapons.size()-1, weapon);
     }
 
+    public void setPlayer(int index) {
+        this.setSprite(newPlayerTextures[index]);
+    }
+
     public ItemType getCurrentWeapon() {
         return this.weapons.get(this.weapon);
+    }
+
+    public void setPlayerSprite(ItemType pickupType) {
+        TextureRegion sprite;
+        if (this.playerIndex == 0) {
+            switch(pickupType) {
+                case GENERIC_LASER:
+                    this.setSprite(newPlayerTextures[0]);
+                    break;
+                case STASIS_LASER:
+                    this.setSprite(newPlayerTextures[6]);
+                    break;
+                case SWARM_LASER:
+                    this.setSprite(newPlayerTextures[5]);
+                    break;
+            }
+        } else {
+            switch(pickupType) {
+                case GENERIC_LASER:
+                    this.setSprite(newPlayerTextures[1]);
+                    break;
+                case STASIS_LASER:
+                    this.setSprite(newPlayerTextures[8]);
+                    break;
+                case SWARM_LASER:
+                    this.setSprite(newPlayerTextures[7]);
+                    break;
+            }
+        }
     }
 }

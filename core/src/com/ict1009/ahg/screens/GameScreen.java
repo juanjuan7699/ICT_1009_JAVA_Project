@@ -46,6 +46,8 @@ public class GameScreen implements Screen {
     public static final TextureAtlas animalTextureAtlas = new TextureAtlas("animals.atlas");
     public static final TextureAtlas backgroundTextureAtlas = new TextureAtlas("backgrounds.atlas");
     public static final TextureAtlas potionsTextureAtlas = new TextureAtlas("potions.atlas");
+    public static final TextureAtlas gunsTextureAtlas = new TextureAtlas("guns.atlas");
+    public static final TextureAtlas newPlayerTextureAtlas = new TextureAtlas("playerAssets.atlas");
 
     public static Texture explosionTexture;
     private TextureRegion[] backgrounds;
@@ -53,7 +55,10 @@ public class GameScreen implements Screen {
             laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion,
             elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion, wolfTextureRegion,
             deerTextureRegion, dinosaurTextureRegion, chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion,
-            potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion;
+            potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion,
+            yellowGunTextureRegion, orangeGunTextureRegion,blueGunTextureRegion,
+            purpleGunTextureRegion, greenGunTextureRegion, redGunTextureRegion,
+            redLaserTextureRegion, orangeLaserTextureRegion, greenLaserTextureRegion;
 
 
     /**Timing**/
@@ -105,6 +110,8 @@ public class GameScreen implements Screen {
     public static TextureRegion[] animalBossTextures;
     public static TextureRegion[] potionTextures;
     public static TextureRegion[] playerTextures;
+    public static TextureRegion[] gunTextures;
+    public static TextureRegion[] newPlayerTextures;
 
     public GameScreen(AnimalHunter game) {
         camera = new OrthographicCamera();
@@ -149,6 +156,26 @@ public class GameScreen implements Screen {
         potion3TextureRegion = potionsTextureAtlas.findRegion("potion3");
         potion4TextureRegion = potionsTextureAtlas.findRegion("potion4");
 
+        // Gun textures
+        yellowGunTextureRegion = gunsTextureAtlas.findRegion("yellow_gun");
+        orangeGunTextureRegion = gunsTextureAtlas.findRegion("orange_gun");
+        blueGunTextureRegion = gunsTextureAtlas.findRegion("blue_gun");
+        purpleGunTextureRegion = gunsTextureAtlas.findRegion("purple_gun");
+        greenGunTextureRegion = gunsTextureAtlas.findRegion("green_gun");
+        redGunTextureRegion = gunsTextureAtlas.findRegion("red_gun");
+
+        // New player textures
+        newPlayerTextures = new TextureRegion[9];
+        newPlayerTextures[0] = newPlayerTextureAtlas.findRegion("manBlue_redGun");
+        newPlayerTextures[1] = newPlayerTextureAtlas.findRegion("soldier1_redGun");
+        newPlayerTextures[2] = newPlayerTextureAtlas.findRegion("laserRed12");
+        newPlayerTextures[3] = newPlayerTextureAtlas.findRegion("laserOrange12");
+        newPlayerTextures[4] = newPlayerTextureAtlas.findRegion("laserBlue12");
+        newPlayerTextures[5] = newPlayerTextureAtlas.findRegion("manBlue_orangeGun");
+        newPlayerTextures[6] = newPlayerTextureAtlas.findRegion("manBlue_gun");
+        newPlayerTextures[7] = newPlayerTextureAtlas.findRegion("soldier1_orangeGun");
+        newPlayerTextures[8] = newPlayerTextureAtlas.findRegion("soldier1_blueGun");
+
         backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
 
 //        animalTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion};
@@ -158,6 +185,8 @@ public class GameScreen implements Screen {
         animalRockTextures = new TextureRegion[]{dinosaurTextureRegion, goatTextureRegion};
         animalBossTextures = new TextureRegion[]{chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion};
         potionTextures = new TextureRegion[]{potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion};
+        gunTextures = new TextureRegion[]{yellowGunTextureRegion, orangeGunTextureRegion, blueGunTextureRegion,
+        purpleGunTextureRegion, greenGunTextureRegion, redGunTextureRegion};
 
         //1f, 4, 120, .35f //laser data
         mobs =  new ArrayList<>();
@@ -453,8 +482,6 @@ public class GameScreen implements Screen {
             }
         }
 
-
-
         //switch weapon
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)) {
             players.get(1).setWeapon(0);
@@ -492,7 +519,7 @@ public class GameScreen implements Screen {
             }
         }
 
-        //switch wepaon
+        //switch weapon
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
             players.get(0).setWeapon(0);
         }
@@ -502,8 +529,6 @@ public class GameScreen implements Screen {
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
             players.get(0).setWeapon(2);
         }
-
-
     }
 
 

@@ -1,0 +1,90 @@
+
+playerAssets.png
+size: 512, 64
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+laserBlue12
+  rotate: false
+  xy: 385, 2
+  size: 13, 57
+  orig: 13, 57
+  offset: 0, 0
+  index: -1
+laserGreen12
+  rotate: false
+  xy: 415, 2
+  size: 13, 57
+  orig: 13, 57
+  offset: 0, 0
+  index: -1
+laserOrange12
+  rotate: false
+  xy: 370, 2
+  size: 13, 57
+  orig: 13, 57
+  offset: 0, 0
+  index: -1
+laserRed12
+  rotate: false
+  xy: 400, 2
+  size: 13, 57
+  orig: 13, 57
+  offset: 0, 0
+  index: -1
+manBlue_greenGun
+  rotate: false
+  xy: 325, 6
+  size: 43, 53
+  orig: 43, 53
+  offset: 0, 0
+  index: -1
+manBlue_gun
+  rotate: false
+  xy: 190, 6
+  size: 43, 53
+  orig: 43, 53
+  offset: 0, 0
+  index: -1
+manBlue_orangeGun
+  rotate: false
+  xy: 235, 6
+  size: 43, 53
+  orig: 43, 53
+  offset: 0, 0
+  index: -1
+manBlue_redGun
+  rotate: false
+  xy: 280, 6
+  size: 43, 53
+  orig: 43, 53
+  offset: 0, 0
+  index: -1
+soldier1_blueGun
+  rotate: false
+  xy: 96, 3
+  size: 45, 56
+  orig: 45, 56
+  offset: 0, 0
+  index: -1
+soldier1_greenGun
+  rotate: false
+  xy: 2, 3
+  size: 45, 56
+  orig: 45, 56
+  offset: 0, 0
+  index: -1
+soldier1_orangeGun
+  rotate: false
+  xy: 143, 3
+  size: 45, 56
+  orig: 45, 56
+  offset: 0, 0
+  index: -1
+soldier1_redGun
+  rotate: false
+  xy: 49, 3
+  size: 45, 56
+  orig: 45, 56
+  offset: 0, 0
+  index: -1

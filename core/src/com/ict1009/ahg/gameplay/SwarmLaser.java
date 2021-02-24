@@ -13,7 +13,7 @@ public class SwarmLaser extends Laser {
         super(owner, team);
         this.setMovementSpeed(300);
         this.setDamageScale(25);
-        this.setSprite(playerTextures[4]);
+        this.setSprite(playerTextures[3]);
     }
 
     @Override
