@@ -27,8 +27,8 @@ public class Pickup extends Entity {
         this.setDamageScale(1 + generator.nextFloat()); //scaling of the pickup itself regardless if its damage, health, attack speed
         this.inventoryItem = inventoryItem;
         //get spawn area then set bounding box
-        this.setBoundingBox(new Rectangle((float)generator.nextInt((int)WORLD_WIDTH - 5), WORLD_HEIGHT-20, 15, 15)); //need more images
-        this.setSprite(potionTextures[0]); //temporary
+        this.setBoundingBox(new Rectangle((float)generator.nextInt((int)WORLD_WIDTH - 5), WORLD_HEIGHT-20, 20, 20)); //need more images
+        this.setSprite(gunTextures[5]); //temporary
         this.pickupType = ItemType.NONE;
 
         if (this.inventoryItem) {
@@ -38,30 +38,29 @@ public class Pickup extends Entity {
             switch (rng) {
                 case 0:
                     this.pickupType = ItemType.GENERIC_LASER;
-                    this.setSprite(playerTextures[0]); //temporary
+                    this.setSprite(gunTextures[5]); //temporary
                     break;
                 case 1:
                     this.pickupType = ItemType.STASIS_LASER;
-                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+                    this.setSprite(gunTextures[2]);//temp
                     System.out.println("stasis");
                     break;
                 case 2:
                     this.pickupType = ItemType.SWARM_LASER;
-                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+                    this.setSprite(gunTextures[1]);//temp
                     break;
-                case 3:
-                    this.pickupType = ItemType.SWARM_LASER;
-                    this.setSprite(textureAtlas.findRegion("snake"));//temp
-                    break;
-                case 4:
-                    this.pickupType = ItemType.SWARM_LASER;
-                    this.setSprite(textureAtlas.findRegion("snake"));//temp
-                    break;
-                case 5:
-                    this.pickupType = ItemType.SWARM_LASER;
-                    this.setSprite(textureAtlas.findRegion("snake"));//temp
-                    break;
-
+//                case 3:
+//                    this.pickupType = ItemType.SWARM_LASER;
+//                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+//                    break;
+//                case 4:
+//                    this.pickupType = ItemType.SWARM_LASER;
+//                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+//                    break;
+//                case 5:
+//                    this.pickupType = ItemType.SWARM_LASER;
+//                    this.setSprite(textureAtlas.findRegion("snake"));//temp
+//                    break;
             }
         }
         else { //drop buffs
@@ -75,18 +74,18 @@ public class Pickup extends Entity {
                 case 2:
                 case 3:
                     this.pickupType = ItemType.REGEN_BUFF;
-                    this.setSprite(potionTextures[1]); //temporary
+                    this.setSprite(potionTextures[2]); //temporary
                     break;
                 case 4:
                 case 5:
                     this.pickupType = ItemType.HEALTH_BUFF;
-                    this.setSprite(potionTextures[1]);
+                    this.setSprite(potionTextures[2]);
                     break;
                 case 6:
                 case 7:
                 case 8:
                     this.pickupType = ItemType.DAMAGE_BUFF;
-                    this.setSprite(potionTextures[2]); //temporary
+                    this.setSprite(potionTextures[1]); //temporary
                     break;
                 case 9:
                     this.pickupType = ItemType.EXTRA_LASER_BUFF;
@@ -143,6 +142,7 @@ public class Pickup extends Entity {
             case STASIS_LASER:
             case SWARM_LASER:
                 if (instigator instanceof Player) {
+                    ((Player)instigator).setPlayerSprite(pickupType);
                     ((Player)instigator).addWeapon(pickupType);
                 }
                 break;

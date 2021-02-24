@@ -106,7 +106,6 @@ public class SplashScreen implements Screen {
 
     @Override
     public void resize(int width, int height) {
-        splashstage.getViewport().update(width,height,true);
     }
     @Override
     public void pause() {

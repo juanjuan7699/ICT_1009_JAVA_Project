@@ -4,11 +4,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.screens.GameScreen;
 
+import static com.ict1009.ahg.screens.GameScreen.*;
 
-import static com.ict1009.ahg.screens.GameScreen.onHitAndExplosionList;
-import static com.ict1009.ahg.screens.GameScreen.onHitGenericTexture;
-import static com.ict1009.ahg.screens.GameScreen.playerTextures;
-import static com.ict1009.ahg.screens.GameScreen.renderQueue;
 
 public class Laser extends Entity {
 
@@ -20,7 +17,7 @@ public class Laser extends Entity {
         this.team = team;
         this.setMovementSpeed(460);
         this.setDamageScale(6);
-        this.setSprite(playerTextures[3]); //defaults
+        this.setSprite(newPlayerTextures[5]); //defaults
 
         this.setBoundingBox(new Rectangle(owner.getBoundingBox().x + owner.getBoundingBox().width *.72f, owner.getBoundingBox().y + owner.getBoundingBox().height *.98f,1,4));
     }

@@ -9,6 +9,7 @@ public class DesktopLauncher {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
 		config.height = 900;
 		config.width = 600;
+		config.resizable = false;
 		new LwjglApplication(new AnimalHunter(), config);
 	}
 }
