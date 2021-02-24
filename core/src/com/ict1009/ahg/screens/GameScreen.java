@@ -63,7 +63,8 @@ public class GameScreen implements Screen {
     private float timeBetweenDamage = 0.2f;
     private float timeBetweenNewMap = 15;
     private float enemySpawnTimer = 0;
-    private float damageTimer = 0;
+    private float damageTimer1 = 0;
+    private float damageTimer2 = 0;
     private float mapTimer = 0;
     private float timeElapsed = 0;
 
@@ -535,7 +536,8 @@ public class GameScreen implements Screen {
 
     private void detectCollisions(float deltaTime){
         //Check if player1 laser intersects animal
-        damageTimer += deltaTime;
+        damageTimer1 += deltaTime; //player1 iframe
+        damageTimer2 += deltaTime; //player2 iframe
 
         //Collision test with animals
         try {
@@ -567,17 +569,17 @@ public class GameScreen implements Screen {
 
                         // Player 1 takes damage from enemy hitbox
                         if (enemyAnimal.collisionTest(players.get(0))) {
-                            if (damageTimer > timeBetweenDamage) {
+                            if (damageTimer1 > timeBetweenDamage) {
                                 players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
-                                damageTimer = 0;
+                                damageTimer1 = 0;
                             }
                         }
 
                         // Player 2 takes damage from enemy hitbox
                         if (enemyAnimal.collisionTest(players.get(1))) {
-                            if (damageTimer > timeBetweenDamage) {
+                            if (damageTimer2 > timeBetweenDamage) {
                                 players.get(1).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
-                                damageTimer = 0;
+                                damageTimer2 = 0;
                             }
                         }
                     }
