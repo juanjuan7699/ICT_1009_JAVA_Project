@@ -29,15 +29,15 @@ public class InstructionScreen implements Screen {
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
-        Label instruction1 = new Label("Player 1\nUp:'W'\nLeft: 'A'\nDown: 'S'\nRight:'D'", AnimalHunter.gameSkin,"black");
+        Label instruction1 = new Label("Player 1\nUp:'W'\nLeft: 'A'\nDown: 'S'\nRight:'D'\nRevive: 'Q'\nChange\nWeapons:\n'1, 2, 3'", AnimalHunter.gameSkin,"black");
         instruction1.setFontScale(1.2f, 1.2f);
         Label space = new Label("     ", AnimalHunter.gameSkin,"black");
-        Label instruction2 = new Label("Player 2\nUp:'Up Arrow'\nLeft: 'Left Arrow'\nDown: 'Down Arrow'\nRight:'Right Arrow'", AnimalHunter.gameSkin,"black");
+        Label instruction2 = new Label("Player 2\nUp:'Up Arrow'\nLeft: 'Left Arrow'\nDown: 'Down Arrow'\nRight: 'Right Arrow'\nRevive: 'Right ctrl'\nChange\nWeapons:\n'4, 5, 6'" , AnimalHunter.gameSkin,"black");
         instruction2.setFontScale(1.2f, 1.2f);
         Label buff = new Label("Blue: Attack Speed Buff\n Red: Regen Buff\n Green: Damage Buff\n Purple: Extra Laser Buff", AnimalHunter.gameSkin,"black");
         buff.setFontScale(1.2f, 1.2f);
         buff.setAlignment(Align.center);
-        buff.setY(Gdx.graphics.getHeight()*2/5);
+        buff.setY(Gdx.graphics.getHeight()*3/8);
         buff.setWidth(Gdx.graphics.getWidth());
 
         Table table = new Table();
