@@ -507,13 +507,13 @@ public class GameScreen implements Screen {
 
         //switch weapon
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_4)) {
-            players.get(1).setWeapon(0);
+            players.get(0).setWeapon(0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_5)) {
-            players.get(1).setWeapon(1);
+            players.get(0).setWeapon(1);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_6)) {
-            players.get(1).setWeapon(2);
+            players.get(0).setWeapon(2);
         }
 
         //Player 2
@@ -544,13 +544,13 @@ public class GameScreen implements Screen {
 
         //switch weapon
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_1)) {
-            players.get(0).setWeapon(0);
+            players.get(1).setWeapon(0);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_2)) {
-            players.get(0).setWeapon(1);
+            players.get(1).setWeapon(1);
         }
         if (Gdx.input.isKeyPressed(Input.Keys.NUM_3)) {
-            players.get(0).setWeapon(2);
+            players.get(1).setWeapon(2);
         }
     }
 
