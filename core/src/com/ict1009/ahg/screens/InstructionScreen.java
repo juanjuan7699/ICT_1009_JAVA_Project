@@ -18,6 +18,7 @@ import com.ict1009.ahg.AnimalHunter;
 public class InstructionScreen implements Screen {
     private AnimalHunter game;
     private Stage stage;
+    private TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
 
     public InstructionScreen(AnimalHunter aGame) {
         game = aGame;
@@ -76,9 +77,6 @@ public class InstructionScreen implements Screen {
     public void render ( float delta){
         stage.act(Gdx.graphics.getDeltaTime());
         stage.getBatch().begin();
-
-        TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
-        SpriteBatch batch = new SpriteBatch();
 
         stage.getBatch().draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();

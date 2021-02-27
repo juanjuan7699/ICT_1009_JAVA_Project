@@ -20,7 +20,7 @@ public class MenuScreen implements Screen {
     private static Music music;
     private Stage stage;
     private AnimalHunter game;
-//    private Music music;
+    private TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
 
     public MenuScreen(AnimalHunter aGame) {
         game = aGame;
@@ -116,8 +116,6 @@ public class MenuScreen implements Screen {
         stage.act(Gdx.graphics.getDeltaTime());
         stage.getBatch().begin();
 
-        TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
-        SpriteBatch batch = new SpriteBatch();
 
         stage.getBatch().draw(backgroundTexture, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         stage.getBatch().end();
