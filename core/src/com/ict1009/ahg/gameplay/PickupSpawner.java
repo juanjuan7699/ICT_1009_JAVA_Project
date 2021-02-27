@@ -16,7 +16,7 @@ public class PickupSpawner implements ISpawnPoint {
         spawning.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                new Pickup(true).addToRenderQueue();
+                new Pickup(false).addToRenderQueue();
             }
         }, 0, timer);
     }

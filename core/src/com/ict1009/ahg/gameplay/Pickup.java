@@ -129,7 +129,13 @@ public class Pickup extends Entity {
                 instigator.setHealthRegen((float) (instigator.getHealthRegen() + (Math.pow(.03f, this.getDamageScale()))));
                 System.out.println("buffed healthreg now " + instigator.getHealthRegen());
                 break;
-            case EXTRA_LASER_BUFF:
+            case EXTRA_LASER_BUFF: //if they already have 5, buff their attack instead
+                if (instigator.getAttacks() + 1 > 5) {
+                    instigator.setDamageScale(instigator.getDamageScale() + 1f);
+                    System.out.println("buffed dmg now " + instigator.getDamageScale());
+                    break;
+                }
+
                 instigator.setAttacks(instigator.getAttacks() + 1);
                 System.out.println("buffed attks now " + instigator.getAttacks());
                 break;

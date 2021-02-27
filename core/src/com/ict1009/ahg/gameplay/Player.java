@@ -30,6 +30,7 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
 
     public Timer attackTimer = new Timer();
 
+    private int novaAmmo = 0;
 
     //runnable here to destroy onDestroy
 
@@ -145,7 +146,13 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
                             case BLAZE_LASER:
                                 laser = new BlazeLaser(Player.this, 0);
                                 break;
-                            case NOVA_LASER:
+                            case NOVA_LASER: //balancing with 10 ammo per stack
+                                if (getNovaAmmo() <= 0) { //break weapon
+                                    addWeapon(ItemType.GENERIC_LASER);
+                                    laser = new Laser(Player.this, 0);
+                                    break;
+                                }
+                                novaAmmo--;
                                 laser = new NovaLaser(Player.this, 0);
                                 break;
                             case GENERIC_LASER:
@@ -217,6 +224,10 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
         this.weapons.add(weapon);
         this.weapon = this.weapons.size() -1;
         this.setWeapon(this.weapon);
+
+        if (weapon == ItemType.NOVA_LASER) {
+            novaAmmo += 10; //stackable
+        }
     }
 
     public void setWeapon(int weapon) {
@@ -247,5 +258,13 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
 
     public ItemType getCurrentWeapon() {
         return this.weapons.get(this.weapon);
+    }
+
+    public int getNovaAmmo() {
+        return novaAmmo;
+    }
+
+    public void setNovaAmmo(int novaAmmo) {
+        this.novaAmmo = novaAmmo;
     }
 }

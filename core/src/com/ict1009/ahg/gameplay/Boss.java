@@ -29,7 +29,14 @@ public class Boss extends Animal {
             new Pickup(this.getBoundingBox().getX(), this.getBoundingBox().getY(), 2, false).addToRenderQueue();
         }
 
-        //also drops one weapon per boss death
+        //also drops two weapon per boss death
         new Pickup(this.getBoundingBox().getX(), this.getBoundingBox().getY(), 2, true).addToRenderQueue();
+        new Pickup(this.getBoundingBox().getX(), this.getBoundingBox().getY(), 2, true).addToRenderQueue();
+
+        //also increases all player health by 50 per boss kill
+        for (Player p : players) {
+            p.setMaxHealth(p.getMaxHealth() + 50);
+            p.modifyHealth(25); //heal half of the max health increment
+        }
     }
 }
