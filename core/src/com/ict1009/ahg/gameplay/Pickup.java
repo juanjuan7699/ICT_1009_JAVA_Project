@@ -43,24 +43,23 @@ public class Pickup extends Entity {
                 case 1:
                     this.pickupType = ItemType.STASIS_LASER;
                     this.setSprite(gunTextures[2]);//temp
-                    System.out.println("stasis");
                     break;
                 case 2:
                     this.pickupType = ItemType.SWARM_LASER;
                     this.setSprite(gunTextures[1]);//temp
                     break;
-//                case 3:
-//                    this.pickupType = ItemType.SWARM_LASER;
-//                    this.setSprite(textureAtlas.findRegion("snake"));//temp
-//                    break;
-//                case 4:
-//                    this.pickupType = ItemType.SWARM_LASER;
-//                    this.setSprite(textureAtlas.findRegion("snake"));//temp
-//                    break;
-//                case 5:
-//                    this.pickupType = ItemType.SWARM_LASER;
-//                    this.setSprite(textureAtlas.findRegion("snake"));//temp
-//                    break;
+                case 3:
+                    this.pickupType = ItemType.NANO_LASER;
+                    this.setSprite(gunTextures[4]);//temp
+                    break;
+                case 4:
+                    this.pickupType = ItemType.BLAZE_LASER;
+                    this.setSprite(gunTextures[0]);//yellow
+                    break;
+                case 5:
+                    this.pickupType = ItemType.NOVA_LASER;
+                    this.setSprite(gunTextures[3]);//temp
+                    break;
             }
         }
         else { //drop buffs
@@ -141,8 +140,10 @@ public class Pickup extends Entity {
             case GENERIC_LASER:
             case STASIS_LASER:
             case SWARM_LASER:
+            case NANO_LASER:
+            case BLAZE_LASER:
+            case NOVA_LASER:
                 if (instigator instanceof Player) {
-                    ((Player)instigator).setPlayerSprite(pickupType);
                     ((Player)instigator).addWeapon(pickupType);
                 }
                 break;

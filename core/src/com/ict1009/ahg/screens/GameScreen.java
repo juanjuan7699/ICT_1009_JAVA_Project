@@ -595,48 +595,50 @@ public class GameScreen implements Screen {
                     ListIterator<Animal> enemyAnimalListIterator = mobs.listIterator();
                     while (enemyAnimalListIterator.hasNext()) {
                         Animal enemyAnimal = enemyAnimalListIterator.next();
-
-
                         if (enemyAnimal.collisionTest(laser)) {
                             // Touches animal
                             enemyAnimal.takeDamage(laser.getDamageScale() * laser.getOwner().getDamageScale(), 0, laser.getOwner());
                             laser.applyOnHit(enemyAnimal);
-                            if (enemyAnimal.isPendingRemoval()) {
-                                enemyAnimalListIterator.remove();
-                                if (enemyAnimal instanceof Boss) { //boss killed, immediately go next level
-                                    bossSpawned = false;
-                                    level +=1;
-                                }
-                            }
-                            laser.setPendingRemoval(true);
+                            laser.setPendingRemoval(!(laser instanceof NovaLaser)); //nova lasers dont get removed on hit
                             break;
                         }
-
-                        // Player 1 takes damage from enemy hitbox
-                        if (enemyAnimal.collisionTest(players.get(0))) {
-                            if (damageTimer1 > timeBetweenDamage) {
-                                players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
-                                damageTimer1 = 0;
-                            }
-                        }
-
-                        // Player 2 takes damage from enemy hitbox
-                        if (enemyAnimal.collisionTest(players.get(1))) {
-                            if (damageTimer2 > timeBetweenDamage) {
-                                players.get(1).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
-                                damageTimer2 = 0;
-                            }
-                        }
                     }
-                } else if (entity instanceof Pickup) {
+                }
+                else if (entity instanceof Pickup) {
                     for (Player p : players) {
                         if (p.collisionTest(entity)) {
                             entity.onDestroy(p);
                         }
                     }
                 }
-
             }
+
+            ListIterator<Animal> enemyAnimalListIterator = mobs.listIterator();
+            while (enemyAnimalListIterator.hasNext()) {
+                Animal enemyAnimal = enemyAnimalListIterator.next();
+                if (enemyAnimal.collisionTest(players.get(0))) {
+                    if (damageTimer1 > timeBetweenDamage) {
+                        players.get(0).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
+                        damageTimer1 = 0;
+                    }
+                }
+            // Player 2 takes damage from enemy hitbox
+                if (enemyAnimal.collisionTest(players.get(1))) {
+                    if (damageTimer2 > timeBetweenDamage) {
+                        players.get(1).takeDamage(enemyAnimal.getDamageScale(), 0, enemyAnimal);
+                        damageTimer2 = 0;
+                    }
+                }
+
+                if (enemyAnimal.isPendingRemoval()) {
+                    enemyAnimalListIterator.remove();
+                    if (enemyAnimal instanceof Boss) { //boss killed, immediately go next level
+                        bossSpawned = false;
+                        level +=1;
+                    }
+                }
+            }
+
         }
         catch (Exception e) {
             System.out.println("cannot detect collision now, trying later");

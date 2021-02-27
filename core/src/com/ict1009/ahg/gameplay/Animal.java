@@ -83,7 +83,12 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
 
             this.setPendingRemoval(true);
             this.statuses.add(StatusType.DEAD);
-            this.statuses.remove(StatusType.DOWNED);
+
+            //25% chance of dropping buff when dead
+            int rng = generator.nextInt(4);
+            if (rng == 0) {
+                new Pickup(false).addToRenderQueue();
+            }
         }
 
 
@@ -100,8 +105,10 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
 
     @Override
     public void takeDamage(float damage, int damageType, Entity instigator) {
-        this.modifyHealth(-damage);
-        onTakeDamage(instigator);
+        if (!this.hasStatus(StatusType.DOWNED) && !this.hasStatus(StatusType.DEAD)) {
+            this.modifyHealth(-damage);
+            onTakeDamage(instigator);
+        }
     }
 
     @Override

@@ -17,11 +17,11 @@ public enum ItemType {
 
     //weapons
     GENERIC_LASER,
-    STASIS_LASER,
-    NOVA_LASER,
-    BLAZE_LASER,
-    SWARM_LASER,
-    NANO_LASER,
+    STASIS_LASER, //freeze
+    NOVA_LASER, //Multi-Target
+    BLAZE_LASER, //DoT
+    SWARM_LASER, //Single Target
+    NANO_LASER, //lifesteal
 
     INSTANT_HEAL,
 
