@@ -2,7 +2,11 @@ package com.ict1009.ahg.gameplay;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
+import com.ict1009.ahg.enums.StatusType;
 import com.ict1009.ahg.screens.GameScreen;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static com.ict1009.ahg.screens.GameScreen.*;
 import static com.ict1009.ahg.screens.GameScreen.WORLD_HEIGHT;
@@ -34,9 +38,18 @@ public class Boss extends Animal {
         new Pickup(this.getBoundingBox().getX(), this.getBoundingBox().getY(), 2, true).addToRenderQueue();
 
         //also increases all player health by 50 per boss kill
-        for (Player p : players) {
+        for (final Player p : players) {
             p.setMaxHealth(p.getMaxHealth() + 50);
             p.modifyHealth(25); //heal half of the max health increment
+            p.addStatus(StatusType.INVULNERABLE); //invul for 3 seconds after killing boss
+
+            Timer timer = new Timer();
+            timer.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                   p.removeStatus(StatusType.INVULNERABLE);
+                }
+            }, 3000);
         }
     }
 }

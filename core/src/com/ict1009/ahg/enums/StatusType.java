@@ -4,6 +4,5 @@ public enum StatusType {
     ALIVE,
     INVULNERABLE,
     DOWNED,
-    REVIVING,
     DEAD, //dead overwrites everything
 }

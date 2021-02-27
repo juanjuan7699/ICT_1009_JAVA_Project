@@ -35,6 +35,12 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
 
         this.statuses = new ArrayList<>();
         this.addStatus(StatusType.ALIVE);
+
+        //additional power every 5 levels
+        if (level/5 >= 1) { //max 300 health extra
+            this.setMaxHealth((float) Math.min((getMaxHealth() + Math.pow(3, level/5)), 300)); //3,9,27,81,243
+
+        }
     }
 
     public Vector2 getDirectionVector() {
@@ -84,9 +90,9 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
             this.setPendingRemoval(true);
             this.statuses.add(StatusType.DEAD);
 
-            //25% chance of dropping buff when dead
-            int rng = generator.nextInt(4);
-            if (rng == 0) {
+            //30% chance of dropping buff when dead
+            int rng = generator.nextInt(10);
+            if (rng >= 7) {
                 new Pickup(false).addToRenderQueue();
             }
         }

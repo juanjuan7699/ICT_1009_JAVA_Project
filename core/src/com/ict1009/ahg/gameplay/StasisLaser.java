@@ -16,6 +16,6 @@ public class StasisLaser extends Laser {
     @Override
     public void applyOnHit(Entity target) { //freeze forever
         new OnHitAndExplosion(onHitStasisTexture, new Rectangle (target.getBoundingBox()), 0.3f,96,96).addToRenderQueue();
-        target.setMovementSpeed(0f);
+        target.setMovementSpeed(target.getMovementSpeed() * 0.75f); //25% slow stackable
     }
 }

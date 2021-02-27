@@ -21,8 +21,6 @@ import static com.ict1009.ahg.screens.GameScreen.*;
 public class Player extends Entity implements ICollidable, IDamageHandler, IStatus {
 
     private int weapon;
-    private float timeSinceLastShot;
-    private boolean invulnerable;
     private List<StatusType> statuses;
     private int playerIndex;
 
@@ -67,13 +65,16 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
 
     @Override
     public boolean collisionTest(Entity target) {
-        return !invulnerable && this.getBoundingBox().overlaps(target.getBoundingBox()); //not invulnerable and overlap = get damage
+        return !hasStatus(StatusType.INVULNERABLE) && this.getBoundingBox().overlaps(target.getBoundingBox()); //not invulnerable and overlap = get damage
     }
 
     @Override
     public void takeDamage(float damage, int damageType, Entity instigator) {
+        if (hasStatus(StatusType.INVULNERABLE)) {
+            return;
+        }
+
         this.modifyHealth(-damage);
-        //do something else when it gets damaged
         onTakeDamage(instigator);
     }
 
