@@ -82,7 +82,7 @@ public class GameScreen implements Screen {
     public static List<OnHitAndExplosion> onHitAndExplosionList;
 
     /** spawners  **/
-    private ISpawnPoint pickupSpawner;
+    private static ISpawnPoint pickupSpawner;
 
     //gs
     public static int level = 1;
@@ -346,6 +346,8 @@ public class GameScreen implements Screen {
         for (Player p : players) {
             p.attackTimer.cancel();
         }
+
+        pickupSpawner.destroySpawner();
         level = 1;
         score = 0;
     }
