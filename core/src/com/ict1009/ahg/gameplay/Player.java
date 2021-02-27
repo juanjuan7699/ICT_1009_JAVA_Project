@@ -64,8 +64,8 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
     }
 
     @Override
-    public boolean collisionTest(Entity target) {
-        return !hasStatus(StatusType.INVULNERABLE) && this.getBoundingBox().overlaps(target.getBoundingBox()); //not invulnerable and overlap = get damage
+    public boolean collisionTest(Entity target) { //invulnerable wont remove hitbox anymore
+        return this.getBoundingBox().overlaps(target.getBoundingBox()); //overlap = get damage
     }
 
     @Override
