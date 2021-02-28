@@ -16,9 +16,7 @@ public class SwarmLaser extends Laser {
     }
 
     @Override
-    public void applyOnHit(Entity target) { //freeze forever
-        // super.applyOnHit(target);
-
+    public void applyOnHit(Entity target) {         
         //animate bombs 5 times
         if (target instanceof Animal) {
             //apply x additional base damage (without modifiers or it becomes op) where x is owner's total bullet count

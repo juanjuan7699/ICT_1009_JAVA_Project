@@ -14,8 +14,7 @@ public class NovaLaser extends Laser {
     }
 
     @Override
-    public void applyOnHit(Entity target) { //temp texture
-        //new OnHitAndExplosion(onHitSwarmTexture, new Rectangle(target.getBoundingBox()), 0.3f,96,96).addToRenderQueue();
+    public void applyOnHit(Entity target) { //temp texture        
         new OnHitAndExplosion(onHitTexture, new Rectangle (this.getBoundingBox()), 0.7f,100,100).addToRenderQueue();
     }
 }

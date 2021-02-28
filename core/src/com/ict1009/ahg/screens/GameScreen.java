@@ -86,7 +86,7 @@ public class GameScreen implements Screen {
     // Sound Effects
     private Music music;
 
-    /*HUD only shows player1, maybe if more players means combine scoregains, lives etc?*/
+    //HUD
     BitmapFont font;
     BitmapFont font2;
 
@@ -96,9 +96,6 @@ public class GameScreen implements Screen {
     float hudRightX;
     float hudSectionWidth;
     float hudVerticalMargin;
-
-     /*if want to remove animal laser, gameobjects enemylaserlist, enemylaser linkedlist,
-    animals variables(class and gamescreen), detectCollisions enemylist, renderlasers 2 lists)  */
 
     public static final Random generator = new Random();
 

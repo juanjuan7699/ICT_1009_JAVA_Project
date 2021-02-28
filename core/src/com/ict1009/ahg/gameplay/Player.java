@@ -35,7 +35,6 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
         this.weapon = -1; //get from db later
         this.weapons = new ArrayList<>();
         this.addWeapon(ItemType.GENERIC_LASER);
-//        this.addWeapon(ItemType.STASIS_LASER);
 
         this.setSprite(newPlayerTextures[playerIndex]);
         this.setMaxHealth(100);
@@ -80,8 +79,7 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
         //show hurt etc
         new OnHitAndExplosion(onHitTexture, new Rectangle (this.getBoundingBox()), 0.7f,100,100).addToRenderQueue();
         if (getCurrentHealth() <= 0) {
-            //downed state or die
-            //this.onDestroy(instigator);
+            //downed state or die            
             this.addStatus(StatusType.DOWNED);
             this.removeStatus(StatusType.ALIVE);
         }

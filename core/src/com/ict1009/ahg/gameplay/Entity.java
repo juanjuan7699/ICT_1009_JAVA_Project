@@ -3,7 +3,6 @@ package com.ict1009.ahg.gameplay;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 
 public abstract class Entity {
     private float currentHealth;
@@ -163,8 +162,7 @@ public abstract class Entity {
     }
 
     public void setPendingRemoval(boolean pendingRemoval) {
-        this.pendingRemoval = pendingRemoval;
-        //this.setVisible(false);
+        this.pendingRemoval = pendingRemoval;    
     }
 
     public float getHealthRegen() {

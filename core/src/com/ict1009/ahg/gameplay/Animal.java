@@ -26,7 +26,6 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
         this.modifyHealth(5 + 3 * level);
         this.setDamageScale(1 + 0.5f * level);
         this.setBoundingBox(new Rectangle(generator.nextFloat() * (WORLD_WIDTH - 10) + 5 - 10, WORLD_HEIGHT + 30 - 10, 20, 20));
-//        this.setSprite(animalForestTextures[0]);
         this.setSprite(GameScreen.getAnimalTexture());
 
         this.directionVector = new Vector2(0 ,-1);

@@ -16,7 +16,6 @@ public class Boss extends Animal {
         this.modifyHealth(5 + 3 * level * level * level);
         this.setDamageScale(5 + 0.5f * level);
         this.setBoundingBox(new Rectangle(generator.nextFloat() * (WORLD_WIDTH - 10) + 5 - 10, WORLD_HEIGHT + 30 - 10, 30, 30));
-//        this.setSprite(animalForestTextures[0]);
         this.setSprite(GameScreen.getBossTexture());
 
         super.directionVector = new Vector2(0 ,-1);

@@ -18,9 +18,7 @@ public class BlazeLaser extends Laser {
     }
 
     @Override
-    public void applyOnHit(Entity target) { //freeze forever
-        // super.applyOnHit(target);
-
+    public void applyOnHit(Entity target) {         
         if (target instanceof Animal) {
             final Animal targett = (Animal)target;
             Timer timer = new Timer();
