@@ -124,7 +124,6 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
             this.removeStatus(StatusType.ALIVE);
             onDestroy(instigator);
         }
-        //blink animation?
     }
 
     @Override

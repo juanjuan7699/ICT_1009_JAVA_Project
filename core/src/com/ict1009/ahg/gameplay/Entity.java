@@ -4,13 +4,11 @@ import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
-import com.ict1009.ahg.enums.EntityType;
 
 public abstract class Entity {
     private Vector3 currentLocation; //2f
     private Vector3 targetLocation; //2f
     private Vector3 spawnLocation; //2f
-    private EntityType entityType;
 
     private float currentHealth;
     private float maxHealth;
@@ -76,14 +74,6 @@ public abstract class Entity {
 
     public void setSpawnLocation(Vector3 spawnLocation) {
         this.spawnLocation = spawnLocation;
-    }
-
-    public EntityType getEntityType() {
-        return entityType;
-    }
-
-    public void setEntityType(EntityType entityType) {
-        this.entityType = entityType;
     }
 
     public float getCurrentHealth() {
