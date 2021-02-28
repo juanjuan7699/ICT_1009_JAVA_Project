@@ -1,12 +1,6 @@
 package com.ict1009.ahg.gameplay;
 
-import com.badlogic.gdx.math.Rectangle;
-
-import java.util.Timer;
-import java.util.TimerTask;
-
 import static com.ict1009.ahg.screens.GameScreen.newPlayerTextures;
-import static com.ict1009.ahg.screens.GameScreen.onHitSwarmTexture;
 
 public class NanoLaser extends Laser {
     public NanoLaser(Entity owner, int team) {

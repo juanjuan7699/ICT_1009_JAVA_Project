@@ -15,18 +15,7 @@ public class AnimalHunter extends Game {
 	}
 
 	@Override
-	public void render() {
-		super.render();
-	}
-
-	@Override
-	public void dispose () {
-		super.dispose();
-	}
-
-	@Override
 	public void resize(int width, int height) {
-		// TODO Auto-generated method stub
 		super.resize(width, height);
 	}
 }

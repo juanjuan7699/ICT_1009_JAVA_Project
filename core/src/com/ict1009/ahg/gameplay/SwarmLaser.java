@@ -24,12 +24,12 @@ public class SwarmLaser extends Laser {
             //apply x additional base damage (without modifiers or it becomes op) where x is owner's total bullet count
             for (int i = 0; i < getOwner().getAttacks(); i++) {
                 ((Animal)target).takeDamage(this.getDamageScale(), 0, getOwner());
-                final Entity targett = target;
+                final Entity targetT = target;
                 Timer timer = new Timer();
                 timer.schedule(new TimerTask() {
                     @Override
                     public void run() {
-                        new OnHitAndExplosion(onHitSwarmTexture, new Rectangle(targett.getBoundingBox()), 0.15f,64,64).addToRenderQueue();
+                        new OnHitAndExplosion(onHitSwarmTexture, new Rectangle(targetT.getBoundingBox()), 0.15f,64,64).addToRenderQueue();
                     }
                 }, 100 * i);
 

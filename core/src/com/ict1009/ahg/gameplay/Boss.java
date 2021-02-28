@@ -9,8 +9,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 import static com.ict1009.ahg.screens.GameScreen.*;
-import static com.ict1009.ahg.screens.GameScreen.WORLD_HEIGHT;
-
 public class Boss extends Animal {
     public Boss() {
         this.setMovementSpeed(Math.min(100, 24 + 3 * level));

@@ -1,7 +1,6 @@
 package com.ict1009.ahg.gameplay;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.screens.GameScreen;
 import com.ict1009.ahg.enums.ItemType;
 
@@ -10,8 +9,6 @@ import static com.ict1009.ahg.screens.GameScreen.*;
 public class Pickup extends Entity {
 
     private ItemType pickupType;
-
-    private boolean inventoryItem; //false for instant buffs
 
     public Pickup(float x, float y, float scale, boolean inventoryItem) { //to spawn at boss location
         this(inventoryItem);
@@ -23,16 +20,15 @@ public class Pickup extends Entity {
     public Pickup(boolean inventoryItem) { //random generation
         this.setMovementSpeed(0.5f);
         this.setDamageScale(1 + generator.nextFloat()); //scaling of the pickup itself regardless if its damage, health, attack speed
-        this.inventoryItem = inventoryItem;
+        //false for instant buffs
         //get spawn area then set bounding box
         this.setBoundingBox(new Rectangle((float)generator.nextInt((int)WORLD_WIDTH - 5), WORLD_HEIGHT-20, 20, 20)); //need more images
         this.setSprite(gunTextures[5]); //temporary
         this.pickupType = ItemType.NONE;
 
-        if (this.inventoryItem) {
+        if (inventoryItem) {
             //drop non buffs
             int rng = generator.nextInt(6);
-            System.out.println("A non buff was generated");
             switch (rng) {
                 case 0:
                     this.pickupType = ItemType.GENERIC_LASER;
@@ -93,16 +89,6 @@ public class Pickup extends Entity {
     }
 
     @Override
-    public void tryMove(int direction) {
-
-    }
-
-    @Override
-    public void tryTeleport(Vector3 targetLocation) {
-
-    }
-
-    @Override
     public void addToRenderQueue() {
         GameScreen.renderQueue.add(this);
     }
@@ -114,32 +100,25 @@ public class Pickup extends Entity {
         switch (pickupType) {
             case DAMAGE_BUFF: //exponential buff
                 instigator.setDamageScale(instigator.getDamageScale() * (this.getDamageScale() * 1.25f));
-                System.out.println("buffed dmg now " + instigator.getDamageScale());
                 break;
             case ATTACKSPEED_BUFF:
                 instigator.setAttackSpeed((float) Math.max(0.2f, instigator.getAttackSpeed() - (0.1 * this.getDamageScale())));
                 if (instigator instanceof Player)
                     ((Player)instigator).startAttacking();
-
-                System.out.println("buffed spd now " + instigator.getAttackSpeed());
                 break;
             case REGEN_BUFF:
                 instigator.setHealthRegen((float) (instigator.getHealthRegen() + (Math.pow(.03f, this.getDamageScale()))));
-                System.out.println("buffed healthreg now " + instigator.getHealthRegen());
                 break;
             case EXTRA_LASER_BUFF: //if they already have 5, buff their attack instead
                 if (instigator.getAttacks() + 1 > 5) {
                     instigator.setDamageScale(instigator.getDamageScale() + 1f);
-                    System.out.println("buffed dmg now " + instigator.getDamageScale());
                     break;
                 }
 
                 instigator.setAttacks(instigator.getAttacks() + 1);
-                System.out.println("buffed attks now " + instigator.getAttacks());
                 break;
             case HEALTH_BUFF:
                 instigator.setMaxHealth(instigator.getMaxHealth() + 5);
-                System.out.println("buffed hp now " + instigator.getMaxHealth());
                 break;
             case GENERIC_LASER:
             case STASIS_LASER:
@@ -152,10 +131,6 @@ public class Pickup extends Entity {
                 }
                 break;
         }
-
-        //picking up a buff means you will increase the level difficulty by a fixed rate of 0.20
-        //score += 200; //but will not add to total score of hunted animals
-        levelScore += 200;
 
         this.setPendingRemoval(true);
     }

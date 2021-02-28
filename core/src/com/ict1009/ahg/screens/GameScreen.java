@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
-import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -28,7 +27,7 @@ public class GameScreen implements Screen {
 
     private static TextureRegion animalTexture;
     private static TextureRegion bossTexture;
-    private AnimalHunter game;
+    private final AnimalHunter game;
 
     /**Screen**/
     private final Camera camera;
@@ -38,9 +37,6 @@ public class GameScreen implements Screen {
     public static final float WORLD_WIDTH = 72;
     public static final float WORLD_HEIGHT = 128;
 
-    /**Graphics**/
-    private float backgroundHeight; //  of background in world units
-
     private final SpriteBatch batch;
     public static final TextureAtlas textureAtlas = new TextureAtlas("images.atlas");
     public static final TextureAtlas animalTextureAtlas = new TextureAtlas("animals.atlas");
@@ -49,31 +45,23 @@ public class GameScreen implements Screen {
     public static final TextureAtlas gunsTextureAtlas = new TextureAtlas("guns.atlas");
     public static final TextureAtlas newPlayerTextureAtlas = new TextureAtlas("playerAssets.atlas");
 
-    public static Texture explosionTexture;     //480 by 480
-    public static Texture onHitTexture;         //100 by 100 
-    public static Texture onHitSwarmTexture;    //64 by 64
-    public static Texture onHitGenericTexture; //96 by 96
-    public static Texture onHitStasisTexture;  //96 by 96
-    private TextureRegion[] backgrounds;
-    private TextureRegion playerTextureRegion, player2TextureRegion, bearTextureRegion, crocTextureRegion, duckTextureRegion, goatTextureRegion,
-            laserTextureRegion, laser2TextureRegion,enemyLaserTextureRegion, pigTextureRegion, rabbitTextureRegion, snakeTextureRegion,
-            elephantTextureRegion, lionTextureRegion, gorillaTextureRegion, camelTextureRegion, wolfTextureRegion,
-            deerTextureRegion, dinosaurTextureRegion, chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion,
-            potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion,
-            yellowGunTextureRegion, orangeGunTextureRegion,blueGunTextureRegion,
-            purpleGunTextureRegion, greenGunTextureRegion, redGunTextureRegion;
+    public static final Texture explosionTexture = new Texture("bloodsprite3.png");     //480 by 480
+    public static final Texture onHitTexture = new Texture("testblood.png");         //100 by 100
+    public static final Texture onHitSwarmTexture = new Texture("SwarmLaserSprite.png");    //64 by 64
+    public static final Texture onHitGenericTexture = new Texture("GenericLaserSprite.png"); //96 by 96
+    public static final Texture onHitStasisTexture = new Texture("IceCastSprite.png");  //96 by 96
+    private final TextureRegion[] backgrounds;
 
     /**Timing**/
     private final float[] backgroundOffsets = {0, 0, 0, 0};
-    private final float backgroundMaxScrollingSpeed;
+    private final float backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
+    private final float timeBetweenDamage = 0.2f;
+    private final float timeBetweenNewMap = 15;
     private float timeBetweenEnemySpawns = 2.45f;
-    private float timeBetweenDamage = 0.2f;
-    private float timeBetweenNewMap = 15;
     private float enemySpawnTimer = 0;
     private float damageTimer1 = 0;
     private float damageTimer2 = 0;
     private float mapTimer = 0;
-    private float timeElapsed = 0;
 
     /** Render Queue **/
     public static List<Player> players; //all players goes here
@@ -87,25 +75,27 @@ public class GameScreen implements Screen {
     //gs
     public static int level = 1;
     public static int score = 0;
-    public static int levelScore = 0;
     private int maxMobs = 10;
-    private int maxBosses = 1;
     private int spawnPerCycle = 1;
     private boolean bossSpawned = false;
 
     // Sound Effects
-    private Sound sound;
     private Music music;
 
     /*HUD only shows player1, maybe if more players means combine scoregains, lives etc?*/
     BitmapFont font;
     BitmapFont font2;
-    float hudVerticalMargin, hudLeftX, hudRightX, hudCentreX, hudRow1Y, hudRow2Y, hudSectionWidth;
+    float hudVerticalMargin;
+    float hudLeftX;
+    float hudRightX;
+    float hudRow1Y;
+    float hudRow2Y;
+    float hudSectionWidth;
 
      /*if want to remove animal laser, gameobjects enemylaserlist, enemylaser linkedlist,
     animals variables(class and gamescreen), detectCollisions enemylist, renderlasers 2 lists)  */
 
-    public static Random generator = new Random();
+    public static final Random generator = new Random();
     public static TextureRegion[] animalForestTextures;
     public static TextureRegion[] animalDesertTextures;
     public static TextureRegion[] animalSnowTextures;
@@ -120,100 +110,90 @@ public class GameScreen implements Screen {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
 
-        backgrounds = new TextureRegion[4];
-        backgrounds[0] = textureAtlas.findRegion("grassBackground2");
-        backgrounds[1] = textureAtlas.findRegion("grassBackground2");
-        backgrounds[2] = textureAtlas.findRegion("grassBackground2");
-        backgrounds[3] = textureAtlas.findRegion("grassBackground2");
+        backgrounds = new TextureRegion[] {
+                textureAtlas.findRegion("grassBackground2"),
+                textureAtlas.findRegion("grassBackground2"),
+                textureAtlas.findRegion("grassBackground2"),
+                textureAtlas.findRegion("grassBackground2")};
 
-        // Animal textures
-        bearTextureRegion = animalTextureAtlas.findRegion("bear");
-        elephantTextureRegion = animalTextureAtlas.findRegion("elephant");
-        lionTextureRegion = animalTextureAtlas.findRegion("lion");
-        gorillaTextureRegion = animalTextureAtlas.findRegion("gorilla");
-        camelTextureRegion = animalTextureAtlas.findRegion("camel");
-        wolfTextureRegion = animalTextureAtlas.findRegion("wolf");
-        deerTextureRegion = animalTextureAtlas.findRegion("deer");
-        dinosaurTextureRegion = animalTextureAtlas.findRegion("dinosaur");
-        goatTextureRegion = animalTextureAtlas.findRegion("goat");
+        playerTextures = new TextureRegion[] {
+                textureAtlas.findRegion("soldier1_gun"),
+                textureAtlas.findRegion("manBlue_gun"),
+                textureAtlas.findRegion("laserBlue12"),
+                textureAtlas.findRegion("laserOrange12"),
+                textureAtlas.findRegion("laserRed12")};
 
-        //player textures //temp only
-        playerTextures = new TextureRegion[5];
-        playerTextures[0] = textureAtlas.findRegion("soldier1_gun");
-        playerTextures[1] = textureAtlas.findRegion("manBlue_gun");
-        playerTextures[2] = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
-        playerTextures[3] = textureAtlas.findRegion("laserOrange12");
-        playerTextures[4] = textureAtlas.findRegion("laserRed12");
-        explosionTexture = new Texture("bloodsprite3.png");
-        onHitTexture = new Texture("testblood.png");        
-        onHitGenericTexture = new Texture("GenericLaserSprite.png");
-        onHitSwarmTexture = new Texture("SwarmLaserSprite.png");
-        onHitStasisTexture = new Texture("IceCastSprite.png");
-        // Boss textures
-        chimeraTextureRegion = animalTextureAtlas.findRegion("chimera");
-        werewolfTextureRegion = animalTextureAtlas.findRegion("werewolf");
-        yetiTextureRegion = animalTextureAtlas.findRegion("yeti");
-
-        laser2TextureRegion = textureAtlas.findRegion("laserBlue12"); // Change this value if setting player 2 laser to another colour
-        enemyLaserTextureRegion = textureAtlas.findRegion("laserOrange12");
-
-        // Potion textures
-        potion1TextureRegion = potionsTextureAtlas.findRegion("potion1");
-        potion2TextureRegion = potionsTextureAtlas.findRegion("potion2");
-        potion3TextureRegion = potionsTextureAtlas.findRegion("potion3");
-        potion4TextureRegion = potionsTextureAtlas.findRegion("potion4");
-
-        // Gun textures
-        yellowGunTextureRegion = gunsTextureAtlas.findRegion("yellow_gun");
-        orangeGunTextureRegion = gunsTextureAtlas.findRegion("orange_gun");
-        blueGunTextureRegion = gunsTextureAtlas.findRegion("darkblue_gun");
-        purpleGunTextureRegion = gunsTextureAtlas.findRegion("purple_gun");
-        greenGunTextureRegion = gunsTextureAtlas.findRegion("green_gun");
-        redGunTextureRegion = gunsTextureAtlas.findRegion("red_gun");
 
         // New player textures
-        newPlayerTextures = new TextureRegion[18];
-        newPlayerTextures[0] = newPlayerTextureAtlas.findRegion("manBlue_redGun");
-        newPlayerTextures[1] = newPlayerTextureAtlas.findRegion("soldier1_redGun");
+        newPlayerTextures = new TextureRegion[] {
+                newPlayerTextureAtlas.findRegion("manBlue_redGun"),
+                newPlayerTextureAtlas.findRegion("soldier1_redGun"),
 
-        // Laser textures
-        newPlayerTextures[2] = newPlayerTextureAtlas.findRegion("laserOrange12");
-        newPlayerTextures[3] = newPlayerTextureAtlas.findRegion("laserPurple12");
-        newPlayerTextures[4] = newPlayerTextureAtlas.findRegion("laserBlue12");
-        newPlayerTextures[5] = newPlayerTextureAtlas.findRegion("laserRed12");
-        newPlayerTextures[6] = newPlayerTextureAtlas.findRegion("laserYellow12");
-        newPlayerTextures[7] = newPlayerTextureAtlas.findRegion("laserGreen12");
+                // Laser textures
+                newPlayerTextureAtlas.findRegion("laserOrange12"),
+                newPlayerTextureAtlas.findRegion("laserPurple12"),
+                newPlayerTextureAtlas.findRegion("laserBlue12"),
+                newPlayerTextureAtlas.findRegion("laserRed12"),
+                newPlayerTextureAtlas.findRegion("laserYellow12"),
+                newPlayerTextureAtlas.findRegion("laserGreen12"),
 
-        // Player 0 with guns textures
-        newPlayerTextures[8] = newPlayerTextureAtlas.findRegion("manBlue_greenGun");
-        newPlayerTextures[9] = newPlayerTextureAtlas.findRegion("manBlue_yellowGun");
-        newPlayerTextures[10] = newPlayerTextureAtlas.findRegion("manBlue_purpleGun");
-        newPlayerTextures[11] = newPlayerTextureAtlas.findRegion("manBlue_blueGun");
-        newPlayerTextures[12] = newPlayerTextureAtlas.findRegion("manBlue_orangeGun");
+                // Player 0 with guns textures
+                newPlayerTextureAtlas.findRegion("manBlue_greenGun"),
+                newPlayerTextureAtlas.findRegion("manBlue_yellowGun"),
+                newPlayerTextureAtlas.findRegion("manBlue_purpleGun"),
+                newPlayerTextureAtlas.findRegion("manBlue_blueGun"),
+                newPlayerTextureAtlas.findRegion("manBlue_orangeGun"),
 
-        // Player 1 with guns textures
-        newPlayerTextures[13] = newPlayerTextureAtlas.findRegion("soldier1_greenGun");
-        newPlayerTextures[14] = newPlayerTextureAtlas.findRegion("soldier1_yellowGun");
-        newPlayerTextures[15] = newPlayerTextureAtlas.findRegion("soldier1_purpleGun");
-        newPlayerTextures[16] = newPlayerTextureAtlas.findRegion("soldier1_blueGun");
-        newPlayerTextures[17] = newPlayerTextureAtlas.findRegion("soldier1_orangeGun");
+                // Player 1 with guns textures
+                newPlayerTextureAtlas.findRegion("soldier1_greenGun"),
+                newPlayerTextureAtlas.findRegion("soldier1_yellowGun"),
+                newPlayerTextureAtlas.findRegion("soldier1_purpleGun"),
+                newPlayerTextureAtlas.findRegion("soldier1_blueGun"),
+                newPlayerTextureAtlas.findRegion("soldier1_orangeGun"),};
 
-        backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
+        // Animal textures
+        animalForestTextures = new TextureRegion[]{
+                animalTextureAtlas.findRegion("bear"),
+                animalTextureAtlas.findRegion("elephant")};
 
-        animalForestTextures = new TextureRegion[]{bearTextureRegion, elephantTextureRegion};
-        animalDesertTextures = new TextureRegion[]{lionTextureRegion, camelTextureRegion};
-        animalSnowTextures = new TextureRegion[]{wolfTextureRegion, deerTextureRegion};
-        animalRockTextures = new TextureRegion[]{dinosaurTextureRegion, goatTextureRegion};
-        animalBossTextures = new TextureRegion[]{chimeraTextureRegion, werewolfTextureRegion, yetiTextureRegion};
-        potionTextures = new TextureRegion[]{potion1TextureRegion, potion2TextureRegion, potion3TextureRegion, potion4TextureRegion};
-        gunTextures = new TextureRegion[]{yellowGunTextureRegion, orangeGunTextureRegion, blueGunTextureRegion,
-        purpleGunTextureRegion, greenGunTextureRegion, redGunTextureRegion};
+        animalDesertTextures = new TextureRegion[]{
+                animalTextureAtlas.findRegion("lion"),
+                animalTextureAtlas.findRegion("camel")};
 
-        //1f, 4, 120, .35f //laser data
-        mobs =  new ArrayList<>();
-        renderQueue = Collections.synchronizedList(new ArrayList<Entity>());
+        animalSnowTextures = new TextureRegion[]{
+                animalTextureAtlas.findRegion("wolf"),
+                animalTextureAtlas.findRegion("deer")};
+
+        animalRockTextures = new TextureRegion[]{
+                animalTextureAtlas.findRegion("goat"),
+                animalTextureAtlas.findRegion("dinosaur")};
+
+        // Boss textures
+        animalBossTextures = new TextureRegion[]{
+                animalTextureAtlas.findRegion("chimera"),
+                animalTextureAtlas.findRegion("werewolf"),
+                animalTextureAtlas.findRegion("yeti")};
+
+        // Potion textures
+        potionTextures = new TextureRegion[]{
+                potionsTextureAtlas.findRegion("potion1"),
+                potionsTextureAtlas.findRegion("potion2"),
+                potionsTextureAtlas.findRegion("potion3"),
+                potionsTextureAtlas.findRegion("potion4")};
+
+        // Gun textures
+        gunTextures = new TextureRegion[]{
+                gunsTextureAtlas.findRegion("yellow_gun"),
+                gunsTextureAtlas.findRegion("orange_gun"),
+                gunsTextureAtlas.findRegion("darkblue_gun"),
+                gunsTextureAtlas.findRegion("purple_gun"),
+                gunsTextureAtlas.findRegion("green_gun"),
+                gunsTextureAtlas.findRegion("red_gun")};
+
+        mobs = new ArrayList<>();
         players = new ArrayList<>();
         onHitAndExplosionList = new ArrayList<>();
+        renderQueue = Collections.synchronizedList(new ArrayList<Entity>());
         batch = new SpriteBatch();
         prepareHud();
 
@@ -223,7 +203,6 @@ public class GameScreen implements Screen {
             player.startAttacking(); //request to start attacking
         }
 
-        //prepare mob spawning here
         pickupSpawner = new PickupSpawner();
         pickupSpawner.startSpawning();
 
@@ -276,7 +255,6 @@ public class GameScreen implements Screen {
         hudVerticalMargin = font.getCapHeight() / 2;
         hudLeftX = hudVerticalMargin;
         hudRightX = WORLD_WIDTH * 2 / 3 - hudLeftX;
-        hudCentreX = WORLD_WIDTH / 3;
         hudRow1Y = WORLD_HEIGHT - hudVerticalMargin;
         hudRow2Y = WORLD_HEIGHT  - hudVerticalMargin * 1.5f- font.getCapHeight();
         hudSectionWidth = WORLD_WIDTH / 3;
@@ -420,7 +398,6 @@ public class GameScreen implements Screen {
 
     private void spawnEnemyAnimals(float deltaTime) {
         enemySpawnTimer += deltaTime;
-        timeElapsed += deltaTime;
 
         int randomIndex = generator.nextInt(animalForestTextures.length);
         if (enemySpawnTimer > timeBetweenEnemySpawns && mobs.size() < maxMobs) {
@@ -554,12 +531,6 @@ public class GameScreen implements Screen {
         }
     }
 
-
-    private void movePickup(Pickup enemyAnimal, float deltaTime) {
-        // Strategy: determine the max distance the enemy can move
-        enemyAnimal.translate(0,-10);
-    }
-
     private void moveEnemy(Animal enemyAnimal, float deltaTime) {
         // Strategy: determine the max distance the enemy can move
 
@@ -588,15 +559,11 @@ public class GameScreen implements Screen {
 
         //Collision test with animals
         try {
-            ListIterator<Entity> laserListIterator = renderQueue.listIterator();
-            while (laserListIterator.hasNext()) {
-                Entity entity = laserListIterator.next();
+            for (Entity entity : renderQueue) {
                 if (entity instanceof Laser) {
                     Laser laser = (Laser) entity;
 
-                    ListIterator<Animal> enemyAnimalListIterator = mobs.listIterator();
-                    while (enemyAnimalListIterator.hasNext()) {
-                        Animal enemyAnimal = enemyAnimalListIterator.next();
+                    for (Animal enemyAnimal : mobs) {
                         if (enemyAnimal.collisionTest(laser)) {
                             // Touches animal
                             enemyAnimal.takeDamage(laser.getDamageScale() * laser.getOwner().getDamageScale(), 0, laser.getOwner());
@@ -605,8 +572,7 @@ public class GameScreen implements Screen {
                             break;
                         }
                     }
-                }
-                else if (entity instanceof Pickup) {
+                } else if (entity instanceof Pickup) {
                     for (Player p : players) {
                         if (p.collisionTest(entity)) {
                             entity.onDestroy(p);

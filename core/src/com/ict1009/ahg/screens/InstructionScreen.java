@@ -3,7 +3,6 @@ package com.ict1009.ahg.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -16,9 +15,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.ict1009.ahg.AnimalHunter;
 
 public class InstructionScreen implements Screen {
-    private AnimalHunter game;
-    private Stage stage;
-    private TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
+    private final AnimalHunter game;
+    private final Stage stage;
+    private final TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
 
     public InstructionScreen(AnimalHunter aGame) {
         game = aGame;
@@ -26,7 +25,7 @@ public class InstructionScreen implements Screen {
 
         Label title = new Label("How to play", AnimalHunter.gameSkin,"big-black");
         title.setAlignment(Align.center);
-        title.setY(Gdx.graphics.getHeight()*6/8);
+        title.setY((float)Gdx.graphics.getHeight()*6/8);
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
@@ -38,7 +37,7 @@ public class InstructionScreen implements Screen {
         Label buff = new Label("Blue: Attack Speed Buff\n Red: Regen Buff\n Green: Damage Buff\n Purple: Extra Laser Buff", AnimalHunter.gameSkin,"black");
         buff.setFontScale(1.2f, 1.2f);
         buff.setAlignment(Align.center);
-        buff.setY(Gdx.graphics.getHeight()*3/8);
+        buff.setY((float)Gdx.graphics.getHeight()*3/8);
         buff.setWidth(Gdx.graphics.getWidth());
 
         Table table = new Table();
@@ -46,14 +45,14 @@ public class InstructionScreen implements Screen {
         table.add(instruction1);
         table.add(space);
         table.add(instruction2);
-        table.setPosition(Gdx.graphics.getWidth()/2-table.getWidth()/2,550-table.getHeight()/2);
+        table.setPosition((float)Gdx.graphics.getWidth()/2-table.getWidth()/2,550-table.getHeight()/2);
         stage.addActor(table);
         stage.addActor(buff);
 
         // to go back to menu page
         TextButton backButton = new TextButton("Back",AnimalHunter.gameSkin);
-        backButton.setWidth(Gdx.graphics.getWidth()/2);
-        backButton.setPosition(Gdx.graphics.getWidth()/2-backButton.getWidth()/2,Gdx.graphics.getHeight()/4-backButton.getHeight()/2);
+        backButton.setWidth((float)Gdx.graphics.getWidth()/2);
+        backButton.setPosition((float)Gdx.graphics.getWidth()/2-backButton.getWidth()/2,(float)Gdx.graphics.getHeight()/4-backButton.getHeight()/2);
         backButton.addListener(new InputListener(){
             @Override
             public void touchUp (InputEvent event, float x, float y, int pointer, int button) {

@@ -2,7 +2,6 @@ package com.ict1009.ahg.gameplay;
 
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
-import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.enums.StatusType;
 import com.ict1009.ahg.interfaces.IStatus;
 import com.ict1009.ahg.screens.GameScreen;
@@ -38,7 +37,7 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
 
         //additional power every 5 levels
         if (level/5 >= 1) { //max 300 health extra
-            this.setMaxHealth((float) Math.min((getMaxHealth() + Math.pow(3, level/5)), 300)); //3,9,27,81,243
+            this.setMaxHealth((float) Math.min((getMaxHealth() + Math.pow(3, (float)level/5)), 300)); //3,9,27,81,243
 
         }
     }
@@ -60,17 +59,6 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
 
         //find target enemy
     }
-
-    @Override
-    public void tryMove(int direction) {
-
-    }
-
-    @Override
-    public void tryTeleport(Vector3 targetLocation) {
-
-    }
-
     @Override
     public void addToRenderQueue() {
         GameScreen.mobs.add(this);
@@ -83,9 +71,6 @@ public class Animal extends Entity implements ICollidable, IDamageHandler, IStat
             onHitAndExplosionList.add(new OnHitAndExplosion(explosionTexture, new Rectangle (this.getBoundingBox()), 0.7f,480,480));
             //Killed and obtain score
             score += 105 + 25 * level;
-            levelScore += 105 + 25 * level;
-
-            //instigator //add points to instigator or smth
 
             this.setPendingRemoval(true);
             this.statuses.add(StatusType.DEAD);

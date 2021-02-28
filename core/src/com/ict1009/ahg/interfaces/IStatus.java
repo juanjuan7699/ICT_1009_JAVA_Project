@@ -2,7 +2,6 @@ package com.ict1009.ahg.interfaces;
 
 import com.ict1009.ahg.enums.StatusType;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public interface IStatus { //this is for status effects

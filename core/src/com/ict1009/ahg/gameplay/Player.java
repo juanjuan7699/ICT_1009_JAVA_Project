@@ -1,9 +1,6 @@
 package com.ict1009.ahg.gameplay;
 
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.enums.ItemType;
 import com.ict1009.ahg.screens.GameScreen;
 import com.ict1009.ahg.enums.StatusType;
@@ -24,7 +21,7 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
     private List<StatusType> statuses;
     private int playerIndex;
 
-    private List<ItemType> weapons;
+    private final List<ItemType> weapons;
 
     public Timer attackTimer = new Timer();
 
@@ -64,7 +61,7 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
     }
 
     @Override
-    public boolean collisionTest(Entity target) { //invulnerable wont remove hitbox anymore
+    public boolean collisionTest(Entity target) { //invulnerable wont remove hit box anymore
         return this.getBoundingBox().overlaps(target.getBoundingBox()); //overlap = get damage
     }
 
@@ -88,16 +85,6 @@ public class Player extends Entity implements ICollidable, IDamageHandler, IStat
             this.addStatus(StatusType.DOWNED);
             this.removeStatus(StatusType.ALIVE);
         }
-    }
-
-    @Override
-    public void tryMove(int direction) {
-
-    }
-
-    @Override
-    public void tryTeleport(Vector3 targetLocation) {
-
     }
 
     @Override

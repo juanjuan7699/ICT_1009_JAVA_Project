@@ -11,13 +11,12 @@ import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.ict1009.ahg.AnimalHunter;
 
 public class SplashScreen implements Screen {
-    private Texture splashtexture;
-    private Image splashimage;
-    private Stage splashstage;
+    private Texture splashTexture;
+    private Stage splashStage;
     private float WIDTH,HEIGHT;
     private float timeToShowSplashScreen = 3f; // 3 seconds
 
-    private AnimalHunter game;
+    private final AnimalHunter game;
 
     public SplashScreen(AnimalHunter aGame) {
         game = aGame;
@@ -28,25 +27,25 @@ public class SplashScreen implements Screen {
         WIDTH = 600;
         HEIGHT = 900;
 
-        splashtexture = new Texture(Gdx.files.internal("splashscreen.png"));
-        splashtexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
+        splashTexture = new Texture(Gdx.files.internal("splashscreen.png"));
+        splashTexture.setFilter(Texture.TextureFilter.Linear, Texture.TextureFilter.Linear);
 
-        splashimage = new Image(splashtexture);
-        splashimage.setSize(WIDTH, HEIGHT);
+        Image splashImage = new Image(splashTexture);
+        splashImage.setSize(WIDTH, HEIGHT);
 
-        splashstage = new Stage(new FitViewport(WIDTH, HEIGHT) {
+        splashStage = new Stage(new FitViewport(WIDTH, HEIGHT) {
         });
-        splashstage.addActor(splashimage);
+        splashStage.addActor(splashImage);
 
-        splashimage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.fadeIn(1.25F),Actions.delay(1F), Actions.fadeOut(0.75F)));
+        splashImage.addAction(Actions.sequence(Actions.alpha(0.0F), Actions.fadeIn(1.25F),Actions.delay(1F), Actions.fadeOut(0.75F)));
     }
 
     @Override
     public void render(float delta) {
         Gdx.gl.glClearColor(0.0F, 0.0F, 0.0F, 0.0F);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        splashstage.act();
-        splashstage.draw();
+        splashStage.act();
+        splashStage.draw();
         // remove delta from time
         timeToShowSplashScreen -= delta;
         // 3 seconds are up
@@ -74,7 +73,7 @@ public class SplashScreen implements Screen {
 
     @Override
     public void dispose() {
-        splashtexture.dispose();
-        splashstage.dispose();
+        splashTexture.dispose();
+        splashStage.dispose();
     }
 }

@@ -6,10 +6,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public abstract class Entity {
-    private Vector3 currentLocation; //2f
-    private Vector3 targetLocation; //2f
-    private Vector3 spawnLocation; //2f
-
     private float currentHealth;
     private float maxHealth;
     private float damageScale;
@@ -31,8 +27,6 @@ public abstract class Entity {
     private Rectangle boundingBox; //hitbox
     private TextureRegion sprite;
 
-    public abstract void tryMove(int direction);
-    public abstract void tryTeleport(Vector3 targetLocation);
     public abstract void addToRenderQueue();
     public abstract void onDestroy(Entity instigator); //explosions, death animations here
     public abstract void update(float deltaTime);
@@ -50,30 +44,6 @@ public abstract class Entity {
 
     public void translate(float xChange, float yChange) {
         getBoundingBox().setPosition(getBoundingBox().x + xChange, getBoundingBox().y + yChange);
-    }
-
-    public Vector3 getCurrentLocation() {
-        return currentLocation;
-    }
-
-    public void setCurrentLocation(Vector3 currentLocation) {
-        this.currentLocation = currentLocation;
-    }
-
-    public Vector3 getTargetLocation() {
-        return targetLocation;
-    }
-
-    public void setTargetLocation(Vector3 targetLocation) {
-        this.targetLocation = targetLocation;
-    }
-
-    public Vector3 getSpawnLocation() {
-        return spawnLocation;
-    }
-
-    public void setSpawnLocation(Vector3 spawnLocation) {
-        this.spawnLocation = spawnLocation;
     }
 
     public float getCurrentHealth() {

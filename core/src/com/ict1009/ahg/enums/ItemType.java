@@ -14,7 +14,7 @@ public enum ItemType {
     NOVA_LASER, //Multi-Target
     BLAZE_LASER, //DoT
     SWARM_LASER, //Single Target
-    NANO_LASER, //lifesteal
+    NANO_LASER, //life steal
 
     NONE,
 }

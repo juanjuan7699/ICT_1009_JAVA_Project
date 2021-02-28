@@ -5,7 +5,6 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
@@ -18,9 +17,9 @@ import com.ict1009.ahg.AnimalHunter;
 
 public class MenuScreen implements Screen {
     private static Music music;
-    private Stage stage;
-    private AnimalHunter game;
-    private TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
+    private final Stage stage;
+    private final AnimalHunter game;
+    private final TextureRegion backgroundTexture = new TextureRegion(new Texture("jungle02.png"), 0, 0, Gdx.graphics.getWidth() , Gdx.graphics.getHeight());
 
     public MenuScreen(AnimalHunter aGame) {
         game = aGame;
@@ -37,15 +36,15 @@ public class MenuScreen implements Screen {
 
         Label title = new Label("Animal Hunter", AnimalHunter.gameSkin, "big-black");
         title.setAlignment(Align.center);
-        title.setY(Gdx.graphics.getHeight() * 6 / 9);
+        title.setY((float)Gdx.graphics.getHeight() * 6 / 9);
         title.setWidth(Gdx.graphics.getWidth());
         stage.addActor(title);
 
         // play button to start the game
         TextButton playBtn = new TextButton("Play!", AnimalHunter.gameSkin);
         playBtn.getLabel().setFontScale(0.8f, 0.8f);
-        playBtn.setWidth(Gdx.graphics.getWidth() / 2);
-        playBtn.setPosition(Gdx.graphics.getWidth() / 2 - playBtn.getWidth() / 2, Gdx.graphics.getHeight() / 2 - playBtn.getHeight() / 2);
+        playBtn.setWidth((float)Gdx.graphics.getWidth() / 2);
+        playBtn.setPosition((float)Gdx.graphics.getWidth() / 2 - playBtn.getWidth() / 2, (float)Gdx.graphics.getHeight() / 2 - playBtn.getHeight() / 2);
         playBtn.addListener(new InputListener() {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
@@ -65,8 +64,8 @@ public class MenuScreen implements Screen {
         // instructions for each player keys
         TextButton instructionButton = new TextButton("Instruction", AnimalHunter.gameSkin);
         instructionButton.getLabel().setFontScale(0.8f, 0.8f);
-        instructionButton.setWidth(Gdx.graphics.getWidth() / 2);
-        instructionButton.setPosition(Gdx.graphics.getWidth() / 2 - instructionButton.getWidth() / 2, Gdx.graphics.getHeight() / 3 - instructionButton.getHeight() / 2);
+        instructionButton.setWidth((float)Gdx.graphics.getWidth() / 2);
+        instructionButton.setPosition((float)Gdx.graphics.getWidth() / 2 - instructionButton.getWidth() / 2, (float)Gdx.graphics.getHeight() / 3 - instructionButton.getHeight() / 2);
         instructionButton.addListener(new InputListener() {
 
             @Override
@@ -86,8 +85,8 @@ public class MenuScreen implements Screen {
         // to exit the game
         TextButton quitButton = new TextButton("Quit", AnimalHunter.gameSkin);
         quitButton.getLabel().setFontScale(0.8f, 0.8f);
-        quitButton.setWidth(Gdx.graphics.getWidth() / 2);
-        quitButton.setPosition(Gdx.graphics.getWidth() / 2 - quitButton.getWidth() / 2, Gdx.graphics.getHeight() / 6 - quitButton.getHeight() / 2);
+        quitButton.setWidth((float)Gdx.graphics.getWidth() / 2);
+        quitButton.setPosition((float)Gdx.graphics.getWidth() / 2 - quitButton.getWidth() / 2, (float)Gdx.graphics.getHeight() / 6 - quitButton.getHeight() / 2);
         quitButton.addListener(new InputListener() {
 
             @Override

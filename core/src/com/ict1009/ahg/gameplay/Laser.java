@@ -1,7 +1,6 @@
 package com.ict1009.ahg.gameplay;
 
 import com.badlogic.gdx.math.Rectangle;
-import com.badlogic.gdx.math.Vector3;
 import com.ict1009.ahg.screens.GameScreen;
 
 import static com.ict1009.ahg.screens.GameScreen.*;
@@ -9,7 +8,7 @@ import static com.ict1009.ahg.screens.GameScreen.*;
 
 public class Laser extends Entity {
 
-    private Entity owner;
+    private final Entity owner;
     private int team; //0 = players, 1 = animals
 
     public Laser(Entity owner, int team) {
@@ -24,16 +23,6 @@ public class Laser extends Entity {
 
     public void applyOnHit(Entity target) {
         onHitAndExplosionList.add(new OnHitAndExplosion(onHitGenericTexture, new Rectangle (target.getBoundingBox()), 0.3f,96,96));
-    }
-
-    @Override
-    public void tryMove(int direction) { //up or down?
-
-    }
-
-    @Override
-    public void tryTeleport(Vector3 targetLocation) {
-
     }
 
     @Override
@@ -55,10 +44,6 @@ public class Laser extends Entity {
 
     public Entity getOwner() {
         return owner;
-    }
-
-    public void setOwner(Entity owner) {
-        this.owner = owner;
     }
 
     @Override

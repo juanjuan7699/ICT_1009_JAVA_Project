@@ -15,7 +15,7 @@ import java.util.Locale;
 
 public class EndScreen implements Screen {
 
-    private AnimalHunter game;
+    private final AnimalHunter game;
     private final SpriteBatch batch = new SpriteBatch();
     private BitmapFont font = new BitmapFont();
     private BitmapFont font2 = new BitmapFont();
