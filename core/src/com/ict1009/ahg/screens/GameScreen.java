@@ -25,8 +25,8 @@ import java.util.*;
 
 public class GameScreen implements Screen {
 
-    private static TextureRegion animalTexture;
     private static TextureRegion bossTexture;
+    private static TextureRegion animalTexture;
     private final AnimalHunter game;
 
     /**Screen**/
@@ -39,34 +39,36 @@ public class GameScreen implements Screen {
 
     private final SpriteBatch batch;
     public static final TextureAtlas textureAtlas = new TextureAtlas("images.atlas");
-    public static final TextureAtlas animalTextureAtlas = new TextureAtlas("animals.atlas");
-    public static final TextureAtlas backgroundTextureAtlas = new TextureAtlas("backgrounds.atlas");
-    public static final TextureAtlas potionsTextureAtlas = new TextureAtlas("potions.atlas");
     public static final TextureAtlas gunsTextureAtlas = new TextureAtlas("guns.atlas");
+    public static final TextureAtlas animalTextureAtlas = new TextureAtlas("animals.atlas");
+    public static final TextureAtlas potionsTextureAtlas = new TextureAtlas("potions.atlas");
     public static final TextureAtlas newPlayerTextureAtlas = new TextureAtlas("playerAssets.atlas");
+    public static final TextureAtlas backgroundTextureAtlas = new TextureAtlas("backgrounds.atlas");
 
-    public static final Texture explosionTexture = new Texture("bloodsprite3.png");     //480 by 480
     public static final Texture onHitTexture = new Texture("testblood.png");         //100 by 100
+    public static final Texture explosionTexture = new Texture("bloodsprite3.png");     //480 by 480
     public static final Texture onHitSwarmTexture = new Texture("SwarmLaserSprite.png");    //64 by 64
-    public static final Texture onHitGenericTexture = new Texture("GenericLaserSprite.png"); //96 by 96
     public static final Texture onHitStasisTexture = new Texture("IceCastSprite.png");  //96 by 96
+    public static final Texture onHitGenericTexture = new Texture("GenericLaserSprite.png"); //96 by 96
     private final TextureRegion[] backgrounds;
 
     /**Timing**/
     private final float[] backgroundOffsets = {0, 0, 0, 0};
-    private final float backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
-    private final float timeBetweenDamage = 0.2f;
+
     private final float timeBetweenNewMap = 15;
-    private float timeBetweenEnemySpawns = 2.45f;
-    private float enemySpawnTimer = 0;
+    private final float timeBetweenDamage = 0.2f;
+    private final float backgroundMaxScrollingSpeed = WORLD_HEIGHT / 4;
+
+    private float mapTimer = 0;
     private float damageTimer1 = 0;
     private float damageTimer2 = 0;
-    private float mapTimer = 0;
+    private float enemySpawnTimer = 0;
+    private float timeBetweenEnemySpawns = 2.45f;
 
     /** Render Queue **/
+    public static List<Animal> mobs; //enemies
     public static List<Player> players; //all players goes here
     public static List<Entity> renderQueue; //all simple rendered stuff here, short lived stuff only
-    public static List<Animal> mobs; //enemies
     public static List<OnHitAndExplosion> onHitAndExplosionList;
 
     /** spawners  **/
@@ -75,8 +77,10 @@ public class GameScreen implements Screen {
     //gs
     public static int level = 1;
     public static int score = 0;
+
     private int maxMobs = 10;
     private int spawnPerCycle = 1;
+
     private boolean bossSpawned = false;
 
     // Sound Effects
@@ -85,27 +89,29 @@ public class GameScreen implements Screen {
     /*HUD only shows player1, maybe if more players means combine scoregains, lives etc?*/
     BitmapFont font;
     BitmapFont font2;
-    float hudVerticalMargin;
+
     float hudLeftX;
-    float hudRightX;
     float hudRow1Y;
     float hudRow2Y;
+    float hudRightX;
     float hudSectionWidth;
+    float hudVerticalMargin;
 
      /*if want to remove animal laser, gameobjects enemylaserlist, enemylaser linkedlist,
     animals variables(class and gamescreen), detectCollisions enemylist, renderlasers 2 lists)  */
 
     public static final Random generator = new Random();
-    public static TextureRegion[] animalForestTextures;
-    public static TextureRegion[] animalDesertTextures;
+
+    public static TextureRegion[] gunTextures;
+    public static TextureRegion[] playerTextures;
+    public static TextureRegion[] potionTextures;
+    public static TextureRegion[] newPlayerTextures;
     public static TextureRegion[] animalSnowTextures;
     public static TextureRegion[] animalRockTextures;
     public static TextureRegion[] animalBossTextures;
-    public static TextureRegion[] potionTextures;
-    public static TextureRegion[] playerTextures;
-    public static TextureRegion[] gunTextures;
-    public static TextureRegion[] newPlayerTextures;
-
+    public static TextureRegion[] animalForestTextures;
+    public static TextureRegion[] animalDesertTextures;
+    
     public GameScreen(AnimalHunter game) {
         camera = new OrthographicCamera();
         viewport = new StretchViewport(WORLD_WIDTH, WORLD_HEIGHT, camera);
